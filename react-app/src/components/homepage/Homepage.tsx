@@ -7,11 +7,12 @@ export const Homepage = () => {
   return (
     <div
       className="h-auto lg:px-24 pt-6 
-       bg-[#A57E63] "
+       bg-[#967a67] "
     >
       <Navbar />
       <MainCard />
       <SpecialOffers />
+      <Categories />
     </div>
   );
 };

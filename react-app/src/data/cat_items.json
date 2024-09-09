@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "title": "Cat Scratching Post",
+    "description": "Durable scratching post for cats to keep their claws healthy.",
+    "price": 29.99
+  },
+  {
+    "id": 2,
+    "title": "Catnip Mouse Toy",
+    "description": "Soft, plush mouse toy filled with premium catnip.",
+    "price": 5.99
+  },
+  {
+    "id": 3,
+    "title": "Automatic Cat Feeder",
+    "description": "Programmable feeder for portion-controlled meals.",
+    "price": 89.99
+  },
+  {
+    "id": 4,
+    "title": "Cat Hammock Bed",
+    "description": "Hanging bed for cats to relax and enjoy their nap time.",
+    "price": 45.0
+  },
+  {
+    "id": 5,
+    "title": "Self-Cleaning Litter Box",
+    "description": "Automatic litter box that cleans itself after each use.",
+    "price": 159.99
+  },
+  {
+    "id": 6,
+    "title": "Cat Window Perch",
+    "description": "Comfortable window-mounted seat for cats to watch the outside world.",
+    "price": 35.99
+  },
+  {
+    "id": 7,
+    "title": "Cat Water Fountain",
+    "description": "Flowing water fountain to encourage hydration.",
+    "price": 25.5
+  },
+  {
+    "id": 8,
+    "title": "Laser Pointer Toy",
+    "description": "Interactive laser pointer to keep cats entertained.",
+    "price": 12.99
+  },
+  {
+    "id": 9,
+    "title": "Cat Carrier Bag",
+    "description": "Comfortable, lightweight carrier for transporting your cat.",
+    "price": 49.99
+  },
+  {
+    "id": 10,
+    "title": "Cat Grooming Glove",
+    "description": "Silicone grooming glove to gently remove loose fur while petting.",
+    "price": 15.99
+  },
+  {
+    "id": 11,
+    "title": "Cat Tree with Hideaway",
+    "description": "Multi-level cat tree with hideaway spots and scratching posts.",
+    "price": 110.0
+  },
+  {
+    "id": 12,
+    "title": "Organic Catnip",
+    "description": "100% organic, high-quality catnip for playtime.",
+    "price": 7.5
+  }
+]

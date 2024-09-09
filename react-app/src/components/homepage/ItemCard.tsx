@@ -1,13 +1,8 @@
-type ItemCardProps = {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-};
+import { ItemCardProps } from "./types/ItemCardProps";
 
 export const ItemCard = ({ id, title, description, price }: ItemCardProps) => {
   const formattedDescription =
-    description.length > 40 ? `${description.slice(0, 40)} ...` : description;
+    description.length > 90 ? `${description.slice(0, 90)} ...` : description;
 
   return (
     <div className="h-[18vw] group bg-[#D8C5B3] flex flex-col w-56 rounded-md shadow-sm place-content-between hover:shadow-md transition-all hover:cursor-pointer">
@@ -17,7 +12,7 @@ export const ItemCard = ({ id, title, description, price }: ItemCardProps) => {
           className="bg-red-400 rounded-t-md max-h-56 group-hover:max-h-0 transition-all w-full"
         ></img>
         <div className="flex flex-col h-20 py-2 px-2 justify-between">
-          <h1 className="text-xl group-hover:text-2xl transition-all">
+          <h1 className="text-xl group-hover:text-2xl transition-all font-semibold">
             {title}
           </h1>
           <div className="group-hover:animate-[fade-in_0.5s_ease-in_forwards] opacity-0 hidden group-hover:block">
