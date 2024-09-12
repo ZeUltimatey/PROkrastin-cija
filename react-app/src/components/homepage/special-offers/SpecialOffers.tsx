@@ -36,15 +36,15 @@ export const SpecialOffers = () => {
 
   return (
     <div className="p-12 bg-[#EDEAE1] h-auto flex flex-col gap-8">
-      <h1 className="text-4xl font-poppins font-bold">Īpašie piedāvājumi</h1>
-      <div className="flex place-items-center justify-center gap-6">
+      <h1 className="text-3xl font-poppins font-bold">Īpašie piedāvājumi</h1>
+      <div className="flex place-items-center justify-center gap-8">
         <div
           onClick={decrementStartItem}
           className="bg-[#F3C9B1] py-1 px-3 shadow-sm rounded-full hover:brightness-90 hover:cursor-pointer"
         >
           <i className="fa-solid fa-chevron-left text-2xl"></i>
         </div>
-        <div className="flex gap-12 place-items-center">{items}</div>
+        <div className="flex gap-8 place-items-center">{items}</div>
         <div
           onClick={incrementStartItem}
           className="bg-[#F3C9B1] py-1 px-3 shadow-sm rounded-full hover:brightness-90 hover:cursor-pointer"

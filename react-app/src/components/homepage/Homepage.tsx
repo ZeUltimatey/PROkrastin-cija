@@ -6,7 +6,7 @@ import { SpecialOffers } from "./special-offers/SpecialOffers";
 export const Homepage = () => {
   return (
     <div
-      className="h-auto lg:px-24 pt-6 
+      className="h-auto lg:px-20 pt-6 
        bg-[#967a67] "
     >
       <Navbar />
