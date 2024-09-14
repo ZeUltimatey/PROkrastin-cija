@@ -5,11 +5,11 @@ export const ItemCard = ({ id, title, description, price }: ItemCardProps) => {
     description.length > 90 ? `${description.slice(0, 90)} ...` : description;
 
   return (
-    <div className="h-[18vw] group bg-[#D8C5B3] flex flex-col w-[13vw] rounded-md shadow-sm place-content-between hover:shadow-md transition-all hover:cursor-pointer">
+    <div className="h-80 group bg-[#D8C5B3] flex flex-col w-56 rounded-md shadow-sm place-content-between hover:shadow-md transition-all hover:cursor-pointer">
       <div className="w-full flex flex-col justify-between max-h-[16vw]">
         <img
           src={"../car.png"}
-          className="bg-red-400 rounded-t-md max-h-52 group-hover:max-h-0 transition-all w-full"
+          className="bg-red-400 rounded-t-md max-h-60 group-hover:max-h-0 transition-all w-full"
         ></img>
         <div className="flex flex-col h-20 py-2 px-2 justify-between gap-1">
           <h1 className="text-lg group-hover:text-2xl transition-all font-semibold">
