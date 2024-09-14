@@ -21,6 +21,7 @@ class TestSeeder extends Seeder
                 'description' => 'Hanging bed for cats to relax and enjoy their nap time.',
                 'pricing' => 45.00,
                 'discount_pricing' => null,
+                'amount' => 12,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -31,6 +32,7 @@ class TestSeeder extends Seeder
                 'description' => 'This kitten was found abandoned in the sewers of Seattle, Washington, D.C.',
                 'pricing' => 1199.99,
                 'discount_pricing' => 1200.00,
+                'amount' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]
