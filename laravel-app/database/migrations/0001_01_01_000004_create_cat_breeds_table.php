@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('cat_breeds', function (Blueprint $table) {
             $table->id('breed_id');
-//            $table->unsignedBigInteger('attachments_id');
-//            $table->foreign('attachments_id')
-//                ->references('attachments_id')
-//                ->on('attachments');
+            $table->unsignedBigInteger('attachments_id')->nullable();
+            $table->foreign('attachments_id')
+                ->references('attachments_id')
+                ->on('attachment_groups');
 
             $table->string('display_name');
             $table->text('breed_information');

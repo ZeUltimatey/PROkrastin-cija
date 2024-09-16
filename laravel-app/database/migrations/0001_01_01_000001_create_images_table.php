@@ -7,32 +7,29 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Migration for the products table.
+     * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
-            $table->id('product_id');
+        Schema::create('images', function (Blueprint $table) {
+            $table->id('image_id');
             $table->unsignedBigInteger('attachments_id')->nullable();
             $table->foreign('attachments_id')
                 ->references('attachments_id')
                 ->on('attachment_groups');
 
-            $table->enum('product_type', ['Unlisted', 'Cat', 'Accessory', 'Food', 'Furniture']);
-            $table->string('display_name');
-            $table->text('description');
-            $table->float('pricing');
-            $table->float('discount_pricing')->nullable();
-            $table->unsignedInteger('stock');
+            $table->string('filepath');
+            $table->string('resolution');
+            $table->unsignedInteger('filesize');
             $table->timestamps();
         });
     }
 
     /**
-     * Reversing migration creation.
+     * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('images');
     }
 };

@@ -13,18 +13,18 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id('review_id');
-//            $table->unsignedBigInteger('reviewer_id');
-//            $table->foreign('reviewer_id')
-//                ->references('user_id')
-//                ->on('users');
+            $table->unsignedBigInteger('reviewer_id');
+            $table->foreign('reviewer_id')
+                ->references('user_id')
+                ->on('users');
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')
                 ->references('product_id')
                 ->on('products');
-//            $table->unsignedBigInteger('attachments_id');
-//            $table->foreign('attachments_id')
-//                ->references('attachments_id')
-//                ->on('attachment_groups');
+            $table->unsignedBigInteger('attachments_id')->nullable();
+            $table->foreign('attachments_id')
+                ->references('attachments_id')
+                ->on('attachment_groups');
 
             $table->text('content');
             $table->unsignedInteger('rating');

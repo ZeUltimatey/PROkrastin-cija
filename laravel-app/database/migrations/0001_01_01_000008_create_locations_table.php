@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('locations', function (Blueprint $table) {
             $table->id('location_id');
-//            $table->unsignedBigInteger('creator_id');
-//            $table->foreign('creator_id')
-//                ->references('user_id')
-//                ->on('users');
+            $table->unsignedBigInteger('creator_id');
+            $table->foreign('creator_id')
+                ->references('user_id')
+                ->on('users');
 
             $table->string('city');
             $table->string('street');

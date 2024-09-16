@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cats', function (Blueprint $table) {
-//            $table->id('cat_id');
             $table->unsignedBigInteger('cat_id');
             $table->primary('cat_id');
             $table->foreign('cat_id')
@@ -24,7 +23,6 @@ return new class extends Migration
             $table->foreign('breed_id')
                 ->references('breed_id')
                 ->on('cat_breeds');
-
 
             $table->date('birthdate');
             $table->string('color');
