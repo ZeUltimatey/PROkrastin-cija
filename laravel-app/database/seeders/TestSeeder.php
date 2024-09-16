@@ -99,7 +99,7 @@ class TestSeeder extends Seeder
                 'transaction_id' => 1,
                 'location_id' => 1,
                 'total_pricing' => 45.00,
-                'check_content' => '1x CAT HAMMOCK BED\t45.00 EUR\n------------------------------\nTOTAL:\t45.00 EUR\n\nTHANK YOU FOR SHOPPING AT MURRĀTUVE!',
+                'check_content' => '1x CAT HAMMOCK BED\t45.00 EUR\n------------------------------\nTOTAL:\t45.00 EUR\n\nTHANK YOU FOR SHOPPING AT MURRĀTUVA!',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]
