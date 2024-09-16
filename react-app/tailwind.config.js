@@ -6,6 +6,7 @@ module.exports = {
       fontFamily: {
         poppins: "Poppins",
         "playwrite-cuba": "Playwrite CU",
+        playpen: "Playpen Sans",
       },
       keyframes: {
         "fade-in": {
@@ -20,7 +21,7 @@ module.exports = {
         },
       },
       backgroundImage: {
-        "cat-bg-image": 'url("/public/cat_bg.jpg")',
+        "cat-bg-image": 'url("/public/cat_bg.png")',
       },
     },
   },
