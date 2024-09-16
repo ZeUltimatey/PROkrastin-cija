@@ -11,6 +11,8 @@ git clone https://github.com/ZeUltimatey/PROkrastinacija.git
 ```
 2) Run script locally in react-app directory
 ```sh
+rm -rf node_modules package-lock.json
+npm install
 npm install react-scripts
 ``` 
 3) In project directory run
