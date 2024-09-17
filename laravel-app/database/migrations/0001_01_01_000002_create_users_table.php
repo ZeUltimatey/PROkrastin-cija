@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id('user_id');
-            $table->unsignedBigInteger('profilepicture_id');
+            $table->unsignedBigInteger('profilepicture_id')->nullable();
             $table->foreign('profilepicture_id')
                 ->references('image_id')
                 ->on('images');

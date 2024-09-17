@@ -59,9 +59,21 @@ class TestSeeder extends Seeder
             ]
         ]);
 
+        DB::table('users')->insert([
+            'user_id' => 1,
+            'email' => 'vardsuzvards@gmail.com',
+            'password' => 'asd',
+            'display_name' => 'Vards Uzvards',
+            'phone_number' => '+37125565816',
+            'user_role' => 'User',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         DB::table('reviews')->insert([
             [
                 'review_id' => 1,
+                'reviewer_id' => 1,
                 'product_id' => 1,
                 'content' => 'Wow very good bed for me, my cat doesn\'t like it though..',
                 'rating' => 8,
@@ -73,6 +85,7 @@ class TestSeeder extends Seeder
         DB::table('card_information')->insert([
             [
                 'card_id' => 1,
+                'cardholder_id' => 1,
                 'card_number' => '5550130966726224',
                 'expiration_date' => '12/24',
                 'cvc_number' => '271',
@@ -85,6 +98,7 @@ class TestSeeder extends Seeder
         DB::table('locations')->insert([
             [
                 'location_id' => 1,
+                'creator_id' => 1,
                 'city' => 'Washington',
                 'street' => '2608 84th Street Ct S',
                 'apartment_number' => null,
@@ -97,6 +111,7 @@ class TestSeeder extends Seeder
         DB::table('transactions')->insert([
             [
                 'transaction_id' => 1,
+                'transactor_id' => 1,
                 'location_id' => 1,
                 'total_pricing' => 45.00,
                 'check_content' => '1x CAT HAMMOCK BED\t45.00 EUR\n------------------------------\nTOTAL:\t45.00 EUR\n\nTHANK YOU FOR SHOPPING AT MURRĀTUVA!',
@@ -104,7 +119,5 @@ class TestSeeder extends Seeder
                 'updated_at' => now(),
             ]
         ]);
-
-        # TODO: add more (am tired), no user so reviews insert fails, same for location, transactions and card_info
     }
 }
