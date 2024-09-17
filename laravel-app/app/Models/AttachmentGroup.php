@@ -10,5 +10,4 @@ class AttachmentGroup extends Model
     protected $primaryKey = 'attachments_id';
     public $incrementing = true;
     public $timestamps = true;
-
 }

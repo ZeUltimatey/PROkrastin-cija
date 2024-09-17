@@ -11,14 +11,13 @@ class Transaction extends Model
     public $incrementing = true;
     public $timestamps = true;
 
-//    public function transactor()
-//    {
-//        return $this->hasOne(User::class, 'user_id', 'transactor_id');
-//    }
-
-//    public function location()
-//    {
-//        if ($this->location == null) { return null; }
-//        return $this->hasOne(Location::class, 'location_id', 'location_id');
-//    }
+    public function transactor()
+    {
+        return $this->hasOne(User::class, 'user_id', 'transactor_id');
+    }
+    public function location()
+    {
+        if ($this->location == null) { return null; }
+        return $this->hasOne(Location::class, 'location_id', 'location_id');
+    }
 }

@@ -16,7 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('cardholder_id');
             $table->foreign('cardholder_id')
                 ->references('user_id')
-                ->on('users');
+                ->on('users')
+                ->onDelete('cascade');
 
             $table->string('card_number');
             $table->string('expiration_date');

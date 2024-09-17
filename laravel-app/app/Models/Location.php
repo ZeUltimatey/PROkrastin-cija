@@ -11,8 +11,8 @@ class Location extends Model
     public $incrementing = true;
     public $timestamps = true;
 
-//    public function creator()
-//    {
-//        return $this->hasOne(User::class, 'user_id', 'creator_id');
-//    }
+    public function creator()
+    {
+        return $this->hasOne(User::class, 'user_id', 'creator_id');
+    }
 }

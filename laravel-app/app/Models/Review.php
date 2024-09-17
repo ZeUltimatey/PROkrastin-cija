@@ -11,8 +11,8 @@ class Review extends Model
     public $incrementing = true;
     public $timestamps = true;
 
-//    public function sender()
-//    {
-//        return $this->hasOne(User::class, 'user_id', 'reviewer_id');
-//    }
+    public function reviewer()
+    {
+        return $this->hasOne(User::class, 'user_id', 'reviewer_id');
+    }
 }
