@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.laravel
     volumes:
       - ./laravel-app:/var/www/html
     ports:
@@ -15,7 +15,7 @@ services:
   react:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.react
     volumes:
       - ./react-app:/app
     ports:
