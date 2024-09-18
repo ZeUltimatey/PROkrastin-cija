@@ -32,3 +32,12 @@ After the Laravel app is running, migrate the database:
 ```sh
 docker-compose exec app php artisan migrate
 ```
+
+If you want to only work on react, frontend, enter this in project bash:
+
+```sh
+cd react-app
+```
+```sh
+npm run start
+```
