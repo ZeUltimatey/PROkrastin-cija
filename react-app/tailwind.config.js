@@ -5,8 +5,8 @@ module.exports = {
     extend: {
       fontFamily: {
         poppins: "Poppins",
-        "playwrite-cuba": "Playwrite CU",
-        playpen: "Playpen Sans",
+        baloo: ['"Baloo Bhaijaan 2"', "cursive"],
+        hind: ["Hind", "sans-serif"],
       },
       keyframes: {
         "fade-in": {
@@ -22,6 +22,11 @@ module.exports = {
       },
       backgroundImage: {
         "cat-bg-image": 'url("/public/cat_bg.png")',
+        "categories-food": 'url("../public/products/cat_food.png")',
+        "categories-furniture": 'url("../public/products/cat_furniture.png")',
+        "categories-tools": 'url("../public/products/cat_tools.png")',
+        "categories-toys": 'url("../public/products/cat_toys.png")',
+        "categories-cats": 'url("../public/products/cats.png")',
       },
     },
   },

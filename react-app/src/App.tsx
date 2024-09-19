@@ -5,7 +5,6 @@ import { Register } from "./components/register/Register";
 import { ProductView } from "./components/product/ProductView";
 import "react-multi-carousel/lib/styles.css";
 
-
 function App() {
   return (
     <BrowserRouter>
