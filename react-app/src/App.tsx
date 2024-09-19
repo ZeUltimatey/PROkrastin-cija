@@ -4,14 +4,13 @@ import { Login } from "./components/login/Login";
 import { ProductView } from "./components/product/ProductView";
 import "react-multi-carousel/lib/styles.css";
 
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/productview" element={<ProductView/>}></Route>
+        <Route path="/productview" element={<ProductView />}></Route>
       </Routes>
     </BrowserRouter>
   );
