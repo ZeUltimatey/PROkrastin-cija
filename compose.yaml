@@ -32,8 +32,6 @@ services:
       - type: bind
         source: ./src/react-app
         target: /app
-    ports:
-      - "3000:3000"
 
   web:
     build:
