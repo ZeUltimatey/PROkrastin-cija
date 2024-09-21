@@ -1,13 +1,12 @@
 export const TitleCard = () => {
   return (
-    <div className="w-[48vw]">
-      <h1 className="text-[2.5rem] font-bold font-poppins">
+    <div className="flex flex-col gap-3">
+      <h1 className="text-7xl font-bold font-baloo text-[#3e2a19]">
         Viss nepieciešamais vienuviet
       </h1>
-      <p className="text-xl mt-2">
-        Barība, rotaļlietas, aksesuāri un vēl daudz kas Lorem ipsum dolor sit
-        amet, consectetur adipisicing elit. Quam ab sequi excepturi, in tenetur
-        fugit accusantium doloribus sit dolores consectetur.
+      <p className="ps-6 text-xl font-hind text-[#3e2a19] font-medium brightness-150">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt,
+        laudantium.
       </p>
     </div>
   );

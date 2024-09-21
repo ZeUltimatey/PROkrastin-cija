@@ -18,7 +18,6 @@ yarn-error.log
 package-lock.json
 yarn.lock
 docker-compose.override.yml
-Dockerfile
 .dockerignore
 .DS_Store
 Thumbs.db
