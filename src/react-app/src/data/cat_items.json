@@ -1,74 +1,92 @@
 [
   {
     "id": 1,
+    "image_url": "../images/products/9.png",
     "title": "Cat Scratching Post",
     "description": "Durable scratching post for cats to keep their claws healthy.",
-    "price": 29.99
+    "price": 29.99,
+    "category": "Cat Furniture"
   },
   {
     "id": 2,
+    "image_url": "../images/products/11.png",
     "title": "Catnip Mouse Toy",
     "description": "Soft, plush mouse toy filled with premium catnip.",
-    "price": 5.99
+    "price": 5.99,
+    "category": "Toys"
   },
   {
     "id": 3,
+    "image_url": "../images/products/16.png",
     "title": "Automatic Cat Feeder",
     "description": "Programmable feeder for portion-controlled meals.",
-    "price": 89.99
+    "price": 89.99,
+    "category": "Feeding"
   },
   {
     "id": 4,
+    "image_url": "../images/products/18.png",
     "title": "Cat Hammock Bed",
     "description": "Hanging bed for cats to relax and enjoy their nap time.",
-    "price": 45.0
+    "price": 45.99,
+    "category": "Cat Furniture"
   },
   {
     "id": 5,
+    "image_url": "../images/products/21.png",
     "title": "Self-Cleaning Litter Box",
     "description": "Automatic litter box that cleans itself after each use.",
-    "price": 159.99
+    "price": 159.99,
+    "category": "Litter & Cleaning"
   },
   {
     "id": 6,
+    "image_url": "../car.png",
     "title": "Cat Window Perch",
     "description": "Comfortable window-mounted seat for cats to watch the outside world.",
-    "price": 35.99
+    "price": 35.99,
+    "category": "Cat Furniture"
   },
   {
     "id": 7,
     "title": "Cat Water Fountain",
     "description": "Flowing water fountain to encourage hydration.",
-    "price": 25.5
+    "price": 25.99,
+    "category": "Feeding"
   },
   {
     "id": 8,
     "title": "Laser Pointer Toy",
     "description": "Interactive laser pointer to keep cats entertained.",
-    "price": 12.99
+    "price": 12.99,
+    "category": "Toys"
   },
   {
     "id": 9,
     "title": "Cat Carrier Bag",
     "description": "Comfortable, lightweight carrier for transporting your cat.",
-    "price": 49.99
+    "price": 49.99,
+    "category": "Travel & Outdoors"
   },
   {
     "id": 10,
     "title": "Cat Grooming Glove",
     "description": "Silicone grooming glove to gently remove loose fur while petting.",
-    "price": 15.99
+    "price": 15.99,
+    "category": "Grooming"
   },
   {
     "id": 11,
     "title": "Cat Tree with Hideaway",
     "description": "Multi-level cat tree with hideaway spots and scratching posts.",
-    "price": 110.0
+    "price": 110.99,
+    "category": "Cat Furniture"
   },
   {
     "id": 12,
     "title": "Organic Catnip",
     "description": "100% organic, high-quality catnip for playtime.",
-    "price": 7.5
+    "price": 7.99,
+    "category": "Toys"
   }
 ]

@@ -1,43 +1,90 @@
 import { useState } from "react";
+import { NavbarCart } from "./NavbarCart";
 
 export const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  const [navbarToggle, setNavbarToggle] = useState(false);
+  const [showCategories, setShowCategories] = useState(false);
+  const [showCart, setShowCart] = useState(false);
 
   return (
     <nav className="bg-[#EDEAE1] rounded-t-md">
-      <div className="h-20 flex items-center px-6 lg:px-12 justify-between">
+      <div className="h-20 flex items-center px-6 justify-between">
         {/* Paigaidu logo interneta veikalam */}
-        <div className="w-32 lg:w-48">
+        <div className="w-32 lg:w-48 p-4">
           <a href="/">
-            <img src={"../cat_logo.png"} alt="Murrātava" className="h-12" />
+            <img src={"../cat_logo.png"} alt="Murrātava" />
           </a>
         </div>
 
-        <ul className="hidden md:flex gap-6 lg:gap-12 font-playpen text-lg lg:text-xl font-semibold">
-          <li className="hover:cursor-pointer">Kaķi</li>
-          <li className="hover:cursor-pointer">Barība</li>
-          <li className="hover:cursor-pointer">Rotaļlietas</li>
-          <li className="hover:cursor-pointer">Aksesuāri</li>
+        <ul className="hidden h-20 md:flex text-lg gap-2 lg:text-xl font-semibold place-items-center font-hind">
+          <li className="transition-all hover:cursor-pointer h-20 px-4 hover:border-b-4 border-[#A67144] justify-center flex place-items-center">
+            Kaķi
+          </li>
+          <li className="transition-all hover:cursor-pointer h-20 px-4 hover:border-b-4 border-[#A67144] justify-center flex place-items-center">
+            Barība
+          </li>
+          <li className="transition-all hover:cursor-pointer h-20 px-4 hover:border-b-4 border-[#A67144] justify-center flex place-items-center">
+            Rotaļlietas
+          </li>
+          <li className="transition-all hover:cursor-pointer h-20 px-4 hover:border-b-4 border-[#A67144] justify-center flex place-items-center">
+            Aksesuāri
+          </li>
+          <li
+            onPointerEnter={() => setShowCategories(true)}
+            onPointerLeave={() => setShowCategories(false)}
+            className="transition-all hover:cursor-pointer h-20 px-4 hover:border-b-4 border-[#A67144] justify-center flex place-items-center"
+          >
+            Kategorijas
+            {showCategories && (
+              <div className="h-12 absolute top-[104px] border-t-4 border-[#A67144] shadow-sm">
+                <ul className="flex text-base place-items-center h-full">
+                  <li className="bg-[#EDEAE1] border-e-2 border-[#d8d6ce] brightness-95 hover:brightness-90 px-4 h-full flex place-items-center rounded-bl-md">
+                    Kategorija
+                  </li>
+                  <li className="bg-[#EDEAE1] border-e-2 border-[#d8d6ce] brightness-95 hover:brightness-90 px-4 h-full flex place-items-center">
+                    Kategorija
+                  </li>
+                  <li className="bg-[#EDEAE1] border-e-2 border-[#d8d6ce] brightness-95 hover:brightness-90 px-4 h-full flex place-items-center">
+                    Kategorija
+                  </li>
+                  <li className="bg-[#EDEAE1] brightness-95 hover:brightness-90 px-4 h-full flex place-items-center rounded-br-md">
+                    Kategorija
+                  </li>
+                </ul>
+              </div>
+            )}
+          </li>
         </ul>
+        {showCart && <NavbarCart />}
 
-        <div className="flex gap-6 lg:gap-12 w-32 lg:w-48 justify-end">
-          <a href="#">
+        <div className="flex justify-end h-full">
+          <button
+            onClick={() => {
+              setShowCart(!showCart);
+            }}
+            className={`h-full px-6 hover:border-b-4 border-[#A67144] ${
+              showCart ? "border-b-4" : "border-b-0"
+            } transition-all`}
+          >
             <i className="fa-solid fa-basket-shopping text-xl lg:text-2xl"></i>
-          </a>
-          <a href="/login">
+          </button>
+          <button
+            onClick={() => window.location.assign("/login")}
+            className=" h-full px-6 hover:border-b-4 border-[#A67144] transition-all"
+          >
             <i className="fa-solid fa-user text-xl lg:text-2xl"></i>
-          </a>
+          </button>
         </div>
 
         <div className="md:hidden flex items-center">
-          <i className="fa-solid fa-bars text-2xl" onClick={toggleDropdown}></i>
+          <i
+            className="fa-solid fa-bars text-2xl"
+            onClick={() => setNavbarToggle(!navbarToggle)}
+          ></i>
         </div>
       </div>
-      {isOpen && (
+
+      {navbarToggle && (
         <ul className="md:hidden bg-[#EDEAE1] font-poppins text-lg font-semibold p-4">
           <li className="py-2 hover:cursor-pointer">Kaķi</li>
           <li className="py-2 hover:cursor-pointer">Barība</li>

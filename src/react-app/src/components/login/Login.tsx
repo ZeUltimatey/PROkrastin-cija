@@ -3,8 +3,7 @@ import { LoginBox } from "./login-page/LoginBox";
 
 export const Login = () => {
   return (
-    <div>
-      <Navbar />
+    <div className="h-screen">
       <LoginBox />
     </div>
   );
