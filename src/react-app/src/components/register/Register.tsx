@@ -4,9 +4,7 @@ import { RegisterBox } from "./register-page/RegisterBox";
 export const Register = () => {
   return (
     <div>
-        <Navbar />
-        
-        <RegisterBox />
+      <RegisterBox />
     </div>
   );
 };

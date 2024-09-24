@@ -5,8 +5,8 @@ export const TitleCard = () => {
         Viss nepieciešamais vienuviet
       </h1>
       <p className="ps-6 text-xl font-hind text-[#3e2a19] font-medium brightness-150">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt,
-        laudantium.
+        Palutini savu mīluli ar aizraujošām rotaļlietām, gardu ēdienu un
+        skaistiem aksesuāriem!
       </p>
     </div>
   );

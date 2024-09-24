@@ -26,7 +26,7 @@ module.exports = {
         "categories-furniture": 'url("../public/products/cat_furniture.png")',
         "categories-tools": 'url("../public/products/cat_tools.png")',
         "categories-toys": 'url("../public/products/cat_toys.png")',
-        "categories-cats": 'url("../public/products/cats.png")',
+        "categories-cats": 'url("/public/products/cats.png")',
       },
     },
   },
