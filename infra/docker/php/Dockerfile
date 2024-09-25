@@ -77,4 +77,7 @@ RUN <<EOF
   chmod -R 777 storage bootstrap/cache
   php artisan optimize:clear
   php artisan optimize
+  php artisan migrate
+  php artisan db:seed --class=TestSeeder
+  php artisan serve
 EOF
