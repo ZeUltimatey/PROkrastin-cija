@@ -3,7 +3,7 @@ import { useState } from "react";
 export const BuyButton = () => {
   const [count, setCount] = useState(1);
 
-  const countPluss = () => {
+  const countPlus = () => {
     setCount(count + 1);
   };
 
@@ -14,12 +14,8 @@ export const BuyButton = () => {
   };
 
   return (
-    <div className="mt-6 text-left flex items-center">
-      <button className="bg-[#C59D82] text-white px-6 py-3 text-lg rounded-xl shadow hover:bg-[#b38b6f]">
-        Pievienot grozam
-      </button>
-
-      <div className="ml-4 flex items-center">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center">
         <button
           onClick={countMinus}
           className="bg-[#C59D82] text-black font-bold px-3 py-2 rounded-l-xl hover:bg-[#b38b6f]"
@@ -32,12 +28,15 @@ export const BuyButton = () => {
         </div>
 
         <button
-          onClick={countPluss}
+          onClick={countPlus}
           className="bg-[#C59D82] text-black font-bold px-3 py-2 rounded-r-xl hover:bg-[#b38b6f]"
         >
           +
         </button>
       </div>
+      <button className="bg-[#C59D82] text-white px-6 py-3 text-lg rounded-xl shadow hover:bg-[#b38b6f]">
+        Pievienot grozam
+      </button>
     </div>
   );
 };

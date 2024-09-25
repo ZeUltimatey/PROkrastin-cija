@@ -1,7 +1,7 @@
 export const RegisterForm = () => {
   return (
     <form className="flex flex-col gap-4">
-      <div className="flex justify-between gap-4">
+      <div className="flex lg:flex-row flex-col lg:justify-between gap-4">
         <div className="w-full">
           <label className="font-medium text-[#3e2a19]">Vārds</label>
           <input
@@ -35,7 +35,7 @@ export const RegisterForm = () => {
           placeholder="Ievadi savu e-pastu"
         />
       </div>
-      <div className="flex gap-4">
+      <div className="flex lg:flex-row flex-col gap-4">
         <div className="w-full">
           <label className="font-medium text-[#3e2a19]">Parole</label>
           <input

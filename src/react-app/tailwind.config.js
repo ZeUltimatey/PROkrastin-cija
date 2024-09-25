@@ -28,6 +28,9 @@ module.exports = {
         "categories-toys": 'url("../public/products/cat_toys.png")',
         "categories-cats": 'url("/public/products/cats.png")',
       },
+      colors: {
+        "foreground-brown": "#967a67",
+      },
     },
   },
   plugins: [],
