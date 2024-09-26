@@ -18,23 +18,27 @@ export const BuyButton = () => {
       <div className="flex items-center">
         <button
           onClick={countMinus}
-          className="bg-light-brown text-black font-bold px-3 py-2 rounded-l-xl hover:bg-medium-brown"
-        >
-          -
+          className="bg-light-brown text-black font-bold w-10 h-10 rounded-l-md hover:bg-medium-brown"
+          <i className="fa-solid fa-minus text-[#3e2a19]"></i>
         </button>
 
-        <div className="bg-white border font-semibold px-4 py-2 text-lg text-center">
-          {count}
-        </div>
+        <input
+          value={count}
+          onChange={(e) => setCount(parseInt(e.target.value))}
+          type="number"
+          max={99}
+          min={1}
+          className="bg-[#EDEAE1] font-semibold w-10 h-10  text-lg text-center "
+        />
 
         <button
           onClick={countPlus}
-          className="bg-light-brown text-black font-bold px-3 py-2 rounded-r-xl hover:bg-medium-brown"
+          className="bg-light-brown text-black font-bold w-10 h-10 rounded-r-md hover:bg-medium-brown"
         >
-          +
+          <i className="fa-solid fa-plus text-[#3e2a19]"></i>
         </button>
       </div>
-      <button className="bg-light-brown text-white px-6 py-3 text-lg rounded-xl shadow hover:bg-medium-brown">
+      <button className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md font-poppins shadow hover:bg-medium-brown transition-all">
         Pievienot grozam
       </button>
     </div>
