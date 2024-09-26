@@ -12,8 +12,8 @@ export const ItemCard = ({
     description.length > 90 ? `${description.slice(0, 90)} ...` : description;
 
   return (
-    <div className="h-[316px] group hover:bg-[#D8C5B3] bg-[#eaded2] brightness-95 flex flex-col w-56 rounded-md place-content-between hover:shadow-md transition-all hover:cursor-pointer">
-      <div className="w-full flex flex-col justify-between max-h-[16vw]">
+    <div className="h-[316px] my-4 group hover:bg-[#D8C5B3] mx-auto bg-[#E1DED6] shadow-md flex flex-col w-56 rounded-md place-content-between hover:shadow-md transition-all hover:cursor-pointer">
+      <div className="w-full flex flex-col justify-between max-h-[12vw]">
         <img
           src={imageurl}
           className=" max-h-60 group-hover:max-h-0 transition-all w-full rounded-t-md"
