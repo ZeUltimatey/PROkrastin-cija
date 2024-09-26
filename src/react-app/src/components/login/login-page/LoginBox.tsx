@@ -14,7 +14,7 @@ export const LoginBox = () => {
           <a href="/">
             <i className="fa-solid fa-arrow-left text-2xl hover:cursor-pointer"></i>
           </a>
-          <span className="text-2xl font-bold text-center mb-4 text-[#3e2a19] grow">
+          <span className="text-2xl font-bold text-center mb-4 text-dark-brown grow">
             Ienāc savā profilā!
           </span>
         </div>

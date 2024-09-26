@@ -18,7 +18,7 @@ export const BuyButton = () => {
       <div className="flex items-center">
         <button
           onClick={countMinus}
-          className="bg-[#C59D82] text-black font-bold px-3 py-2 rounded-l-xl hover:bg-[#b38b6f]"
+          className="bg-light-brown text-black font-bold px-3 py-2 rounded-l-xl hover:bg-medium-brown"
         >
           -
         </button>
@@ -29,12 +29,12 @@ export const BuyButton = () => {
 
         <button
           onClick={countPlus}
-          className="bg-[#C59D82] text-black font-bold px-3 py-2 rounded-r-xl hover:bg-[#b38b6f]"
+          className="bg-light-brown text-black font-bold px-3 py-2 rounded-r-xl hover:bg-medium-brown"
         >
           +
         </button>
       </div>
-      <button className="bg-[#C59D82] text-white px-6 py-3 text-lg rounded-xl shadow hover:bg-[#b38b6f]">
+      <button className="bg-light-brown text-white px-6 py-3 text-lg rounded-xl shadow hover:bg-medium-brown">
         Pievienot grozam
       </button>
     </div>
