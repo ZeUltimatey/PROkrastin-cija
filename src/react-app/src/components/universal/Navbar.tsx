@@ -7,14 +7,13 @@ export const Navbar = () => {
   const [showCart, setShowCart] = useState(false);
 
   return (
-    <nav className="bg-[#EDEAE1] rounded-t-md">
-      <div className="h-20 flex items-center px-6 gap-2">
+    <nav className="bg-content-white rounded-t-md">
+      <div className="h-20 flex items-center px-6 gap-2 justify-between">
         <div className="w-32 lg:w-48 p-4">
           <a href="/">
             <img src={"../cat_logo.png"} alt="Murrātava" />
           </a>
         </div>
-
         <div className="hidden md:flex text-lg lg:text-xl font-semibold place-items-center grow border-[1.5px] rounded-full border-gray-300 has-[:focus]:border-gray-600">
           <div className="flex grow">
             <input
@@ -63,7 +62,7 @@ export const Navbar = () => {
             onClick={() => {
               setShowCart(!showCart);
             }}
-            className={`h-full px-6 hover:border-b-4 border-[#A67144] ${
+            className={`h-full px-6 hover:border-b-4 border-accent-brown ${
               showCart ? "border-b-4" : "border-b-0"
             } transition-all`}
           >
@@ -71,7 +70,7 @@ export const Navbar = () => {
           </button>
           <button
             onClick={() => window.location.assign("/login")}
-            className=" h-full px-6 hover:border-b-4 border-[#A67144] transition-all"
+            className=" h-full px-6 hover:border-b-4 border-accent-brown transition-all"
           >
             <i className="fa-solid fa-user text-xl lg:text-2xl"></i>
           </button>
@@ -86,7 +85,7 @@ export const Navbar = () => {
       </div>
 
       {navbarToggle && (
-        <ul className="md:hidden bg-[#EDEAE1] font-poppins text-lg font-semibold p-4">
+        <ul className="md:hidden bg-content-white font-poppins text-lg font-semibold p-4">
           <li className="py-2 hover:cursor-pointer">Kaķi</li>
           <li className="py-2 hover:cursor-pointer">Barība</li>
           <li className="py-2 hover:cursor-pointer">Rotaļlietas</li>

@@ -6,7 +6,7 @@ import { SpecialOffers } from "./special-offers/SpecialOffers";
 export const Homepage = () => {
   return (
     <div style={{ backgroundImage: `url(../cat_pattern_bg.jpg)` }} className="">
-      <div className="lg:px-20 pt-6 bg-[#967a67] bg-opacity-95">
+      <div className="lg:px-20 pt-6 bg-background-brown bg-opacity-95">
         <Navbar />
         <MainCard />
         <SpecialOffers />
