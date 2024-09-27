@@ -1,15 +1,37 @@
 import { useState } from "react";
 import { NavbarCart } from "./NavbarCart";
+import { CategoryList } from "../homepage/categories/CategoryList";
 
 export const Navbar = () => {
   const [navbarToggle, setNavbarToggle] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
   const [showCart, setShowCart] = useState(false);
+  console.log(CategoryList.length);
+  const Category = ({
+    name,
+    link,
+    idx,
+  }: {
+    name: string;
+    link: string;
+    idx: number;
+  }) => {
+    return (
+      <li
+        onClick={() => window.location.assign(link)}
+        className={`${idx + 1 == CategoryList.length ? "rounded-br-md" : ""} ${
+          idx == CategoryList.length - 3 ? "rounded-bl-md" : ""
+        } bg-[#EDEAE1] border-[#d8d6ce] brightness-95 hover:brightness-90 px-4 min-w-24 text-center py-2 h-full`}
+      >
+        {name}
+      </li>
+    );
+  };
 
   return (
     <nav className="bg-content-white rounded-t-md">
       <div className="h-20 flex items-center px-6 gap-2 justify-between">
-        <div className="w-32 lg:w-48 p-4">
+        <div className="w-52 p-4">
           <a href="/">
             <img src={"../cat_logo.png"} alt="Murrātava" />
           </a>
@@ -30,27 +52,29 @@ export const Navbar = () => {
         <div
           onPointerEnter={() => setShowCategories(true)}
           onPointerLeave={() => setShowCategories(false)}
-          className="transition-all  hover:cursor-pointer h-20 px-4 font-semibold text-xl hover:border-b-4 border-[#A67144] justify-center flex place-items-center"
+          className="group hover:cursor-pointer font-semibold text-xl justify-center flex place-items-center"
         >
-          <span className="flex place-items-center gap-2">
+          <button
+            onClick={() =>
+              document
+                .getElementById("categories")
+                ?.scrollIntoView({ behavior: "smooth" })
+            }
+            className="flex place-items-center gap-2 h-20 px-4 group-hover:border-b-4 border-[#A67144] transition-all"
+          >
             <i className="fa-solid fa-layer-group text-2xl"></i>
             <span className="font-bold font-poppins">Kategorijas</span>
-          </span>
+          </button>
           {showCategories && (
             <div className="h-12 absolute top-[104px] border-t-4 border-[#A67144] shadow-sm">
-              <ul className="flex text-base place-items-center h-full">
-                <li className="bg-[#EDEAE1] border-e-2 border-[#d8d6ce] brightness-95 hover:brightness-90 px-4 h-full flex place-items-center rounded-bl-md">
-                  Kategorija
-                </li>
-                <li className="bg-[#EDEAE1] border-e-2 border-[#d8d6ce] brightness-95 hover:brightness-90 px-4 h-full flex place-items-center">
-                  Kategorija
-                </li>
-                <li className="bg-[#EDEAE1] border-e-2 border-[#d8d6ce] brightness-95 hover:brightness-90 px-4 h-full flex place-items-center">
-                  Kategorija
-                </li>
-                <li className="bg-[#EDEAE1] brightness-95 hover:brightness-90 px-4 h-full flex place-items-center rounded-br-md">
-                  Kategorija
-                </li>
+              <ul className="text-base h-full grid grid-cols-3">
+                {CategoryList.map((category, idx) => (
+                  <Category
+                    name={category.name}
+                    link={category.link}
+                    idx={idx}
+                  />
+                ))}
               </ul>
             </div>
           )}

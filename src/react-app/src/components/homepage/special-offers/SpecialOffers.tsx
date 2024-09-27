@@ -4,8 +4,6 @@ import { useState } from "react";
 import Carousel from "react-multi-carousel";
 
 export const SpecialOffers = () => {
-  const [startItem, setStartItem] = useState(0);
-
   const items = catItems
     //.slice(startItem, startItem + 5)
     .map((item) => (
@@ -23,7 +21,7 @@ export const SpecialOffers = () => {
   const responsive = {
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 4,
+      items: 5,
       slidesToSlide: 3, // optional, default to 1.
     },
     tablet: {
@@ -40,10 +38,10 @@ export const SpecialOffers = () => {
 
   return (
     <div className="p-12 bg-[#EDEAE1] h-auto">
-      <div className="flex flex-col gap-6 bg-[#E1DED6] p-8 rounded-md">
+      <div className="flex flex-col gap-6 bg-light-gray p-8 rounded-md">
         <div className="flex place-items-center gap-6">
           <div className="grow h-[1px] bg-dark-brown" />
-          <span className="text-3xl font-poppins font-semibold">
+          <span className="text-3xl font-poppins font-bold text-dark-brown">
             Īpašie piedāvājumi
           </span>
           <div className="grow h-[1px] bg-dark-brown" />
@@ -54,7 +52,8 @@ export const SpecialOffers = () => {
             draggable={false}
             infinite={true}
             responsive={responsive}
-            centerMode={true}
+            partialVisbile={false}
+            renderButtonGroupOutside={true}
           >
             {items}
           </Carousel>
