@@ -15,18 +15,15 @@ rm -rf node_modules package-lock.json
 npm install
 npm install react-scripts
 ``` 
-3) In project directory run
+3) In project directory run for local development
 ```sh
-docker compose build
+docker-compose -f docker-compose-local.yml up --build -d
 ```
-```sh
-docker compose up -d
-```
-or
+Or for production build
 ```sh
 docker compose up --build -d
 ```
-4) Open http://localhost:3000/
+4) Open http://localhost/
 ## Migrate the Database
 After the Laravel app is running, migrate the database:
 ```sh

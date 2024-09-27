@@ -1,14 +1,17 @@
-import { ProductImage } from "./ProductImage";
 import { ProductInfo } from "./ProductInfo";
 import { ProductSpecification } from "./ProductSpecification";
 import { Breadcrumbs } from "./Breadcrumbs";
 
 export const ProductDetails = () => {
   return (
-    <div className="h-screen bg-[#EDEAE1] rounded-t px-4 sm:px-8 lg:px-12 mt-1">
+    <div className="h-screen bg-content-white py-4 px-8">
       <Breadcrumbs />
-      <div className="mt-6 flex flex-col lg:flex-row lg:space-x-6">
-        <ProductImage />
+      <div className="flex flex-col lg:flex-row mt-8 gap-12 px-12">
+        <img
+          src={"../car.png"}
+          alt="product"
+          className="rounded-md h-[400px] w-[700px] object-cover shadow-md"
+        />
         <ProductInfo />
       </div>
 

@@ -23,6 +23,7 @@ services:
       - DB_DATABASE=${DB_DATABASE:-laravel}
       - DB_USERNAME=${DB_USERNAME:-phper}
       - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - APP_KEY=base64:YrvAlCVWQcvusn76oJb7Ysa7e3FxZenFir09RmH0lr0= 
 
   react:
     build:

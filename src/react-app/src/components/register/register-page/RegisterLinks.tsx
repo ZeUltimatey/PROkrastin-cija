@@ -5,7 +5,7 @@ export const RegisterLinks = () => {
         Tev jau ir profils?{" "}
         <a
           href="/login"
-          className="text-[#3e2a19] hover:underline font-semibold"
+          className="text-dark-brown hover:underline font-semibold"
         >
           Ienākt
         </a>
