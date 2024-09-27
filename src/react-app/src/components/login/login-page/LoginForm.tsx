@@ -41,7 +41,7 @@ export const LoginForm = () => {
       <div className="text-center">
         <p className="text-gray-500">Tev vēl nav profila?</p>
         <a
-          href="/register"
+          href="/auth/register"
           className="text-dark-brown hover:underline font-semibold"
         >
           Reģistrējies šeit

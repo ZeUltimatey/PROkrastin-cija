@@ -1,13 +1,20 @@
-import { Navbar } from "../universal/Navbar";
-import { ProductDetails } from "./product-details/ProductDetails";
+import { ProductInfo } from "./product-details/ProductInfo";
+import { ProductSpecification } from "./product-details/ProductSpecification";
 
 export const ProductView = () => {
   return (
-    <div style={{ backgroundImage: `url(../cat_pattern_bg.jpg)` }} className="">
-      <div className="lg:px-20 pt-6 bg-background-brown bg-opacity-95">
-        <Navbar />
-        <ProductDetails />
+    <div className="h-screen bg-[#EDEAE1] py-4 px-8">
+      <div className="bg-[#eaded2] mt-4 py-12">
+        <div className="flex flex-col lg:flex-row gap-12 px-12">
+          <img
+            src={"../images/products/cat_food.png"}
+            alt="product"
+            className="rounded-md h-[400px] w-[700px] object-cover shadow-md"
+          />
+          <ProductInfo />
+        </div>
       </div>
+      <ProductSpecification />
     </div>
   );
 };

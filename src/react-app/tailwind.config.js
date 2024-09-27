@@ -22,6 +22,7 @@ module.exports = {
       },
       backgroundImage: {
         "cat-bg-image": 'url("/public/cat_bg.png")',
+        "login-bg-image": 'url("/public/login_bg.jpg")',
         "categories-food": 'url("../public/products/cat_food.png")',
         "categories-furniture": 'url("../public/products/cat_furniture.png")',
         "categories-tools": 'url("../public/products/cat_tools.png")',

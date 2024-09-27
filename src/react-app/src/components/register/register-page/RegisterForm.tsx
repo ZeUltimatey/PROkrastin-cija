@@ -8,8 +8,7 @@ export const RegisterForm = () => {
     email: "",
     password: "",
     confirmPassword: "",
-  }); 
-
+  });
 
   return (
     <form className="flex flex-col gap-4">
@@ -82,7 +81,9 @@ export const RegisterForm = () => {
             className="mt-1  w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
             placeholder="Ievadi atkārtotu paroli"
             value={formData.confirmPassword}
-            onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, confirmPassword: e.target.value })
+            }
           />
         </div>
       </div>
@@ -95,7 +96,7 @@ export const RegisterForm = () => {
         <div className="text-center">
           <p className=" text-gray-500">Tev jau ir profils?</p>
           <a
-            href="/login"
+            href="/auth/login"
             className="text-dark-brown hover:underline font-semibold"
           >
             Ienāc šeit
