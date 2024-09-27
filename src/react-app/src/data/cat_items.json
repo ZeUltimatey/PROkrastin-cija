@@ -41,7 +41,7 @@
   },
   {
     "id": 6,
-    "image_url": "../car.png",
+    "image_url": "../images/products/16.png",
     "title": "Cat Window Perch",
     "description": "Comfortable window-mounted seat for cats to watch the outside world.",
     "price": 35.99,
@@ -49,6 +49,7 @@
   },
   {
     "id": 7,
+    "image_url": "../images/products/16.png",
     "title": "Cat Water Fountain",
     "description": "Flowing water fountain to encourage hydration.",
     "price": 25.99,
@@ -56,6 +57,7 @@
   },
   {
     "id": 8,
+    "image_url": "../images/products/16.png",
     "title": "Laser Pointer Toy",
     "description": "Interactive laser pointer to keep cats entertained.",
     "price": 12.99,
@@ -63,6 +65,7 @@
   },
   {
     "id": 9,
+    "image_url": "../images/products/16.png",
     "title": "Cat Carrier Bag",
     "description": "Comfortable, lightweight carrier for transporting your cat.",
     "price": 49.99,
@@ -70,6 +73,7 @@
   },
   {
     "id": 10,
+    "image_url": "../images/products/16.png",
     "title": "Cat Grooming Glove",
     "description": "Silicone grooming glove to gently remove loose fur while petting.",
     "price": 15.99,
@@ -77,6 +81,7 @@
   },
   {
     "id": 11,
+    "image_url": "../images/products/16.png",
     "title": "Cat Tree with Hideaway",
     "description": "Multi-level cat tree with hideaway spots and scratching posts.",
     "price": 110.99,
@@ -84,6 +89,7 @@
   },
   {
     "id": 12,
+    "image_url": "../images/products/16.png",
     "title": "Organic Catnip",
     "description": "100% organic, high-quality catnip for playtime.",
     "price": 7.99,

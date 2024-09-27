@@ -19,6 +19,7 @@ export const BuyButton = () => {
         <button
           onClick={countMinus}
           className="bg-light-brown text-black font-bold w-10 h-10 rounded-l-md hover:bg-medium-brown"
+        >
           <i className="fa-solid fa-minus text-[#3e2a19]"></i>
         </button>
 

@@ -1,12 +1,13 @@
 import { ItemCard } from "../ItemCard";
 import catItems from "../../../data/cat_items.json";
 import { useState } from "react";
+import Carousel from "react-multi-carousel";
 
 export const SpecialOffers = () => {
   const [startItem, setStartItem] = useState(0);
 
   const items = catItems
-    .slice(startItem, startItem + 4)
+    //.slice(startItem, startItem + 5)
     .map((item) => (
       <ItemCard
         key={item.id}
@@ -19,22 +20,27 @@ export const SpecialOffers = () => {
       />
     ));
 
-  const incrementStartItem = () => {
-    console.log(startItem);
-    if (catItems.length > startItem + 4) {
-      setStartItem(startItem + 1);
-    }
-  };
-
-  const decrementStartItem = () => {
-    if (startItem !== 0) {
-      setStartItem(startItem - 1);
-    }
+  const responsive = {
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 4,
+      slidesToSlide: 3, // optional, default to 1.
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2,
+      slidesToSlide: 2, // optional, default to 1.
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+      slidesToSlide: 1, // optional, default to 1.
+    },
   };
 
   return (
-    <div className="p-12 bg-content-white h-auto">
-      <div className="flex flex-col gap-6 bg-light-gray p-8 rounded-md">
+    <div className="p-12 bg-[#EDEAE1] h-auto">
+      <div className="flex flex-col gap-6 bg-[#E1DED6] p-8 rounded-md">
         <div className="flex place-items-center gap-6">
           <div className="grow h-[1px] bg-dark-brown" />
           <span className="text-3xl font-poppins font-semibold">
@@ -42,20 +48,16 @@ export const SpecialOffers = () => {
           </span>
           <div className="grow h-[1px] bg-dark-brown" />
         </div>
-        <div className="flex place-items-center justify-center gap-8">
-          <div
-            onClick={decrementStartItem}
-            className="bg-hover-brown py-1 px-3 shadow-sm rounded-full hover:brightness-90 hover:cursor-pointer"
+        <div className="px-12">
+          <Carousel
+            swipeable={false}
+            draggable={false}
+            infinite={true}
+            responsive={responsive}
+            centerMode={true}
           >
-            <i className="text-dark-brown brightness-105 fa-solid fa-chevron-left text-2xl"></i>
-          </div>
-          <div className="flex gap-16 place-items-center">{items}</div>
-          <div
-            onClick={incrementStartItem}
-            className="bg-hover-brown py-1 px-3 shadow-sm rounded-full hover:brightness-90 hover:cursor-pointer"
-          >
-            <i className="text-dark-brown brightness-105 fa-solid fa-chevron-right text-2xl"></i>
-          </div>
+            {items}
+          </Carousel>
         </div>
       </div>
     </div>

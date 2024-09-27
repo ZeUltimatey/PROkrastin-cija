@@ -5,3 +5,23 @@
 html {
   background-color: #967a67;
 }
+
+.react-multiple-carousel__arrow--left {
+  left: 0px !important;
+}
+
+.react-multiple-carousel__arrow--right {
+  right: 0px !important;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}

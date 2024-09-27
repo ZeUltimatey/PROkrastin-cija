@@ -19,9 +19,9 @@ export const Navbar = () => {
             <input
               placeholder="Meklēt..."
               type="text"
-              className="text-xl h-12 px-6 w-[600px] font-semibold grow bg-[#F9F6EC] rounded-s-full focus:outline-none font-poppins"
+              className="text-xl h-12 px-6 w-[600px] font-semibold grow bg-[#f4f1e9] rounded-s-full focus:outline-none font-poppins"
             />
-            <button className="bg-[#F9F6EC] text-2xl px-10 rounded-e-full h-12 flex place-items-center hover:bg-opacity-60">
+            <button className="bg-[#f4f1e9] text-2xl px-10 rounded-e-full h-12 flex place-items-center hover:bg-opacity-60">
               <i className="fa-solid fa-magnifying-glass "></i>
             </button>
           </div>
