@@ -6,7 +6,7 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 
-class ProductController extends Controller
+class ProductController2 extends Controller
 {
     public function index()
     {

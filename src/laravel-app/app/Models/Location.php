@@ -8,6 +8,12 @@ class Location extends Model
 {
     protected $table = 'locations';
     protected $primaryKey = 'location_id';
+    protected $fillable = [
+        'city',
+        'street',
+        'apartment_number',
+        'zip_code',
+    ];
     public $incrementing = true;
     public $timestamps = true;
 

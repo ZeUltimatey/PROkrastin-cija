@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class TestSeeder extends Seeder
 {
@@ -126,7 +127,20 @@ class TestSeeder extends Seeder
                 'transactor_id' => 2,
                 'location_id' => 1,
                 'total_pricing' => 45.00,
-                'check_content' => '1x CAT HAMMOCK BED\t45.00 EUR\n------------------------------\nTOTAL:\t45.00 EUR\n\nTHANK YOU FOR SHOPPING AT MURRĀTUVA!',
+                'check_content' => '1x CAT HAMMOCK BED\t45.00 EUR\n------------------------------\nTOTAL:\t45.00 EUR\n\nTHANK YOU FOR SHOPPING AT MURRĀTAVA!',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        ]);
+
+        DB::table('bought_products')->insert([
+            [
+                'product_id' => 1,
+                'transaction_id' => 1,
+                'display_name' => 'Cat Hammock Bed',
+                'amount' => 2,
+                'price_per_product' => 45.00,
+                'total_price' => 90.00,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

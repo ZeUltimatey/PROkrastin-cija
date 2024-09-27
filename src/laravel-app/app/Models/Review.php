@@ -8,6 +8,10 @@ class Review extends Model
 {
     protected $table = 'reviews';
     protected $primaryKey = 'review_id';
+    protected $fillable = [
+        'content',
+        'rating',
+    ];
     public $incrementing = true;
     public $timestamps = true;
 
