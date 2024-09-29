@@ -7,6 +7,7 @@ import "react-multi-carousel/lib/styles.css";
 import { Catalog } from "./components/catalog/Catalog";
 import { GeneralLayout } from "./components/layouts/GeneralLayout";
 import { LoginLayout } from "./components/layouts/LoginLayout";
+import { Profile } from "./components/profile/Profile";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route index element={<Homepage />} />
           <Route path="/productview" element={<ProductView />} />
           <Route path="/catalog" element={<Catalog />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
         <Route path="/auth" element={<LoginLayout />}>
           <Route path="login" element={<Login />} />
