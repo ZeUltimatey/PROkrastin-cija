@@ -21,7 +21,9 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('display_name');
-            $table->string('phone_number');
+            $table->string('name'); // added name and surrname because frontend
+            $table->string('surname');
+            $table->string('phone_number')->nullable(); // temp nullable because frontend
             $table->enum('user_role', ['User', 'Admin'])->default('User');
             $table->boolean('deactivated')->default(false);
             $table->timestamps();

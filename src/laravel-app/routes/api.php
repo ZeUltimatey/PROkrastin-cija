@@ -9,4 +9,4 @@ Route::get('/products', [ProductController2::class, 'index']);
 Route::get('/products/{id}', [ProductController2::class, 'show'])->middleware('auth:sanctum');
 
 Route::post('/register', [UserController::class, 'register']);
-Route::post('/login', [UserController::class, 'login']);
+Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum');
