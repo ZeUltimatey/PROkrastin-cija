@@ -3,10 +3,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Login } from "./components/login/Login";
 import { Register } from "./components/register/Register";
 import { ProductView } from "./components/product/ProductView";
-import "react-multi-carousel/lib/styles.css";
 import { Catalog } from "./components/catalog/Catalog";
 import { GeneralLayout } from "./components/layouts/GeneralLayout";
-import { LoginLayout } from "./components/layouts/LoginLayout";
+import { AuthLayout } from "./components/layouts/AuthLayout";
 
 function App() {
   return (
@@ -17,7 +16,7 @@ function App() {
           <Route path="/productview" element={<ProductView />} />
           <Route path="/catalog" element={<Catalog />} />
         </Route>
-        <Route path="/auth" element={<LoginLayout />}>
+        <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Route>

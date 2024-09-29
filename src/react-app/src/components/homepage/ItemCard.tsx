@@ -21,7 +21,7 @@ export const ItemCard = ({
         <div className="flex flex-col h-24 py-2 px-2 justify-between gap-1">
           <div className="flex flex-col">
             <span className="text-sm group-hover:font-semibold">
-              {category}
+              {category.toUpperCase()}
             </span>
             <span className="text-lg group-hover:text-2xl transition-all font-semibold">
               {title}
@@ -33,9 +33,9 @@ export const ItemCard = ({
         </div>
       </div>
       <span className="text-lg font-poppins justify-between group-hover:bg-light-gray font-medium h-[2vw] flex group-hover:brightness-90 rounded-b-md place-items-center select-none">
-        <div className="flex gap-2 px-2 place-items-center">
+        <div className="flex gap-2 ps-2 place-items-center">
           <span className="text-2xl">{(price - 0.01).toFixed(2)}€</span>
-          <span className="text-xl line-through">{price} &euro;</span>
+          <span className="text-lg line-through">{price} &euro;</span>
         </div>
         <div className="group-hover:animate-[fade-in_0.1s_ease-in-out_forwards] opacity-0 hidden bg-light-gray rounded-br-md hover:brightness-90 group-hover:flex place-items-center justify-center h-[2vw] w-[2vw]">
           <i className="fa-solid fa-basket-shopping text-xl"></i>

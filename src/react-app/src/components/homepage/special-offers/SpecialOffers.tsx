@@ -14,7 +14,7 @@ export const SpecialOffers = () => {
         title={item.title}
         description={item.description}
         price={item.price}
-        category={item.category.toUpperCase()}
+        category={item.category}
       />
     ));
 
@@ -48,8 +48,6 @@ export const SpecialOffers = () => {
         </div>
         <div className="px-12">
           <Carousel
-            swipeable={false}
-            draggable={false}
             infinite={true}
             responsive={responsive}
             partialVisbile={false}
