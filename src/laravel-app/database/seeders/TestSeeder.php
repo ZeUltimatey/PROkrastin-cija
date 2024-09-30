@@ -62,7 +62,7 @@ class TestSeeder extends Seeder
 
         DB::table('users')->insert([
             [
-                'user_id' => 1,
+                'id' => 1,
                 'email' => 'admin@murratava.lv',
                 'password' => Hash::make('safe123'),
                 'display_name' => 'Admin',
@@ -74,7 +74,7 @@ class TestSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'user_id' => 2,
+                'id' => 2,
                 'email' => 'vardsuzvards@gmail.com',
                 'password' => Hash::make('asd'),
                 'display_name' => 'Vards Uzvards',

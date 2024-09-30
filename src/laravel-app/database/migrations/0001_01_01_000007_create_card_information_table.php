@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('card_id');
             $table->unsignedBigInteger('cardholder_id');
             $table->foreign('cardholder_id')
-                ->references('user_id')
+                ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
 

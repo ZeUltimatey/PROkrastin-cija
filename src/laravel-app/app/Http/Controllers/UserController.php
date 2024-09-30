@@ -63,7 +63,7 @@ class UserController extends Controller
         ]);
 
         // Create a token for the user
-        $token = $user->createToken('funny_token_hihi_haha')->plainTextToken;
+        $token = $user->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken;
 
         // Return response with user data and token
         return response()->json([
@@ -101,7 +101,7 @@ class UserController extends Controller
         } else {
             // gonna change this
             $user = Auth::user();
-            $token = $user->createToken('auth_token')->plainTextToken;
+            $token = $user->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken;
             return response()->json([
                 'user' => $user,
                 'token' => $token,

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('transaction_id');
             $table->unsignedBigInteger('transactor_id');
             $table->foreign('transactor_id')
-                ->references('user_id')
+                ->references('id')
                 ->on('users');
             $table->unsignedBigInteger('location_id')->nullable();
             $table->foreign('location_id')
