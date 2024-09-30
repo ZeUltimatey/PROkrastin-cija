@@ -6,8 +6,27 @@ export const LoginForm = () => {
     password: "",
   });
 
+  const onSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.status === 200) {
+        alert("Login veiksmīgs!");
+      }
+      console.log(response);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   return (
-    <form className="space-y-4">
+    <form onSubmit={onSubmit} className="space-y-4">
       <div>
         <label className="text-dark-brown">E-pasts</label>
         <input
@@ -35,9 +54,11 @@ export const LoginForm = () => {
           Aizmirsi paroli?
         </a>
       </div>
-      <button className="w-full bg-light-brown text-white font-semibold py-2 px-4 rounded-md hover:bg-medium-brown transition-all">
-        Ienākt
-      </button>
+      <input
+        type="submit"
+        value="Ienākt"
+        className="w-full bg-light-brown text-white font-semibold py-2 px-4 rounded-md hover:bg-medium-brown transition-all"
+      ></input>
       <div className="text-center">
         <p className="text-gray-500">Tev vēl nav profila?</p>
         <a
