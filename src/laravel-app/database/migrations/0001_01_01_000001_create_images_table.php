@@ -13,10 +13,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('images', function (Blueprint $table) {
-            $table->id('image_id');
+            $table->id();
             $table->unsignedBigInteger('attachments_id')->nullable();
             $table->foreign('attachments_id')
-                ->references('attachments_id')
+                ->references('id')
                 ->on('attachment_groups');
 
 //            $table->string('filepath');

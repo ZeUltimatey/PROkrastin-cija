@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('profilepicture_id')->nullable();
             $table->foreign('profilepicture_id')
-                ->references('image_id')
+                ->references('id')
                 ->on('images');
 
             $table->string('email')->unique();
             $table->string('password');
             $table->string('display_name');
-            $table->string('name'); // added name and surrname because frontend
+            $table->string('name'); 
             $table->string('surname');
             $table->string('phone_number')->nullable(); // temp nullable because frontend
             $table->enum('user_role', ['User', 'Admin'])->default('User');

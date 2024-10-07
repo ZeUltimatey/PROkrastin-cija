@@ -12,16 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cats', function (Blueprint $table) {
-            $table->unsignedBigInteger('cat_id');
+            $table->unsignedBigInteger('cat_id');  // mazs apjukums par šo
             $table->primary('cat_id');
             $table->foreign('cat_id')
-                ->references('product_id')
+                ->references('id')
                 ->on('products')
                 ->onDelete('cascade'); // delete cat if base product was deleted
 
             $table->unsignedBigInteger('breed_id');
             $table->foreign('breed_id')
-                ->references('breed_id')
+                ->references('id')
                 ->on('cat_breeds');
 
             $table->date('birthdate');

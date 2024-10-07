@@ -16,7 +16,7 @@ class TestSeeder extends Seeder
     {
         DB::table('products')->insert([
             [
-                'product_id' => 1,
+                'id' => 1,
                 'product_type' => 'Furniture',
                 'display_name' => 'Cat Hammock Bed',
                 'description' => 'Hanging bed for cats to relax and enjoy their nap time.',
@@ -27,7 +27,7 @@ class TestSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'product_id' => 2,
+                'id' => 2,
                 'product_type' => 'Cat',
                 'display_name' => 'Asteroid Destroyer',
                 'description' => 'This kitten was found abandoned in the sewers of Seattle, Washington, D.C.',
@@ -41,7 +41,7 @@ class TestSeeder extends Seeder
 
         DB::table('cat_breeds')->insert([
             [
-                'breed_id' => 1,
+                'id' => 1,
                 'display_name' => 'Munchkin',
                 'breed_information' => 'A cat breed known for its short legs, black and white color combination and fur pattern. etc.',
                 'created_at' => now(),
@@ -89,7 +89,7 @@ class TestSeeder extends Seeder
 
         DB::table('reviews')->insert([
             [
-                'review_id' => 1,
+                'id' => 1,
                 'reviewer_id' => 2,
                 'product_id' => 1,
                 'content' => 'Wow very good bed for me, my cat doesn\'t like it though..',
@@ -101,7 +101,7 @@ class TestSeeder extends Seeder
 
         DB::table('card_information')->insert([
             [
-                'card_id' => 1,
+                'id' => 1,
                 'cardholder_id' => 2,
                 'card_number' => '5550130966726224',
                 'expiration_date' => '12/24',
@@ -114,7 +114,7 @@ class TestSeeder extends Seeder
 
         DB::table('locations')->insert([
             [
-                'location_id' => 1,
+                'id' => 1,
                 'creator_id' => 2,
                 'city' => 'Washington',
                 'street' => '2608 84th Street Ct S',
@@ -127,7 +127,7 @@ class TestSeeder extends Seeder
 
         DB::table('transactions')->insert([
             [
-                'transaction_id' => 1,
+                'id' => 1,
                 'transactor_id' => 2,
                 'location_id' => 1,
                 'total_pricing' => 45.00,
