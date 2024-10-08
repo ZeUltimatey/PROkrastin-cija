@@ -10,3 +10,4 @@ Route::get('/products/{id}', [ProductController2::class, 'show'])->middleware('a
 
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum');
+

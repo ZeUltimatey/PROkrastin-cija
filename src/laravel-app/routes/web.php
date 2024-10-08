@@ -11,4 +11,3 @@ use Illuminate\Support\Facades\Route;
 //Route::get('/products/{id}', [ProductController2::class, 'show']);
 
 //Route::post('/products', [ProductController2::class, 'store']);
-
