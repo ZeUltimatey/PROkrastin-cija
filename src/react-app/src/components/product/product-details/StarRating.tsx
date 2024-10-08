@@ -8,7 +8,7 @@ export const StarRating = () => {
         <i className="fa-solid fa-star text-2xl text-amber-300"></i>
         <i className="fa-solid fa-star text-2xl text-stone-400"></i>
       </div>
-      <div className="text-sm ml-1 font-poppins text-[#3e2a19] ">
+      <div className="text-sm ml-1 font-poppins text-dark-brown ">
         52 atsauksmes
       </div>
     </div>

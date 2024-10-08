@@ -8,7 +8,11 @@ import { Catalog } from "./components/catalog/Catalog";
 import { GeneralLayout } from "./components/layouts/GeneralLayout";
 import { LoginLayout } from "./components/layouts/LoginLayout";
 import { Profile } from "./components/profile/Profile";
-
+import { Panel } from "./components/panel/Panel";
+import { Policy } from "./components/policy/Policy";
+import { ContactInfo } from "./components/contact/Contact";
+import { Users } from "./components/panel/admin-panel/Users";
+import { Orders } from "./components/panel/admin-panel/Orders";
 function App() {
   return (
     <BrowserRouter>
@@ -18,6 +22,11 @@ function App() {
           <Route path="/productview" element={<ProductView />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="panel" element={<Panel />} />
+          <Route path="policy" element={<Policy />} />
+          <Route path="contact" element={<ContactInfo />} />
+          <Route path="/panel/users" element={<Users />} />
+          <Route path="/panel/orders" element={<Orders />} />
         </Route>
         <Route path="/auth" element={<LoginLayout />}>
           <Route path="login" element={<Login />} />

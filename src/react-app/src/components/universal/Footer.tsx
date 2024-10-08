@@ -12,13 +12,13 @@ export const Footer = () => {
                 Sākumlapa
               </a>
               <a
-                href="/"
+                href="contact"
                 className="mx-4 text-dark-brown hover:text-medium-brown"
               >
                 Kontaktinformācija
               </a>
               <a
-                href="/"
+                href="policy"
                 className="mx-4 text-dark-brown hover:text-medium-brown"
               >
                 Privātuma politika
