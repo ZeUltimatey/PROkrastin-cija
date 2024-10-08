@@ -81,8 +81,6 @@ class UserController extends Controller
      */
     public function login(Request $request)
     {
-        //return; // TODO
-
         $validatedData = $request->validate([
             'email' => 'required|string|email|max:255',
             'password' => 'required|string',
@@ -97,7 +95,7 @@ class UserController extends Controller
         */
         if (!Auth::attempt($validatedData)) {
             return response()->json(['error' => 'Invalid credentials'], 401);
-            
+
         } else {
             // gonna change this
             $user = Auth::user();
@@ -107,14 +105,14 @@ class UserController extends Controller
                 'token' => $token,
             ], 200);
         }
-        
+
 
         /**
         * $existingToken = DB::table('personal_access_tokens') // TODO: cannot find personal_access_tokens??
         *     ->where('tokenable_id', $user->id)
         *     ->where('name', 'funny_token_hihi_haha')
         *     ->first();
-        * 
+        *
         * if ($existingToken) {
         *     // If the token exists, return it
         *     $token = $existingToken->plainTextToken;
@@ -124,7 +122,7 @@ class UserController extends Controller
         * }
         */
 
-        
+
     }
 
     /**
