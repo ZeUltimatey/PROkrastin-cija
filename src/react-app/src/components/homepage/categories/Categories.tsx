@@ -15,8 +15,8 @@ export const Categories = () => {
           </span>
           <div className="grow h-[1px] bg-dark-brown" />
         </div>
-        <div className=" px-16 h-auto mb-6">
-          <div className="grid grid-cols-3 gap-12 justify-center">
+        <div className="h-auto mb-4">
+          <div className="grid grid-cols-3 gap-y-16 place-items-center">
             {CategoryList.map((category, idx) => (
               <Category
                 image={category.image}
@@ -26,6 +26,16 @@ export const Categories = () => {
               />
             ))}
           </div>
+        </div>
+        <div className="mx-12 mb-6">
+          <button
+            onClick={() => window.location.assign("/catalog")}
+            className="flex place-items-center justify-center h-16 w-full bg-content-white hover:brightness-90 transition-all hover:shadow-lg rounded-md shadow-md"
+          >
+            <span className="text-2xl font-semibold text-dark-brown font-poppins">
+              Apskatīt visas preces
+            </span>
+          </button>
         </div>
       </div>
     </div>

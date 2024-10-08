@@ -1,11 +1,12 @@
 import products from "../../data/cat_items.json";
-import { Navbar } from "../universal/Navbar";
 import { ItemCard } from "../homepage/ItemCard";
 import { useState } from "react";
 import { Filter } from "./catalog-page/Filter";
+import { SearchSort } from "./catalog-page/SearchSort";
 
 export const Catalog = () => {
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState({ popularity: "", price: "" });
 
   const filteredProducts = products.filter((product) =>
     product.title.toLowerCase().includes(search.toLowerCase())
@@ -13,30 +14,28 @@ export const Catalog = () => {
 
   return (
     <div className="bg-light-gray">
-      <div className="flex flex-col gap-6 mb-6">
-        <img
-          src="../cat_bg.jpg"
-          alt="bildite"
-          className="w-full h-72 object-cover"
-        />
+      <div className="">
+        <div className="w-full h-80 object-cover bg-temp-bg-image bg-cover p-12 flex flex-col gap-2">
+          <span className="text-6xl font-baloo text-dark-brown font-bold">
+            Preču katalogs
+          </span>
+          <p className="text-xl font-hind text-dark-brown font-medium brightness-150 w-1/2">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia quos
+            suscipit adipisci aperiam soluta. Laborum fugit eveniet corrupti
+            commodi quas.
+          </p>
+        </div>
       </div>
       <div className="flex flex-col lg:flex-row gap-6 p-8">
-        <div className="flex flex-col grow">
-          <div className="hidden md:flex text-lg lg:text-xl font-semibold place-items-center grow border-[1.5px] rounded-full border-gray-300 focus-within:border-gray-600 mb-6">
-            <div className="flex grow">
-              <input
-                placeholder="Meklēt..."
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="text-xl h-12 px-6 w-[600px] font-semibold grow bg-[#f4f1e9] rounded-s-full focus:outline-none font-poppins"
-              />
-              <button className="bg-[#f4f1e9] text-2xl px-10 rounded-e-full h-12 flex place-items-center hover:bg-opacity-60">
-                <i className="fa-solid fa-magnifying-glass"></i>
-              </button>
-            </div>
-          </div>
-          <div className="px-16 h-auto mb-6">
+        <div className="flex flex-col grow gap-1">
+          <SearchSort
+            filteredItemAmount={filteredProducts.length}
+            onSearch={setSearch}
+            inputValue={search}
+            sortValues={sort}
+            onSort={setSort}
+          />
+          <div className="mx-8 h-auto mb-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 place-items-center gap-12">
               {filteredProducts.map((product) => (
                 <ItemCard
@@ -51,6 +50,11 @@ export const Catalog = () => {
               ))}
             </div>
           </div>
+          {filteredProducts.length === 0 && (
+            <div className="place-self-center flex flex-col place-items-center gap-6 text-dark-brown font-semibold text-2xl font-poppins">
+              Nekas netika atrasts :(
+            </div>
+          )}
         </div>
         <Filter />
       </div>

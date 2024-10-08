@@ -8,7 +8,7 @@ export const Button = ({ isInfoButton }: { isInfoButton: boolean }) => {
     );
   } else {
     return (
-      <button className="bg-content-white hover:brightness-90 justify-center min-w-64 hover:gap-4 transition-all hover:shadow-xl text-lg rounded-full px-8 py-3.5 flex gap-2 place-items-center shadow-md">
+      <button className="bg-content-white hover:brightness-90 text-dark-brown justify-center min-w-64 hover:gap-4 transition-all hover:shadow-xl text-lg rounded-full px-8 py-3.5 flex gap-2 place-items-center shadow-md">
         <span className="font-semibold font-poppins">Uzzināt vairāk</span>
         <i className="fa-solid fa-circle-info"></i>
       </button>

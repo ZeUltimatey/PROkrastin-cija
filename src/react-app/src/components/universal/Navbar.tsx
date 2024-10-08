@@ -6,7 +6,6 @@ export const Navbar = () => {
   const [navbarToggle, setNavbarToggle] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
   const [showCart, setShowCart] = useState(false);
-  console.log(CategoryList.length);
   const Category = ({
     name,
     link,
@@ -19,8 +18,8 @@ export const Navbar = () => {
     return (
       <li
         onClick={() => window.location.assign(link)}
-        className={`${idx + 1 == CategoryList.length ? "rounded-br-md" : ""} ${
-          idx == CategoryList.length - 3 ? "rounded-bl-md" : ""
+        className={`${idx + 1 === CategoryList.length ? "rounded-br-md" : ""} ${
+          idx === CategoryList.length - 3 ? "rounded-bl-md" : ""
         } bg-[#EDEAE1] border-[#d8d6ce] brightness-95 hover:brightness-90 px-4 min-w-24 text-center py-2 h-full`}
       >
         {name}
@@ -39,7 +38,7 @@ export const Navbar = () => {
         <div className="hidden md:flex text-lg lg:text-xl font-semibold place-items-center grow border-[1.5px] rounded-full border-gray-300 has-[:focus]:border-gray-600">
           <div className="flex grow">
             <input
-              placeholder="Meklēt..."
+              placeholder="Meklēt visā Murrātavā..."
               type="text"
               className="text-xl h-12 px-6 w-[600px] font-semibold grow bg-[#f4f1e9] rounded-s-full focus:outline-none font-poppins"
             />
