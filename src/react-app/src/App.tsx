@@ -5,6 +5,12 @@ import { Register } from "./components/register/Register";
 import { ProductView } from "./components/product/ProductView";
 import { Catalog } from "./components/catalog/Catalog";
 import { GeneralLayout } from "./components/layouts/GeneralLayout";
+import { Profile } from "./components/profile/Profile";
+import { Panel } from "./components/panel/Panel";
+import { Policy } from "./components/policy/Policy";
+import { ContactInfo } from "./components/contact/Contact";
+import { Users } from "./components/panel/admin-panel/Users";
+import { Orders } from "./components/panel/admin-panel/Orders";
 import { AuthLayout } from "./components/layouts/AuthLayout";
 
 function App() {
@@ -15,6 +21,12 @@ function App() {
           <Route index element={<Homepage />} />
           <Route path="/productview" element={<ProductView />} />
           <Route path="/catalog" element={<Catalog />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="panel" element={<Panel />} />
+          <Route path="policy" element={<Policy />} />
+          <Route path="contact" element={<ContactInfo />} />
+          <Route path="/panel/users" element={<Users />} />
+          <Route path="/panel/orders" element={<Orders />} />
         </Route>
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<Login />} />

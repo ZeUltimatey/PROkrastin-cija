@@ -92,7 +92,7 @@ export const Navbar = () => {
             <i className="fa-solid fa-basket-shopping text-xl lg:text-2xl"></i>
           </button>
           <button
-            onClick={() => window.location.assign("/auth/login")}
+            onClick={() => window.location.assign("/profile")}
             className=" h-full px-6 hover:border-b-4 border-accent-brown transition-all"
           >
             <i className="fa-solid fa-user text-xl lg:text-2xl"></i>

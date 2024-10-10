@@ -1,15 +1,33 @@
 export const Footer = () => {
   return (
-    <div className="bg-content-white rounded-b-md font-poppins">
-      <div className="h-20 flex items-center px-12 justify-between">
-        <span>Interneta veikals Murrātava&trade; 2024</span>
-        <ul className="flex gap-12">
-          <li>BUJ</li>
-          <li>Piegāde</li>
-          <li>Kontakti</li>
-          <li>Privātuma politika</li>
-        </ul>
+    <footer className="bg-content-white py-6">
+      <div className="container mx-auto px-6">
+        <div className="border-t border-dark-brown py-4">
+          <div className="text-center text-dark-brown">
+            <nav className="mb-4">
+              <a
+                href="/"
+                className="mx-4 text-dark-brown hover:text-medium-brown"
+              >
+                Sākumlapa
+              </a>
+              <a
+                href="contact"
+                className="mx-4 text-dark-brown hover:text-medium-brown"
+              >
+                Kontaktinformācija
+              </a>
+              <a
+                href="policy"
+                className="mx-4 text-dark-brown hover:text-medium-brown"
+              >
+                Privātuma politika
+              </a>
+            </nav>
+            <p className="text-sm text-dark-brown">&copy; 2024 Murrātava</p>
+          </div>
+        </div>
       </div>
-    </div>
+    </footer>
   );
 };
