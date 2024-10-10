@@ -1,5 +1,6 @@
 import { Homepage } from "./components/homepage/Homepage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState, useEffect} from 'react';
 import { Login } from "./components/login/Login";
 import { Register } from "./components/register/Register";
 import { ProductView } from "./components/product/ProductView";

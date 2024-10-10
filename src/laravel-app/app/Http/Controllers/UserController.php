@@ -66,10 +66,10 @@ class UserController extends Controller
         $token = $user->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken;
 
         // Return response with user data and token
-        return response()->json([
-            'user' => $user,
-            'token' => $token,
-        ], 201); // HTTP status code 201 indicates resource creation
+        return response()->headers('Authorization', $token)
+            //'user' => $user,
+            //'token' => $token,
+        ; // HTTP status code 201 indicates resource creation
     }
 
 
@@ -81,51 +81,41 @@ class UserController extends Controller
      */
     public function login(Request $request)
     {
-        //return; // TODO
-
         $validatedData = $request->validate([
             'email' => 'required|string|email|max:255',
             'password' => 'required|string',
         ]);
 
-        // $user = User::where('email', $validatedData['email'])->first();
 
-        /**
-        * if (!$user || !Hash::check($validatedData['password'], $user->password)) {
-        *    return response()->json(['error' => 'Invalid credentials'], 401);
-        * }
-        */
         if (!Auth::attempt($validatedData)) {
             return response()->json(['error' => 'Invalid credentials'], 401);
             
         } else {
-            // gonna change this
             $user = Auth::user();
             $token = $user->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken;
+            //return response()->headers('Authorization', $token)
             return response()->json([
                 'user' => $user,
                 'token' => $token,
             ], 200);
+            
         }
-        
-
-        /**
-        * $existingToken = DB::table('personal_access_tokens') // TODO: cannot find personal_access_tokens??
-        *     ->where('tokenable_id', $user->id)
-        *     ->where('name', 'funny_token_hihi_haha')
-        *     ->first();
-        * 
-        * if ($existingToken) {
-        *     // If the token exists, return it
-        *     $token = $existingToken->plainTextToken;
-        * } else {
-        *     // If the token does not exist, create a new one
-        *     $token = $user->createToken($tokenName)->plainTextToken;
-        * }
-        */
-
-        
     }
+
+    public function logout(Request $request)
+    { 
+        $user = Auth::user();
+        $request->user()->currentAccessToken()->delete();
+        return response()->json([
+            'message' => 'Logged out successfully',
+        ], 200);
+
+    }
+
+        
+
+        
+    
 
     /**
      * Display the specified resource.

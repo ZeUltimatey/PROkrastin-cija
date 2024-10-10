@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 
 class ProductController2 extends Controller
@@ -15,12 +16,16 @@ class ProductController2 extends Controller
 
     public function show($id)
     {
-        $product = Product::find($id);
+        if (Auth::user()) {
+            $product = Product::find($id);
 
-        if ($product) {
-            return response()->json($product, 200);
+            if ($product) {
+                return response()->json($product, 200);
+            } else {
+                return response()->json('Product not found', 404);
+            }
         } else {
-            return response()->json('Product not found', 404);
+            return response()->json('Unauthorized', 401);
         }
     }
 
