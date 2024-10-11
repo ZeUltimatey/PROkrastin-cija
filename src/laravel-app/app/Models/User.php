@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -47,5 +48,23 @@ class User extends Authenticatable
 //            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function get_basket()
+    { // TODO
+        $userId = $this->getKey();
+        $selected_products = SelectedProducts::with('product')
+            ->where('user_id', $userId)
+            ->get();
+
+        $basket = [];
+        foreach ($selected_products as $selected_product) {
+            $basket[] = [
+                'product_id' => $selected_product->product_id,
+                'amount' => $selected_product->amount,
+            ];
+        }
+
+        return $basket;
     }
 }

@@ -51,7 +51,7 @@ class TestSeeder extends Seeder
 
         DB::table('cats')->insert([
             [
-                'cat_id' => 2,
+                'id' => 2,
                 'breed_id' => 1,
                 'birthdate' => '2021-09-11',
                 'color' => 'Black and White',
@@ -148,6 +148,23 @@ class TestSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]
+        ]);
+
+        DB::table('selected_products')->insert([
+            [
+                'user_id' => 2,
+                'product_id' => 1,
+                'amount' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 2,
+                'product_id' => 2,
+                'amount' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

@@ -22,6 +22,11 @@ class Product extends Model
 
     public function cat()
     {
-        return $this->hasOne(Cat::class, 'cat_id', 'product_id');
+        return $this->hasOne(Cat::class, 'id', 'id');
+    }
+
+    public function selectedProduct()
+    {
+        return $this->hasMany(SelectedProducts::class, 'product_id', 'id');
     }
 }
