@@ -12,13 +12,16 @@ export const OrderHistory = () => {
   const [isAllOrdersModalOpen, setIsAllOrdersModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  // Manually created orders with items
   const orders: Order[] = [
     {
       id: 12345,
       status: "Sūtīšans procesā",
       date: "26.09.2024.",
-      items: ["Kaķu gulta", "Slapjā barība (1kg)", "Kaķu kārumi ar vistas garšu"],
+      items: [
+        "Kaķu gulta",
+        "Slapjā barība (1kg)",
+        "Kaķu kārumi ar vistas garšu",
+      ],
     },
     {
       id: 12344,
@@ -49,7 +52,7 @@ export const OrderHistory = () => {
   };
 
   return (
-    <div className="bg-light-gray shadow-lg rounded-md p-8 border-2 border-medium-brown">
+    <div className="bg-light-gray shadow-md rounded-md p-8 border-2 border-medium-brown">
       <h3 className="text-2xl font-bold text-dark-brown font-poppins mb-4">
         Pasūtījumu vēsture
       </h3>
@@ -66,7 +69,7 @@ export const OrderHistory = () => {
               onClick={() => handleOpenOrderDetails(order)}
               className="text-medium-brown hover:underline text-sm font-poppins"
             >
-              Apskatīt
+              Apskatīt <i className="fa-solid fa-eye"></i>
             </button>
           </li>
         ))}
@@ -75,15 +78,23 @@ export const OrderHistory = () => {
         onClick={handleOpenAllOrders}
         className="text-medium-brown hover:underline text-sm font-poppins mt-4"
       >
-        Apskatīt visus sūtījumus
+        Apskatīt visus sūtījumus <i className="fa-solid fa-eye"></i>
       </button>
 
       {isOrderDetailsModalOpen && selectedOrder && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-2xl font-bold text-dark-brown font-poppins mb-4">
-              Pasūtījuma detaļas
-            </h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-dark-brown font-poppins">
+                Pasūtījuma detaļas
+              </h2>
+              <button
+                onClick={handleCloseModal}
+                className="text-dark-brown rounded-full w-8 h-8 flex items-center justify-center"
+              >
+                <i className="fa-solid fa-x"></i>
+              </button>
+            </div>
             <p className="text-dark-brown font-poppins">
               Pasūtijums #{selectedOrder.id} - {selectedOrder.status}
             </p>
@@ -102,7 +113,7 @@ export const OrderHistory = () => {
             </ul>
             <button
               onClick={handleCloseModal}
-              className="bg-medium-brown text-white px-4 py-2 rounded-md shadow mt-4 font-poppins hover:bg-dark-brown transition-all"
+              className="bg-medium-brown text-white px-4 py-2 rounded-md shadow mt-4 font-poppins"
             >
               Aizvērt
             </button>
@@ -113,14 +124,22 @@ export const OrderHistory = () => {
       {isAllOrdersModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-lg w-2/3 h-2/3 overflow-y-auto">
-            <h2 className="text-2xl font-bold text-dark-brown font-poppins mb-4">
-              Visu pasūtījumu vēsture
-            </h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-dark-brown font-poppins">
+                Visu pasūtījumu vēsture
+              </h2>
+              <button
+                onClick={handleCloseModal}
+                className="text-dark-brown rounded-full w-8 h-8 flex items-center justify-center"
+              >
+                <i className="fa-solid fa-x"></i>
+              </button>
+            </div>
             <ul className="space-y-4">
               {orders.map((order) => (
                 <li key={order.id} className="border-b border-dark-brown pb-4">
                   <p className="text-dark-brown font-poppins">
-                    Pasūtijums #{order.id} - {order.status}
+                    Pasūtījums #{order.id} - {order.status}
                   </p>
                   <p className="text-sm text-dark-brown font-poppins">
                     Pasūtīts: {order.date}
@@ -140,7 +159,7 @@ export const OrderHistory = () => {
             </ul>
             <button
               onClick={handleCloseModal}
-              className="bg-medium-brown text-white px-4 py-2 rounded-md shadow mt-4 font-poppins hover:bg-dark-brown transition-all"
+              className="bg-medium-brown text-white px-4 py-2 rounded-md shadow mt-4 font-poppins"
             >
               Aizvērt
             </button>

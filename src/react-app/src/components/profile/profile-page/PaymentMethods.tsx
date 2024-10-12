@@ -32,39 +32,61 @@ export const PaymentMethods = () => {
     setIsModalOpen(false);
   };
 
+  const handleDeletePayment = (index: number) => {
+    const updatedPayments = paymentMethods.filter((_, i) => i !== index);
+    setPaymentMethods(updatedPayments);
+  };
+
   return (
-    <div className="bg-light-gray shadow-lg rounded-md p-8 border-2 border-medium-brown">
+    <div className="bg-light-gray shadow-md rounded-md p-8 border-2 border-medium-brown">
       <h3 className="text-2xl font-bold text-dark-brown font-poppins mb-4">
         Saglabātās maksājumu metodes
       </h3>
       <ul className="space-y-4">
         {paymentMethods.map((payment, index) => (
-          <li key={index} className="border-b border-dark-brown pb-4">
-            <p className="text-dark-brown font-poppins">
-              {payment.type} - {payment.cardNumber}
-            </p>
-            <p className="text-sm text-dark-brown font-poppins">
-              Beidzas: {payment.expiryDate}
-            </p>
-            <button className="text-red-600 hover:underline text-sm font-poppins">
-              Dzēst
+          <li
+            key={index}
+            className="border-b border-dark-brown pb-4 flex justify-between items-center"
+          >
+            <div>
+              <p className="text-dark-brown font-poppins">
+                {payment.type} - {payment.cardNumber}
+              </p>
+              <p className="text-sm text-dark-brown font-poppins">
+                Beidzas: {payment.expiryDate}
+              </p>
+            </div>
+            <button
+              onClick={() => handleDeletePayment(index)}
+              className="text-red-600 hover:underline text-sm font-poppins"
+            >
+              <i className="fa-solid fa-trash"></i>
             </button>
           </li>
         ))}
       </ul>
       <button
         onClick={handleAddNewPayment}
-        className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins mt-4"
+        className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown font-poppins mt-4"
       >
-        Pievienot jaunu
+        <i className="fa-solid fa-plus mr-2"></i> Pievienot jaunu
       </button>
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-2xl font-bold text-dark-brown font-poppins mb-4">
-              Pievienot jaunu maksājumu karti
-            </h2>
+          <div className="bg-white p-8 rounded-lg shadow-lg w-2/4">
+            {" "}
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-dark-brown font-poppins">
+                Pievienot jaunu maksājumu karti
+              </h2>
+              <button
+                onClick={handleCloseModal}
+                className="text-dark-brown rounded-full w-7 h-7 flex items-center justify-center"
+              >
+                <i className="fa-solid fa-x"></i>
+              </button>
+            </div>
             <form className="space-y-4">
               <div>
                 <label className="text-sm text-dark-brown font-poppins block mb-1">

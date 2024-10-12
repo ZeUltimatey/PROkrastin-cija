@@ -18,7 +18,7 @@ export const ProfileSettings = () => {
   };
 
   return (
-    <div className="bg-light-gray shadow-lg rounded-md p-8 border-2 border-medium-brown">
+    <div className="bg-light-gray shadow-md rounded-md p-8 border-2 border-medium-brown">
       <h3 className="text-2xl font-bold text-dark-brown font-poppins mb-4">
         Profila iestatījumi
       </h3>
@@ -39,66 +39,74 @@ export const ProfileSettings = () => {
           <p className="text-dark-brown font-poppins">Lietotāja preferences</p>
           <button
             onClick={handleOpenPreferences}
-            className="text-medium-brown hover:underline text-sm font-poppins"
+            className="text-medium-brown hover:underline text-sm font-poppins flex items-center"
           >
-            Iestatīt
+            <i className="fa-solid fa-pen-to-square m-1"></i> Iestatīt
           </button>
         </li>
         <li>
           <p className="text-dark-brown font-poppins">Parole</p>
           <button
             onClick={handleOpenPasswordChange}
-            className="text-medium-brown hover:underline text-sm font-poppins"
+            className="text-medium-brown hover:underline text-sm font-poppins flex items-center"
           >
-            Mainīt paroli
+            <i className="fa-solid fa-pen-to-square m-1"></i> Mainīt paroli
           </button>
         </li>
       </ul>
 
       {isPreferencesModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-2xl font-bold text-dark-brown font-poppins mb-4">
-              Lietotāja preferences
-            </h2>
-            <div className="space-y-4">
-              <label className="flex items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-dark-brown font-poppins">
+                Lietotāja preferences
+              </h2>
+              <button
+                onClick={handleCloseModal}
+                className="text-dark-brown rounded-full w-7 h-7 flex items-center justify-center"
+              >
+                <i className="fa-solid fa-x"></i>
+              </button>
+            </div>
+            <form className="space-y-4">
+              <div className="flex items-center">
                 <input
                   type="checkbox"
-                  className="form-checkbox text-medium-brown"
+                  className="form-checkbox text-medium-brown mr-2"
                 />
-                <span className="ml-2 text-dark-brown font-poppins">
+                <label className="text-sm text-dark-brown font-poppins">
                   Vienmēr rādīt lētākos piedāvājumus
-                </span>
-              </label>
-              <label className="flex items-center">
+                </label>
+              </div>
+              <div className="flex items-center">
                 <input
                   type="checkbox"
-                  className="form-checkbox text-medium-brown"
+                  className="form-checkbox text-medium-brown mr-2"
                 />
-                <span className="ml-2 text-dark-brown font-poppins">
+                <label className="text-sm text-dark-brown font-poppins">
                   Rādīt tikai bezmaksas piegādes piedāvājumus
-                </span>
-              </label>
-              <label className="flex items-center">
+                </label>
+              </div>
+              <div className="flex items-center">
                 <input
                   type="checkbox"
-                  className="form-checkbox text-medium-brown"
+                  className="form-checkbox text-medium-brown mr-2"
                 />
-                <span className="ml-2 text-dark-brown font-poppins">
+                <label className="text-sm text-dark-brown font-poppins">
                   Rādīt tikai uzreiz pieejamos produktus
-                </span>
-              </label>
-              <label className="flex items-center">
+                </label>
+              </div>
+              <div className="flex items-center">
                 <input
                   type="checkbox"
-                  className="form-checkbox text-medium-brown"
+                  className="form-checkbox text-medium-brown mr-2"
                 />
-                <span className="ml-2 text-dark-brown font-poppins">
+                <label className="text-sm text-dark-brown font-poppins">
                   Rādīt tikai vietējos ražotājus
-                </span>
-              </label>
-               <div className="flex justify-end space-x-4 mt-6">
+                </label>
+              </div>
+              <div className="flex justify-end space-x-4 mt-4">
                 <button
                   type="button"
                   onClick={handleCloseModal}
@@ -113,47 +121,58 @@ export const ProfileSettings = () => {
                 >
                   Saglabāt
                 </button>
-            </div>
+              </div>
+            </form>
           </div>
-        </div>
         </div>
       )}
 
       {isPasswordModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-2xl font-bold text-dark-brown font-poppins mb-4">
-              Mainīt paroli
-            </h2>
-            <div className="space-y-4">
-              <label className="block">
-                <span className="text-dark-brown font-poppins">
-                  Vecā parole:
-                </span>
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-dark-brown font-poppins">
+                Mainīt paroli
+              </h2>
+              <button
+                onClick={handleCloseModal}
+                className="text-dark-brown rounded-full w-7 h-7 flex items-center justify-center"
+              >
+                <i className="fa-solid fa-x"></i>
+              </button>
+            </div>
+            <form className="space-y-4">
+              <div>
+                <label className="text-sm text-dark-brown font-poppins block mb-1">
+                  Vecā parole
+                </label>
                 <input
                   type="password"
-                  className="form-input mt-1 block w-full text-dark-brown border border-medium-brown rounded-md"
+                  className="w-full border border-medium-brown rounded-md p-2"
+                  placeholder="Ievadiet veco paroli"
                 />
-              </label>
-              <label className="block">
-                <span className="text-dark-brown font-poppins">
-                  Jaunā parole:
-                </span>
+              </div>
+              <div>
+                <label className="text-sm text-dark-brown font-poppins block mb-1">
+                  Jaunā parole
+                </label>
                 <input
                   type="password"
-                  className="form-input mt-1 block w-full text-dark-brown border border-medium-brown rounded-md"
+                  className="w-full border border-medium-brown rounded-md p-2"
+                  placeholder="Ievadiet jauno paroli"
                 />
-              </label>
-              <label className="block">
-                <span className="text-dark-brown font-poppins">
-                  Apstiprināt jauno paroli:
-                </span>
+              </div>
+              <div>
+                <label className="text-sm text-dark-brown font-poppins block mb-1">
+                  Apstiprināt jauno paroli
+                </label>
                 <input
                   type="password"
-                  className="form-input mt-1 block w-full text-dark-brown border border-medium-brown rounded-md"
+                  className="w-full border border-medium-brown rounded-md p-2"
+                  placeholder="Apstipriniet jauno paroli"
                 />
-              </label>
-              <div className="flex justify-end space-x-4 mt-6">
+              </div>
+              <div className="flex justify-end space-x-4 mt-4">
                 <button
                   type="button"
                   onClick={handleCloseModal}
@@ -168,8 +187,8 @@ export const ProfileSettings = () => {
                 >
                   Saglabāt
                 </button>
-                </div>
-            </div>
+              </div>
+            </form>
           </div>
         </div>
       )}
