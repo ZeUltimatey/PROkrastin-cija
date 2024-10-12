@@ -2,49 +2,52 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CardInformation;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Psy\Util\Json;
 
-class CardsController extends Controller
+class ProductController extends Controller
 {
     private array $validationRules = [
-        'cardholder_id'   => 'required|exists:users,user_id',
-        'card_number'     => 'required|string|digits:16|unique:cards,card_number',
-        'expiration_date' => 'required|date_format:m/y|after:today',
-        'cvc_number'      => 'nullable|string|digits:3',
-        'card_name'       => 'required|string|max:255',
+        'product_type'     => 'required|in:Unlisted,Cat,Accessory,Food,Furniture',
+        'display_name'     => 'required|string|max:255',
+        'description'      => 'required|string',
+        'pricing'          => 'required|numeric|min:0',
+        'discount_pricing' => 'nullable|numeric|min:0|lt:pricing',
+        'stock'            => 'required|integer|min:0',
     ];
 
     /**
-     * Show all card information.
+     * Show all products.
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(): JsonResponse
     {
-        return response()->json(CardInformation::all());
+        return response()->json(Product::all());
     }
 
     /**
-     * Show one card information.
+     * Show a singular product.
      *
-     * @param string $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(string $id)
+    public function show(int $id): JsonResponse
     {
-        // Find card information by id
-        $card = CardInformation::find($id);
+        // Find the product by id
+        $product = Product::find($id);
 
-        if ($card) { return response()->json($card, 200); }
-        else { return response()->json('Card information not found', 404); }
+        if ($product) { return response()->json($product, 200); }
+        else { return response()->json(null, 404); }
     }
 
     /**
-     * Store new card information.
+     * Store a new product.
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -60,19 +63,19 @@ class CardsController extends Controller
             return response()->json($errors, 422);
         }
 
-        // Create card information record if everything is correct
-        $card = CardInformation::create($request->validated());
-        return response()->json($card, 201);
+        // Create product if everything is correct
+        $product = Product::create($validator->validated());
+        return response()->json($product, 201);
     }
 
     /**
      * Update the information of a product.
      *
      * @param \Illuminate\Http\Request $request
-     * @param string $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, int $id): JsonResponse
     {
         // Validator for checking filled information
         $validator = Validator::make($request->all(), $this->validationRules);
@@ -83,23 +86,23 @@ class CardsController extends Controller
             return response()->json($errors, 422);
         }
 
-        // Update and return card information if everything is correct
-        $product = CardInformation::findOrFail($id);
+        // Update and return product if everything is correct
+        $product = Product::findOrFail($id);
         $product->update($validator->validated());
         return response()->json($product, 201);
     }
 
     /**
-     * Remove card information.
+     * Remove a product.
      *
-     * @param string $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(string $id): JsonResponse
     {
-        // Find and delete card information by id
-        $card = CardInformation::findOrFail($id);
-        $card->delete();
-        return response()->json('Card deleted successfully', 200);
+        // Find and delete product by id
+        $product = Product::findOrFail($id);
+        $product->delete();
+        return response()->json('Product deleted successfully', 200);
     }
 }

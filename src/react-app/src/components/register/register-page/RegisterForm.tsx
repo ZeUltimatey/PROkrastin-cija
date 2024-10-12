@@ -4,14 +4,31 @@ export const RegisterForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     surname: "",
-    username: "",
+    display_name: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    password_confirmation: "",
   });
 
+  const onSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      alert("Reģistrācija veiksmīga!");
+      console.log(response);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   return (
-    <form className="flex flex-col gap-4">
+    <form onSubmit={onSubmit} className="flex flex-col gap-4">
       <div className="flex lg:flex-row flex-col lg:justify-between gap-4">
         <div className="w-full">
           <label className="font-medium text-dark-brown">Vārds</label>
@@ -42,9 +59,9 @@ export const RegisterForm = () => {
           id="username"
           className="mt-1  w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
           placeholder="Ievadi savu lietotājvārdu"
-          value={formData.username}
+          value={formData.display_name}
           onChange={(e) =>
-            setFormData({ ...formData, username: e.target.value })
+            setFormData({ ...formData, display_name: e.target.value })
           }
         />
       </div>
@@ -80,17 +97,22 @@ export const RegisterForm = () => {
             type="password"
             className="mt-1  w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
             placeholder="Ievadi atkārtotu paroli"
-            value={formData.confirmPassword}
+            value={formData.password_confirmation}
             onChange={(e) =>
-              setFormData({ ...formData, confirmPassword: e.target.value })
+              setFormData({
+                ...formData,
+                password_confirmation: e.target.value,
+              })
             }
           />
         </div>
       </div>
       <div className="mt-2">
-        <button className="w-full bg-light-brown text-white font-semibold py-2 px-4 rounded-md hover:bg-medium-brown transition-all">
-          Reģistrēties
-        </button>
+        <input
+          type="submit"
+          className="w-full bg-light-brown text-white font-semibold py-2 px-4 rounded-md hover:cursor-pointer hover:bg-medium-brown transition-all"
+          value="Reģistrēties"
+        />
       </div>
       <div className="">
         <div className="text-center">

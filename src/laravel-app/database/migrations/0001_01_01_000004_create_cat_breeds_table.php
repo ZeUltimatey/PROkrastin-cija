@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cat_breeds', function (Blueprint $table) {
-            $table->id('breed_id');
+            $table->id();
             $table->unsignedBigInteger('attachments_id')->nullable();
             $table->foreign('attachments_id')
-                ->references('attachments_id')
+                ->references('id')
                 ->on('attachment_groups');
 
             $table->string('display_name');

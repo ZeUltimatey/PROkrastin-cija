@@ -16,10 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('transaction_id');
             $table->primary(['product_id', 'transaction_id']);
             $table->foreign('product_id')
-                ->references('product_id')
+                ->references('id')
                 ->on('products');
             $table->foreign('transaction_id')
-                ->references('transaction_id')
+                ->references('id')
                 ->on('transactions');
 
             $table->string('display_name');

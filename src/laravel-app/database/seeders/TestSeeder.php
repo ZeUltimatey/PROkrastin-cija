@@ -16,7 +16,7 @@ class TestSeeder extends Seeder
     {
         DB::table('products')->insert([
             [
-                'product_id' => 1,
+                'id' => 1,
                 'product_type' => 'Furniture',
                 'display_name' => 'Cat Hammock Bed',
                 'description' => 'Hanging bed for cats to relax and enjoy their nap time.',
@@ -27,7 +27,7 @@ class TestSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'product_id' => 2,
+                'id' => 2,
                 'product_type' => 'Cat',
                 'display_name' => 'Asteroid Destroyer',
                 'description' => 'This kitten was found abandoned in the sewers of Seattle, Washington, D.C.',
@@ -41,7 +41,7 @@ class TestSeeder extends Seeder
 
         DB::table('cat_breeds')->insert([
             [
-                'breed_id' => 1,
+                'id' => 1,
                 'display_name' => 'Munchkin',
                 'breed_information' => 'A cat breed known for its short legs, black and white color combination and fur pattern. etc.',
                 'created_at' => now(),
@@ -51,7 +51,7 @@ class TestSeeder extends Seeder
 
         DB::table('cats')->insert([
             [
-                'cat_id' => 2,
+                'id' => 2,
                 'breed_id' => 1,
                 'birthdate' => '2021-09-11',
                 'color' => 'Black and White',
@@ -62,20 +62,24 @@ class TestSeeder extends Seeder
 
         DB::table('users')->insert([
             [
-                'user_id' => 1,
+                'id' => 1,
                 'email' => 'admin@murratava.lv',
                 'password' => Hash::make('safe123'),
                 'display_name' => 'Admin',
+                'name' => 'Admin',
+                'surname' => 'Admin',
                 'phone_number' => '+37125565817',
                 'user_role' => 'Admin',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'user_id' => 2,
+                'id' => 2,
                 'email' => 'vardsuzvards@gmail.com',
                 'password' => Hash::make('asd'),
                 'display_name' => 'Vards Uzvards',
+                'name' => 'Vards',
+                'surname' => 'Uzvards',
                 'phone_number' => '+37125565816',
                 'user_role' => 'User',
                 'created_at' => now(),
@@ -85,7 +89,7 @@ class TestSeeder extends Seeder
 
         DB::table('reviews')->insert([
             [
-                'review_id' => 1,
+                'id' => 1,
                 'reviewer_id' => 2,
                 'product_id' => 1,
                 'content' => 'Wow very good bed for me, my cat doesn\'t like it though..',
@@ -97,7 +101,7 @@ class TestSeeder extends Seeder
 
         DB::table('card_information')->insert([
             [
-                'card_id' => 1,
+                'id' => 1,
                 'cardholder_id' => 2,
                 'card_number' => '5550130966726224',
                 'expiration_date' => '12/24',
@@ -110,7 +114,7 @@ class TestSeeder extends Seeder
 
         DB::table('locations')->insert([
             [
-                'location_id' => 1,
+                'id' => 1,
                 'creator_id' => 2,
                 'city' => 'Washington',
                 'street' => '2608 84th Street Ct S',
@@ -123,7 +127,7 @@ class TestSeeder extends Seeder
 
         DB::table('transactions')->insert([
             [
-                'transaction_id' => 1,
+                'id' => 1,
                 'transactor_id' => 2,
                 'location_id' => 1,
                 'total_pricing' => 45.00,
@@ -144,6 +148,23 @@ class TestSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]
+        ]);
+
+        DB::table('selected_products')->insert([
+            [
+                'user_id' => 2,
+                'product_id' => 1,
+                'amount' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'user_id' => 2,
+                'product_id' => 2,
+                'amount' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

@@ -12,16 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id('user_id');
+            $table->id();
             $table->unsignedBigInteger('profilepicture_id')->nullable();
             $table->foreign('profilepicture_id')
-                ->references('image_id')
+                ->references('id')
                 ->on('images');
 
             $table->string('email')->unique();
             $table->string('password');
             $table->string('display_name');
-            $table->string('phone_number');
+            $table->string('name'); 
+            $table->string('surname');
+            $table->string('phone_number')->nullable(); // temp nullable because frontend
             $table->enum('user_role', ['User', 'Admin'])->default('User');
             $table->boolean('deactivated')->default(false);
             $table->timestamps();

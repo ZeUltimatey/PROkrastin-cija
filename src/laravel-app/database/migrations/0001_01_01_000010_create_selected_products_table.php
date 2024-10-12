@@ -16,10 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->primary(['user_id', 'product_id']);
             $table->foreign('user_id')
-                ->references('user_id')
+                ->references('id')
                 ->on('users');
             $table->foreign('product_id')
-                ->references('product_id')
+                ->references('id')
                 ->on('products');
 
             $table->unsignedBigInteger('amount');

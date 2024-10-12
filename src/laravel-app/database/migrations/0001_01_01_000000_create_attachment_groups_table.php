@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('attachment_groups', function (Blueprint $table) {
-            $table->id('attachments_id');
+            $table->id();
 
             $table->unsignedInteger('image_amount');
             $table->timestamps();

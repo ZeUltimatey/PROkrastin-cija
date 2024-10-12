@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id('transaction_id');
+            $table->id();
             $table->unsignedBigInteger('transactor_id');
             $table->foreign('transactor_id')
-                ->references('user_id')
+                ->references('id')
                 ->on('users');
             $table->unsignedBigInteger('location_id')->nullable();
             $table->foreign('location_id')
-                ->references('location_id')
+                ->references('id')
                 ->on('locations');
 
             $table->float('total_pricing');
