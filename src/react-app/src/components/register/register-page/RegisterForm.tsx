@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { FormInput } from "../../universal/FormInput";
+import { Constants } from "../../universal/Constants";
 
 export const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -12,28 +14,37 @@ export const RegisterForm = () => {
 
   const onSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    try {
-      const response = await fetch("http://127.0.0.1:8000/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+    await fetch("http://127.0.0.1:8000/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then(async (response) => {
+        const data = await response.json();
+        if (response.ok) {
+          sessionStorage.setItem(Constants.SESSION_STORAGE.TOKEN, data.token);
+          window.location.href = "/";
+        } else {
+          console.log(data);
+          throw new Error(data.error);
+        }
+      })
+      .catch((error) => {
+        alert(error);
       });
-      alert("Reģistrācija veiksmīga!");
-      console.log(response);
-    } catch (error) {
-      alert(error);
-    }
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4">
+    <form onSubmit={onSubmit} className="flex flex-col gap-4 font-poppins">
       <div className="flex lg:flex-row flex-col lg:justify-between gap-4">
         <div className="w-full">
-          <label className="font-medium text-dark-brown">Vārds</label>
-          <input
-            className="mt-1  w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
+          <label htmlFor="name" className="font-medium text-dark-brown">
+            Vārds
+          </label>
+          <FormInput
+            id="name"
             placeholder="Ievadi savu vārdu"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -41,9 +52,11 @@ export const RegisterForm = () => {
         </div>
 
         <div className="w-full">
-          <label className="font-medium text-dark-brown">Uzvārds</label>
-          <input
-            className="mt-1  w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
+          <label htmlFor="surname" className="font-medium text-dark-brown">
+            Uzvārds
+          </label>
+          <FormInput
+            id="surname"
             placeholder="Ievadi savu uzvārdu"
             value={formData.surname}
             onChange={(e) =>
@@ -52,12 +65,12 @@ export const RegisterForm = () => {
           />
         </div>
       </div>
-      <div className="">
-        <label className="font-medium text-dark-brown">Lietotājvārds</label>
-        <input
-          type="text"
+      <div>
+        <label htmlFor="username" className="font-medium text-dark-brown">
+          Lietotājvārds
+        </label>
+        <FormInput
           id="username"
-          className="mt-1  w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
           placeholder="Ievadi savu lietotājvārdu"
           value={formData.display_name}
           onChange={(e) =>
@@ -66,22 +79,26 @@ export const RegisterForm = () => {
         />
       </div>
       <div className="">
-        <label className="font-medium text-dark-brown">E-pasts</label>
-        <input
-          type="email"
-          className="mt-1  w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
+        <label htmlFor="email" className="font-medium text-dark-brown">
+          E-pasts
+        </label>
+        <FormInput
+          id="email"
           placeholder="Ievadi savu e-pastu"
+          type="email"
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         />
       </div>
       <div className="flex lg:flex-row flex-col gap-4">
         <div className="w-full">
-          <label className="font-medium text-dark-brown">Parole</label>
-          <input
+          <label htmlFor="password" className="font-medium text-dark-brown">
+            Parole
+          </label>
+          <FormInput
+            id="password"
+            placeholder="••••••••"
             type="password"
-            className="mt-1  w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
-            placeholder="Izveido savu paroli"
             value={formData.password}
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
@@ -90,13 +107,16 @@ export const RegisterForm = () => {
         </div>
 
         <div className="w-full">
-          <label className="font-medium text-dark-brown">
+          <label
+            htmlFor="password_confirmation"
+            className="font-medium text-dark-brown"
+          >
             Atkārtota parole
           </label>
-          <input
+          <FormInput
+            id="password_confirmation"
+            placeholder="••••••••"
             type="password"
-            className="mt-1  w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
-            placeholder="Ievadi atkārtotu paroli"
             value={formData.password_confirmation}
             onChange={(e) =>
               setFormData({
@@ -121,7 +141,7 @@ export const RegisterForm = () => {
             href="/auth/login"
             className="text-dark-brown hover:underline font-semibold"
           >
-            Ienāc šeit
+            Ienāc šeit!
           </a>
         </div>
       </div>
