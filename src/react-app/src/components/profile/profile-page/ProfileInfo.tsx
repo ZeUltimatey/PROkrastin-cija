@@ -12,7 +12,7 @@ export const ProfileInfo = () => {
   };
 
   return (
-    <div className="bg-light-gray shadow-lg rounded-md p-8 border-2 border-medium-brown">
+    <div className="bg-light-gray shadow-md rounded-md p-8 border-2 border-medium-brown">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-6">
           <img
@@ -36,16 +36,24 @@ export const ProfileInfo = () => {
           onClick={handleEditClick}
           className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
         >
-          Rediģēt profilu
+          <i className="fa-solid fa-pen-to-square"></i> Rediģēt profilu
         </button>
       </div>
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-2xl font-bold text-dark-brown font-poppins mb-4">
-              Rediģēt Profila Informāciju
-            </h2>
+          <div className="bg-white p-8 rounded-lg shadow-lg w-1/3 relative">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-dark-brown font-poppins">
+                Rediģēt Profila Informāciju
+              </h2>
+              <button
+                onClick={handleCloseModal}
+                className="text-dark-brown rounded-full w-7 h-7 flex items-center justify-center"
+              >
+                <i className="fa-solid fa-x"></i>
+              </button>
+            </div>
             <form className="space-y-4">
               <div>
                 <label className="text-sm text-dark-brown font-poppins block mb-1">

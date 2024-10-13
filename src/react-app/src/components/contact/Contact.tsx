@@ -1,6 +1,6 @@
 export const ContactInfo = () => {
   return (
-    <div className="bg-content-white shadow-lg rounded-lg p-12 border-2 border-dark-brown max-w-7xl mx-auto my-12">
+    <div className="min-h-screen bg-content-white bg-opacity-95 p-6">
       <h2 className="text-4xl font-bold text-dark-brown font-poppins mb-8 text-center">
         Sazinieties ar mums
       </h2>
@@ -11,7 +11,7 @@ export const ContactInfo = () => {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
-        <div>
+        <div className="pl-6">
           <h3 className="text-3xl font-semibold text-dark-brown font-poppins mb-6">
             Kontaktinformācija
           </h3>
@@ -20,7 +20,7 @@ export const ContactInfo = () => {
               <strong>Telefona numurs:</strong> +371 12 345 678
             </li>
             <li>
-              <strong>E-pasta adrese:</strong> info@murrātava.lv
+              <strong>E-pasta adrese:</strong> info@murratava.lv
             </li>
             <li>
               <strong>Adrese:</strong> Brīvības iela 123, Rīga, LV-1001, Latvija
@@ -37,10 +37,7 @@ export const ContactInfo = () => {
           </h3>
           <form className="space-y-6">
             <div>
-              <label
-                className="block text-dark-brown font-poppins mb-2"
-                htmlFor="name"
-              >
+              <label className="block text-dark-brown font-poppins mb-2">
                 Vārds:
               </label>
               <input
@@ -51,10 +48,7 @@ export const ContactInfo = () => {
               />
             </div>
             <div>
-              <label
-                className="block text-dark-brown font-poppins mb-2"
-                htmlFor="email"
-              >
+              <label className="block text-dark-brown font-poppins mb-2">
                 E-pasts:
               </label>
               <input
@@ -65,16 +59,12 @@ export const ContactInfo = () => {
               />
             </div>
             <div>
-              <label
-                className="block text-dark-brown font-poppins mb-2"
-                htmlFor="message"
-              >
+              <label className="block text-dark-brown font-poppins mb-2">
                 Ziņojums:
               </label>
               <textarea
                 id="message"
-                className="w-full p-4 border-2 border-dark-brown rounded-md focus:outline-none focus:border-medium-brown"
-                rows={5}
+                className="w-full h-32 p-4 border-2 border-dark-brown rounded-md focus:outline-none focus:border-medium-brown resize-none"
                 placeholder="Ievadiet savu ziņojumu"
               />
             </div>

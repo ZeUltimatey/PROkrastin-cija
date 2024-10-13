@@ -14,23 +14,19 @@ export const Orders = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  // Function to handle opening the modal and showing order details
   const handleEditClick = (order: Order) => {
     setSelectedOrder(order);
     setIsModalOpen(true);
   };
 
-  // Function to handle closing the modal
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedOrder(null);
   };
 
-  // Function to handle purchase cancellation
   const handleCancelOrder = () => {
     if (selectedOrder) {
       console.log(`Canceling order ${selectedOrder.id}`);
-      // Perform cancellation logic here (e.g., API call)
       setIsModalOpen(false);
     }
   };
@@ -153,29 +149,29 @@ export const Orders = () => {
               <p className="mb-4">
                 <span className="font-bold text-dark-brown">
                   Pasūtījuma ID:
-                </span>{" "}
+                </span>
                 {selectedOrder.id}
               </p>
               <p className="mb-4">
                 <span className="font-bold text-dark-brown">
                   Klienta vārds:
-                </span>{" "}
+                </span>
                 {selectedOrder.customerName}
               </p>
               <p className="mb-4">
-                <span className="font-bold text-dark-brown">E-pasts:</span>{" "}
+                <span className="font-bold text-dark-brown">E-pasts:</span>
                 {selectedOrder.email}
               </p>
               <p className="mb-4">
-                <span className="font-bold text-dark-brown">Datums:</span>{" "}
+                <span className="font-bold text-dark-brown">Datums:</span>
                 {selectedOrder.date}
               </p>
               <p className="mb-4">
-                <span className="font-bold text-dark-brown">Statuss:</span>{" "}
+                <span className="font-bold text-dark-brown">Statuss:</span>
                 {selectedOrder.status}
               </p>
               <p className="mb-4">
-                <span className="font-bold text-dark-brown">Kopā:</span>{" "}
+                <span className="font-bold text-dark-brown">Kopā:</span>
                 {selectedOrder.total}
               </p>
             </div>

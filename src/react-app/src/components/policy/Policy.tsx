@@ -1,6 +1,6 @@
 export const Policy = () => {
   return (
-    <div className="bg-content-white shadow-lg rounded-md p-8 border-2 border-dark-brown max-w-7xl mx-auto my-8">
+    <div className="min-h-screen bg-content-white bg-opacity-95 p-6">
       <h2 className="text-3xl font-bold text-dark-brown font-poppins mb-6">
         Privātuma politika
       </h2>

@@ -12,6 +12,8 @@ import { ContactInfo } from "./components/contact/Contact";
 import { Users } from "./components/panel/admin-panel/Users";
 import { Orders } from "./components/panel/admin-panel/Orders";
 import { AuthLayout } from "./components/layouts/AuthLayout";
+import {Products} from "./components/panel/admin-panel/Products";
+import {Cart} from "./components/cart/Cart";
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
           <Route path="contact" element={<ContactInfo />} />
           <Route path="/panel/users" element={<Users />} />
           <Route path="/panel/orders" element={<Orders />} />
+          <Route path="/panel/products" element={<Products />} />
+          <Route path="/cart" element={<Cart />} />
         </Route>
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<Login />} />
