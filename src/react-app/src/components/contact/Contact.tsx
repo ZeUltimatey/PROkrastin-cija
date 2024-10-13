@@ -12,7 +12,6 @@ export const ContactInfo = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
         <div className="pl-6">
-          {" "}
           <h3 className="text-3xl font-semibold text-dark-brown font-poppins mb-6">
             Kontaktinformācija
           </h3>
@@ -38,10 +37,7 @@ export const ContactInfo = () => {
           </h3>
           <form className="space-y-6">
             <div>
-              <label
-                className="block text-dark-brown font-poppins mb-2"
-                htmlFor="name"
-              >
+              <label className="block text-dark-brown font-poppins mb-2">
                 Vārds:
               </label>
               <input
@@ -52,10 +48,7 @@ export const ContactInfo = () => {
               />
             </div>
             <div>
-              <label
-                className="block text-dark-brown font-poppins mb-2"
-                htmlFor="email"
-              >
+              <label className="block text-dark-brown font-poppins mb-2">
                 E-pasts:
               </label>
               <input
@@ -66,18 +59,13 @@ export const ContactInfo = () => {
               />
             </div>
             <div>
-              <label
-                className="block text-dark-brown font-poppins mb-2"
-                htmlFor="message"
-              >
+              <label className="block text-dark-brown font-poppins mb-2">
                 Ziņojums:
               </label>
               <textarea
                 id="message"
-                className="w-full p-4 border-2 border-dark-brown rounded-md focus:outline-none focus:border-medium-brown"
-                rows={5}
+                className="w-full h-32 p-4 border-2 border-dark-brown rounded-md focus:outline-none focus:border-medium-brown resize-none"
                 placeholder="Ievadiet savu ziņojumu"
-                style={{ height: "150px", resize: "none" }}
               />
             </div>
             <button

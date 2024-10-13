@@ -3,7 +3,7 @@ export const Sidebar = () => {
     <div className="min-h-screen flex rounded-md ">
       <aside className="w-64 bg-light-gray text-white p-8">
         <div className="text-2xl font-bold mb-8 font-poppins text-dark-brown">
-          Administrātora panelis
+          Administratora panelis
         </div>
         <nav>
           <ul className="space-y-4 text-dark-brown">

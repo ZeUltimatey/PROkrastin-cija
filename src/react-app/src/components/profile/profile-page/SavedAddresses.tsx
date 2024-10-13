@@ -90,9 +90,7 @@ export const SavedAddresses = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 relative">
-            {" "}
             <div className="flex justify-between items-center mb-4">
-              {" "}
               <h2 className="text-2xl font-bold text-dark-brown font-poppins">
                 {isEditing ? "Rediģēt adresi" : "Pievienot jaunu adresi"}
               </h2>
@@ -104,7 +102,6 @@ export const SavedAddresses = () => {
               </button>
             </div>
             <form className="space-y-4">
-              {" "}
               <div>
                 <label className="text-sm text-dark-brown font-poppins block mb-1">
                   Adreses Nosaukums
@@ -134,7 +131,6 @@ export const SavedAddresses = () => {
                 />
               </div>
               <div className="flex justify-end space-x-4 mt-4">
-                {" "}
                 <button
                   type="button"
                   onClick={handleCloseModal}

@@ -2,6 +2,7 @@ import { useState } from "react";
 
 export const PaymentMethods = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [paymentMethods, setPaymentMethods] = useState([
     { type: "Visa", cardNumber: "**** **** **** 1234", expiryDate: "08/26" },
     {
@@ -26,10 +27,6 @@ export const PaymentMethods = () => {
       setNewPayment({ type: "", cardNumber: "", expiryDate: "" });
       setIsModalOpen(false);
     }
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
   };
 
   const handleDeletePayment = (index: number) => {
@@ -75,13 +72,12 @@ export const PaymentMethods = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-lg w-2/4">
-            {" "}
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold text-dark-brown font-poppins">
                 Pievienot jaunu maksājumu karti
               </h2>
               <button
-                onClick={handleCloseModal}
+                onClick={() => setIsModalOpen(false)}
                 className="text-dark-brown rounded-full w-7 h-7 flex items-center justify-center"
               >
                 <i className="fa-solid fa-x"></i>
@@ -133,7 +129,7 @@ export const PaymentMethods = () => {
               <div className="flex justify-end space-x-4 mt-6">
                 <button
                   type="button"
-                  onClick={handleCloseModal}
+                  onClick={() => setIsModalOpen(false)}
                   className="bg-light-gray text-dark-brown px-4 py-2 rounded-md shadow font-poppins"
                 >
                   Atcelt

@@ -12,12 +12,8 @@ interface CartProductProps {
   onQuantityChange: (id: number, delta: number) => void;
 }
 
-const CartProduct: React.FC<CartProductProps> = ({
-  product,
-  quantity,
-  onRemove,
-  onQuantityChange,
-}) => {
+export const CartProduct = (props: CartProductProps) => {
+  const { product, quantity, onRemove, onQuantityChange } = props;
   const totalPrice = product.price * quantity;
 
   return (

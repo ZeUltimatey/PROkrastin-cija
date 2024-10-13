@@ -6,7 +6,7 @@ export const NavbarCart = () => {
     <ul className="flex flex-col border-t-4 border-accent-brown absolute w-[218px] right-[150px] top-[104px] justify-between shadow-sm">
       {cartIsEmpty && (
         <li className="bg-content-white w-full flex py-4 place-items-center justify-center flex-col gap-2 rounded-b-md">
-          <span className="font-semibold text-lg">Nekā te nav!</span>{" "}
+          <span className="font-semibold text-lg">Nekā te nav!</span>
           <i className="fa-solid fa-bugs text-2xl"></i>
         </li>
       )}

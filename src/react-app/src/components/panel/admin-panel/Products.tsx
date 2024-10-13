@@ -6,14 +6,6 @@ import { Sidebar } from "../admin-panel/Sidebar";
 export const Products = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); 
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
   return (
     <div className="flex min-h-screen">
       <Sidebar />
@@ -22,7 +14,7 @@ export const Products = () => {
           Preču Saraksts
         </h2>
         <button
-          onClick={handleOpenModal} 
+          onClick={() => setIsModalOpen(true)}
           className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
         >
           <i className="fa-solid fa-plus"></i> Pievienot produktu
@@ -55,7 +47,7 @@ export const Products = () => {
                   Jauna Produkta Pievienošana
                 </h2>
                 <button
-                  onClick={handleCloseModal} 
+                  onClick={() => setIsModalOpen(false)}
                   className="text-dark-brown rounded-full w-7 h-7 flex items-center justify-center"
                 >
                   <i className="fa-solid fa-x"></i>
@@ -104,7 +96,7 @@ export const Products = () => {
                 </div>
                 <div className="flex justify-end space-x-4 mt-6">
                   <button
-                    onClick={handleCloseModal} 
+                    onClick={() => setIsModalOpen(false)}
                     className="bg-light-gray text-dark-brown px-4 py-2 rounded-md shadow font-poppins"
                   >
                     Atcelt
