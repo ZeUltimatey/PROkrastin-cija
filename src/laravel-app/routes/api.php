@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum');
 Route::get('/basket/{id}', [UserController::class, 'get_basket']); // TODO
+Route::post('/basket/{id}', [UserController::class, 'add_to_basket']); // TODO
 // ->middleware('auth:sanctum');
 
 // Products

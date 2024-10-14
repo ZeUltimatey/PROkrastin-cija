@@ -133,15 +133,17 @@ class UserController extends Controller
         //
     }
 
-    public function select_product(int $id): JsonResponse
+    public function add_to_basket(int $id): JsonResponse
     {
-        return response()->json([], 200);
+        $user = User::findOrFail($id);
+
+        return response()->json($user->add_to_basket(), 200);
     }
 
     public function get_basket(int $id): JsonResponse
     {
         $user = User::findOrFail($id);
 
-        return response()->json([$user->get_basket()], 200);
+        return response()->json($user->get_basket(), 200);
     }
 }

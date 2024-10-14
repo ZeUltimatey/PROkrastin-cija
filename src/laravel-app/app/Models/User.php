@@ -7,6 +7,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -50,21 +51,37 @@ class User extends Authenticatable
         ];
     }
 
+    public function add_to_basket(int $productId, int $amount): void
+    {
+        $userId = $this->getKey();
+        $selected_product = new SelectedProducts();
+        $selected_product->user_id = $userId;
+        $selected_product->product_id = $productId;
+        $selected_product->amount = $amount;
+
+        $selected_product->save();
+
+    }
+
     public function get_basket()
     { // TODO
         $userId = $this->getKey();
-        $selected_products = SelectedProducts::with('product')
-            ->where('user_id', $userId)
-            ->get();
+//        $selected_products = SelectedProducts::with('product')
+//            ->where('user_id', $userId)
+//            ->get();
 
-        $basket = [];
-        foreach ($selected_products as $selected_product) {
-            $basket[] = [
-                'product_id' => $selected_product->product_id,
-                'amount' => $selected_product->amount,
-            ];
-        }
+        $selected_products = DB::select("
+            SELECT selected_products.amount,
+                   products.product_type,
+                   products.display_name,
+                   products.description,
+                   products.pricing,
+                   products.discount_pricing
+            FROM selected_products
+            JOIN products ON selected_products.product_id = products.id
+            WHERE selected_products.user_id = ?
+        ", [$userId]);
 
-        return $basket;
+        return $selected_products;
     }
 }
