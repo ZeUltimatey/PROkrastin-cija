@@ -132,12 +132,24 @@ class UserController extends Controller
     {
         //
     }
+//29 m
+    public function add_to_basket(Request $request, int $id): JsonResponse
+    { // don't forget to optimize (update selected products instead of adding more)
+        // Validator for checking filled information
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|int|exists:products,id',
+            'amount' => 'required|int|min:1',
+        ]);
 
-    public function add_to_basket(int $id): JsonResponse
-    {
+        // Check if the data is valid fr
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422); // Unprocessable Entity
+        }
+
         $user = User::findOrFail($id);
-
-        return response()->json($user->add_to_basket(), 200);
+        return response()->json($user->add_to_basket($request->product_id, $request->amount), 200);
     }
 
     public function get_basket(int $id): JsonResponse
