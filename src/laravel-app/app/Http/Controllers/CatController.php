@@ -12,9 +12,15 @@ use Psy\Util\Json;
 class CatController extends Controller
 {
     private array $validationRules = [
-        'breed_id'     => 'required|exists:cat_breeds,id',
-        'birthdate'     => 'required|date|before:today',
-        'color'      => 'required|string|max:255',
+        'product_type'     => 'required|in:Unlisted,Cat,Accessory,Food,Furniture',
+        'display_name'     => 'required|string|max:255',
+        'description'      => 'required|string',
+        'pricing'          => 'required|numeric|min:0',
+        'discount_pricing' => 'nullable|numeric|min:0|lt:pricing',
+        'stock'            => 'required|integer|min:0',
+        'breed_id'         => 'required|exists:cat_breeds,id',
+        'birthdate'        => 'required|date|before:today',
+        'color'            => 'required|string|max:255',
     ];
 
     /**

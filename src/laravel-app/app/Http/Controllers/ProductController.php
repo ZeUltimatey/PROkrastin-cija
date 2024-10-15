@@ -11,7 +11,7 @@ use Psy\Util\Json;
 class ProductController extends Controller
 {
     private array $validationRules = [
-        'product_type'     => 'required|in:Unlisted,Cat,Accessory,Food,Furniture',
+        'product_type'     => 'required|in:Unlisted,Accessory,Food,Furniture',
         'display_name'     => 'required|string|max:255',
         'description'      => 'required|string',
         'pricing'          => 'required|numeric|min:0',

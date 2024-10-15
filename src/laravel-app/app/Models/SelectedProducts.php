@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class SelectedProducts extends Model
 {
     protected $table = 'selected_products';
-    protected $primaryKey = ['user_id', 'product_id'];
+    protected $primaryKey = 'id';
     protected $fillable = [
         'user_id',
         'product_id',
@@ -18,9 +18,9 @@ class SelectedProducts extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
     public function product()    {
-        return $this->belongsTo(Product::class, 'id', 'product_id');
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 }

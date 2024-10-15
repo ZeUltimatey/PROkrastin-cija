@@ -11,7 +11,7 @@ use Psy\Util\Json;
 class CatBreedController extends Controller
 {
     private array $validationRules = [
-        'attachments_id'    => 'required|integer|exists:attachment_groups,id',
+        'attachments_id'    => 'nullable|integer|exists:attachment_groups,id',
         'display_name'      => 'required|string|max:255',
         'breed_information' => 'required|text',
     ];

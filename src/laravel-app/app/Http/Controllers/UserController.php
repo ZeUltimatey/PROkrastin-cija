@@ -54,14 +54,14 @@ class UserController extends Controller
         // Proceed with user creation if information is valid fr
         $user = User::create([
             'profilepicture_id' => $request->profilepicture_id,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'display_name' => $request->display_name,
-            'name' => $request->name,
-            'surname' => $request->surname,
-            'phone_number' => $request->phone_number,
-            'user_role' => $request->user_role ?? 'User',
-            'deactivated' => false,
+            'email'             => $request->email,
+            'password'          => Hash::make($request->password),
+            'display_name'      => $request->display_name,
+            'name'              => $request->name,
+            'surname'           => $request->surname,
+            'phone_number'      => $request->phone_number,
+            'user_role'         => $request->user_role ?? 'User',
+            'deactivated'       => false,
         ]);
 
         // Create an authentification token for the user
@@ -132,12 +132,12 @@ class UserController extends Controller
         //
     }
 //29 m
-    public function add_to_basket(Request $request, int $id): JsonResponse
+    public function update_basket_item(Request $request, int $id): JsonResponse
     {
         // Validate request data
         $validator = Validator::make($request->all(), [
             'product_id' => 'required|int|exists:products,id',
-            'amount' => 'required|int|min:1',
+            'amount' => 'required|int|min:0',
         ]);
 
         // Check if validation fails
@@ -155,18 +155,27 @@ class UserController extends Controller
             ->where('product_id', $request->product_id)
             ->first();
 
-        if ($selectedProduct) {
-            $selectedProduct->update(['amount' => $selectedProduct->amount + $request->amount]);
-//            // If the product exists, increment the amount and save
-//            $selectedProduct->amount += (int) $request->amount;
-//            $selectedProduct->save();  // Use save() here
+        // Check if the amount is equal to 0
+        if ((int) $request->amount == 0) {
+            // If it exists, delete the selected product record
+            if ($selectedProduct) {
+                $selectedProduct->delete();
+            }
+            // Return a response indicating that the item was removed
+            return response()->json(null, 200); // OK
         } else {
-            // If the product doesn't exist, create a new record
-            $selectedProduct = new SelectedProducts();
-            $selectedProduct->user_id = $user->id;
-            $selectedProduct->product_id = $request->product_id;
-            $selectedProduct->amount = (int) $request->amount;
-            $selectedProduct->save();  // Save the new record
+            if ($selectedProduct) {
+                // If the product exists, update the amount and save
+                $selectedProduct->amount = (int) $request->amount;
+                $selectedProduct->save();  // Use save() here
+            } else {
+                // If the product doesn't exist, create a new record
+                $selectedProduct = new SelectedProducts();
+                $selectedProduct->user_id = $user->id;
+                $selectedProduct->product_id = $request->product_id;
+                $selectedProduct->amount = (int) $request->amount;
+                $selectedProduct->save();  // Save the new record
+            }
         }
 
         // Reload the updated basket item with the product relation
@@ -178,9 +187,6 @@ class UserController extends Controller
         // Return the updated product with the related product information
         return response()->json($updatedProduct, 200);
     }
-
-
-
 
     public function get_basket(int $id): JsonResponse
     {

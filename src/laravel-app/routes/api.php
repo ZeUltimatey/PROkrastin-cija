@@ -5,14 +5,13 @@ use App\Http\Controllers\CatBreedController;
 use App\Http\Controllers\CatController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Users
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum');
-Route::get('/bask   et/{id}', [UserController::class, 'get_basket']);
-Route::post('/basket/{id}', [UserController::class, 'add_to_basket']); // TODO
+Route::get('/basket/{id}', [UserController::class, 'get_basket']);
+Route::post('/basket/{id}', [UserController::class, 'update_basket_item']);
 // ->middleware('auth:sanctum');
 
 // Products
@@ -42,7 +41,3 @@ Route::get('/cards/{id}', [CardsController::class, 'show']);
 Route::post('/cards', [CardsController::class, 'store']);
 Route::post('/cards/{id}', [CardsController::class, 'update']);
 Route::post('/cards/remove/{id}', [CardsController::class, 'store']);
-
-// Basket
-//Route::get('/basket/{id}', [BasketController::class, 'show']);
-//Route::post('/basket/{id}', [BasketController::class, 'add_product']);

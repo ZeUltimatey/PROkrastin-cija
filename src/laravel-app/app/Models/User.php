@@ -64,23 +64,23 @@ class User extends Authenticatable
     }
 
     public function get_basket()
-    { // TODO
+    {
         $userId = $this->getKey();
-//        $selected_products = SelectedProducts::with('product')
-//            ->where('user_id', $userId)
-//            ->get();
 
-        $selected_products = DB::select("
-            SELECT selected_products.amount,
-                   products.product_type,
-                   products.display_name,
-                   products.description,
-                   products.pricing,
-                   products.discount_pricing
-            FROM selected_products
-            JOIN products ON selected_products.product_id = products.id
-            WHERE selected_products.user_id = ?
-        ", [$userId]);
+        $selected_products = SelectedProducts::with('product')
+            ->where('user_id', $userId)
+            ->get(['amount', 'product_id']) // Include only the fields you need from selected_products
+            ->map(function ($selectedProduct) {
+                // For each selected product, retrieve the corresponding product details
+                return [
+                    'amount' => $selectedProduct->amount,
+                    'product_type' => $selectedProduct->product->product_type,
+                    'display_name' => $selectedProduct->product->display_name,
+                    'description' => $selectedProduct->product->description,
+                    'pricing' => $selectedProduct->product->pricing,
+                    'discount_pricing' => $selectedProduct->product->discount_pricing,
+                ];
+            });
 
         return $selected_products;
     }
