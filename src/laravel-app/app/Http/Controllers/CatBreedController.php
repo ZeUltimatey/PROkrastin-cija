@@ -2,50 +2,47 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Models\CatBreed;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Psy\Util\Json;
 
-class ProductController extends Controller
+class CatBreedController extends Controller
 {
     private array $validationRules = [
-        'product_type'     => 'required|in:Unlisted,Cat,Accessory,Food,Furniture',
-        'display_name'     => 'required|string|max:255',
-        'description'      => 'required|string',
-        'pricing'          => 'required|numeric|min:0',
-        'discount_pricing' => 'nullable|numeric|min:0|lt:pricing',
-        'stock'            => 'required|integer|min:0',
+        'attachments_id'    => 'required|integer|exists:attachment_groups,id',
+        'display_name'      => 'required|string|max:255',
+        'breed_information' => 'required|text',
     ];
 
     /**
-     * Show all products.
+     * Show all cat breeds.
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(): JsonResponse
     {
-        return response()->json(Product::all());
+        return response()->json(Catbreed::all());
     }
 
     /**
-     * Show a singular product.
+     * Show a singular cat breed.
      *
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(int $id): JsonResponse
     {
-        // Find the product by id
-        $product = Product::find($id);
+        // Find the cat breed by id
+        $cat_breed = CatBreed::find($id);
 
-        if ($product) { return response()->json($product, 200); }
+        if ($cat_breed) { return response()->json($cat_breed, 200); }
         else { return response()->json(null, 404); }
     }
 
     /**
-     * Store a new product.
+     * Store a new cat breed.
      *
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -61,13 +58,13 @@ class ProductController extends Controller
             return response()->json($errors, 422);
         }
 
-        // Create product if everything is correct
-        $product = Product::create($validator->validated());
-        return response()->json($product, 201);
+        // Create cat breed if everything is correct
+        $cat_breed = CatBreed::create($validator->validated());
+        return response()->json($cat_breed, 201);
     }
 
     /**
-     * Update the information of a product.
+     * Update the information of a cat breed.
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
@@ -84,23 +81,23 @@ class ProductController extends Controller
             return response()->json($errors, 422);
         }
 
-        // Update and return product if everything is correct
-        $product = Product::findOrFail($id);
-        $product->update($validator->validated());
-        return response()->json($product, 201);
+        // Update and return cat breed if everything is correct
+        $cat_breed = CatBreed::findOrFail($id);
+        $cat_breed->update($validator->validated());
+        return response()->json($cat_breed, 201);
     }
 
     /**
-     * Remove a product.
+     * Remove a cat breed.
      *
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(string $id): JsonResponse
     {
-        // Find and delete product by id
-        $product = Product::findOrFail($id);
-        $product->delete();
-        return response()->json('Product deleted successfully', 200);
+        // Find and delete cat breed by id
+        $cat_breed = CatBreed::findOrFail($id);
+        $cat_breed->delete();
+        return response()->json('Cat breed deleted successfully', 200);
     }
 }

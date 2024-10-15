@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Laravel\Sanctum\Http\Controllers\AuthenticatedSessionController;
-use Psy\Util\Json;
 
 class UserController extends Controller
 {
@@ -134,23 +133,54 @@ class UserController extends Controller
     }
 //29 m
     public function add_to_basket(Request $request, int $id): JsonResponse
-    { // don't forget to optimize (update selected products instead of adding more)
-        // Validator for checking filled information
+    {
+        // Validate request data
         $validator = Validator::make($request->all(), [
             'product_id' => 'required|int|exists:products,id',
             'amount' => 'required|int|min:1',
         ]);
 
-        // Check if the data is valid fr
+        // Check if validation fails
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
             ], 422); // Unprocessable Entity
         }
 
+        // Get the authenticated user
         $user = User::findOrFail($id);
-        return response()->json($user->add_to_basket($request->product_id, $request->amount), 200);
+
+        // Find the selected product based on user and product ID
+        $selectedProduct = SelectedProducts::where('user_id', $user->id)
+            ->where('product_id', $request->product_id)
+            ->first();
+
+        if ($selectedProduct) {
+            $selectedProduct->update(['amount' => $selectedProduct->amount + $request->amount]);
+//            // If the product exists, increment the amount and save
+//            $selectedProduct->amount += (int) $request->amount;
+//            $selectedProduct->save();  // Use save() here
+        } else {
+            // If the product doesn't exist, create a new record
+            $selectedProduct = new SelectedProducts();
+            $selectedProduct->user_id = $user->id;
+            $selectedProduct->product_id = $request->product_id;
+            $selectedProduct->amount = (int) $request->amount;
+            $selectedProduct->save();  // Save the new record
+        }
+
+        // Reload the updated basket item with the product relation
+        $updatedProduct = SelectedProducts::with('product')  // Load related product info
+        ->where('user_id', $user->id)
+            ->where('product_id', $request->product_id)
+            ->first();
+
+        // Return the updated product with the related product information
+        return response()->json($updatedProduct, 200);
     }
+
+
+
 
     public function get_basket(int $id): JsonResponse
     {

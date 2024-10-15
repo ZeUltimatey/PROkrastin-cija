@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Crypt;
 class CardInformation extends Model
 {
     protected $table = 'card_information';
-    protected $primaryKey = 'card_id';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'card_number',
         'expiration_date',

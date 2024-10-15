@@ -8,6 +8,11 @@ class SelectedProducts extends Model
 {
     protected $table = 'selected_products';
     protected $primaryKey = ['user_id', 'product_id'];
+    protected $fillable = [
+        'user_id',
+        'product_id',
+        'amount',
+    ];
     public $incrementing = false;
     public $timestamps = true;
 
