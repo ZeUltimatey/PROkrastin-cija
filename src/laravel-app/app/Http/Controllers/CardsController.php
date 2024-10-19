@@ -6,13 +6,13 @@ use App\Models\CardInformation;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class CardsController extends Controller
 {
     private array $validationRules = [
-        'cardholder_id'   => 'required|exists:users,user_id',
-        'card_number'     => 'required|string|digits:16|unique:cards,card_number',
+        'card_number'     => 'required|string|digits:16',
         'expiration_date' => 'required|date_format:m/y|after:today',
         'cvc_number'      => 'nullable|string|digits:3',
         'card_name'       => 'required|string|max:255',
@@ -23,9 +23,30 @@ class CardsController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
+    public function index_all(): JsonResponse
+    {
+        // Fetch all card information
+        $cardInformation = CardInformation::all();
+
+        return response()->json($cardInformation);
+    }
+
+    /**
+     * Show all card information for the user.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index(): JsonResponse
     {
-        return response()->json(CardInformation::all());
+        // Get the ID of the authenticated user
+        $userId = Auth::user()->id;
+
+        // Fetch all card information that belong to the authenticated user
+        $cardInformation = CardInformation::where('cardholder_id', $userId)->get();
+        $cardInformation->makeHidden(['cardholder_id']);
+
+        // Return the filtered records as a JSON response
+        return response()->json($cardInformation);
     }
 
     /**
@@ -37,10 +58,17 @@ class CardsController extends Controller
     public function show(string $id)
     {
         // Find card information by id
-        $card = CardInformation::find($id);
+        $cardInformation = CardInformation::find($id);
 
-        if ($card) { return response()->json($card, 200); }
-        else { return response()->json('Card information not found', 404); }
+        if (!$cardInformation) { return response()->json(null, 404); } // Not found
+        $cardInformation->makeHidden(['cardholder_id']);
+
+        // Check if the user owns the card
+        $userId = Auth::user()->id;
+        if ($cardInformation->cardholder_id != $userId) { return response()->json(null, 403); } // Forbidden
+
+        if ($cardInformation) { return response()->json($cardInformation, 200); } // OK
+        else { return response()->json(null, 404); } // Not found
     }
 
     /**
@@ -57,12 +85,17 @@ class CardsController extends Controller
         // Return an error if the information is not valid fr
         if ($validator->fails()) {
             $errors = ['errors' => $validator->errors()];
-            return response()->json($errors, 422);
+            return response()->json($errors, 422); // Unprocessable entity
         }
 
+        // Append the current user id
+        $userId = Auth::user()->id;
+        $cardInformation = $validator->validated();
+        $cardInformation["cardholder_id"] = $userId;
+
         // Create card information record if everything is correct
-        $card = CardInformation::create($request->validated());
-        return response()->json($card, 201);
+        $card = CardInformation::create($cardInformation);
+        return response()->json($card, 201); // Content created
     }
 
     /**
@@ -80,13 +113,18 @@ class CardsController extends Controller
         // Return an error if the information is not valid fr
         if ($validator->fails()) {
             $errors = ['errors' => $validator->errors()];
-            return response()->json($errors, 422);
+            return response()->json($errors, 422); // Unprocessable entity
         }
 
         // Update and return card information if everything is correct
-        $product = CardInformation::findOrFail($id);
-        $product->update($validator->validated());
-        return response()->json($product, 201);
+        $cardInformation = CardInformation::findOrFail($id);
+
+        // Check if the user owns the card
+        $userId = Auth::user()->id;
+        if ($cardInformation->cardholder_id != $userId) { return response()->json(null, 403); } // Forbidden
+
+        $cardInformation->update($validator->validated());
+        return response()->json($cardInformation, 202); // Request accepted
     }
 
     /**
@@ -100,6 +138,6 @@ class CardsController extends Controller
         // Find and delete card information by id
         $card = CardInformation::findOrFail($id);
         $card->delete();
-        return response()->json('Card deleted successfully', 200);
+        return response()->json(true, 202); // Request accepted
     }
 }

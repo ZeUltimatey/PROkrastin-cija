@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Review extends Model
 {
     protected $table = 'reviews';
-    protected $primaryKey = 'review_id';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'content',
         'rating',
@@ -17,6 +17,6 @@ class Review extends Model
 
     public function reviewer()
     {
-        return $this->hasOne(User::class, 'user_id', 'reviewer_id');
+        return $this->hasOne(User::class, 'id', 'reviewer_id');
     }
 }

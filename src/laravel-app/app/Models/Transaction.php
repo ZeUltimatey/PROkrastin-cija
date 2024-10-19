@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     protected $table = 'transactions';
-    protected $primaryKey = 'transaction_id';
+    protected $primaryKey = 'id';
     public $incrementing = true;
     public $timestamps = true;
 
     public function transactor()
     {
-        return $this->hasOne(User::class, 'user_id', 'transactor_id');
+        return $this->hasOne(User::class, 'id', 'transactor_id');
     }
     public function location()
     {

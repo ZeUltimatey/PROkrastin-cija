@@ -12,12 +12,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Laravel\Sanctum\Http\Controllers\AuthenticatedSessionController;
-use Psy\Util\Json;
 
 class UserController extends Controller
 {
     /**
-     * Show all user.s
+     * Show all users.
      */
     public function index()
     {
@@ -34,15 +33,15 @@ class UserController extends Controller
     {
         // Validator for checking filled information
         $validator = Validator::make($request->all(), [
-            'profilepicture_id' => 'nullable|exists:images,image_id',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'profilepicture_id'     => 'nullable|exists:images,id',
+            'email'                 => 'required|string|email|max:255|unique:users',
+            'password'              => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required|same:password',
-            'display_name' => 'required|string|max:255',
-            'name' => 'required|string|max:255', // added name and surrname because frontend
-            'surname' => 'required|string|max:255',
-            'phone_number' => 'nullable|string|max:15', // temp nullable because frontend
-            'user_role' => 'nullable|in:User,Admin',
+            'display_name'          => 'required|string|max:255',
+            'name'                  => 'required|string|max:255', // added name and surname because frontend
+            'surname'               => 'required|string|max:255',
+            'phone_number'          => 'nullable|string|max:15', // temp nullable because frontend
+            'user_role'             => 'nullable|in:User,Admin',
         ]);
 
         // Check if the data is valid fr
@@ -55,17 +54,17 @@ class UserController extends Controller
         // Proceed with user creation if information is valid fr
         $user = User::create([
             'profilepicture_id' => $request->profilepicture_id,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'display_name' => $request->display_name,
-            'name' => $request->name,
-            'surname' => $request->surname,
-            'phone_number' => $request->phone_number,
-            'user_role' => $request->user_role ?? 'User',
-            'deactivated' => false,
+            'email'             => $request->email,
+            'password'          => Hash::make($request->password),
+            'display_name'      => $request->display_name,
+            'name'              => $request->name,
+            'surname'           => $request->surname,
+            'phone_number'      => $request->phone_number,
+            'user_role'         => $request->user_role ?? 'User',
+            'deactivated'       => false,
         ]);
 
-        // Create an authentification token for the user
+        // Create an authentication token for the user
         $token = $user->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken;
 
         // Return response with user data and token
@@ -138,15 +137,43 @@ class UserController extends Controller
         //
     }
 
-    public function select_product(int $id): JsonResponse
+    public function update_basket_item(Request $request): JsonResponse
     {
-        return response()->json([], 200);
+        // Validate request data
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|int|exists:products,id',
+            'amount' => 'required|int|min:0',
+        ]);
+
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422); // Unprocessable Entity
+        }
+
+        // Get the authenticated user
+        $user = Auth::user();
+
+        // Update basket
+        $updated = $user->update_basket_item($request->product_id, (int)$request->amount);
+        if ($updated) { return response()->json($updated, 200); } // OK
+        else { return response()->json(null, 422); } // Unprocessable entity
     }
 
-    public function get_basket(int $id): JsonResponse
+    public function get_basket(): JsonResponse
     {
-        $user = User::findOrFail($id);
+        // Get the authenticated user
+        $user = Auth::user();
 
-        return response()->json([$user->get_basket()], 200);
+        return response()->json($user->get_basket(), 200); // OK
+    }
+
+    public function clear_basket(): JsonResponse
+    {
+        // Get the authenticated user
+        $user = Auth::user();
+
+        return response()->json($user->clear_basket(), 202); // Request accepted
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Location extends Model
 {
     protected $table = 'locations';
-    protected $primaryKey = 'location_id';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'city',
         'street',
@@ -19,6 +19,6 @@ class Location extends Model
 
     public function creator()
     {
-        return $this->hasOne(User::class, 'user_id', 'creator_id');
+        return $this->hasOne(User::class, 'id', 'creator_id');
     }
 }

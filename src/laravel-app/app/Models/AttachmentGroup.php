@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class AttachmentGroup extends Model
 {
     protected $table = 'attachment_groups';
-    protected $primaryKey = 'attachments_id';
+    protected $primaryKey = 'id';
     public $incrementing = true;
     public $timestamps = true;
 }

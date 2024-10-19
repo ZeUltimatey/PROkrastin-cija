@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Cat extends Model
 {
     protected $table = 'cats';
-    protected $primaryKey = 'cat_id';
+    protected $primaryKey = 'id';
+    protected $fillable = [
+        'breed_id',
+        'birthdate',
+        'color',
+    ];
     public $incrementing = false;
     public $timestamps = true;
 
