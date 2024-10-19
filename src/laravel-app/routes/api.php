@@ -6,6 +6,7 @@ use App\Http\Controllers\CatController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 // Free for all
 Route::post('/register', [UserController::class, 'register']);
@@ -23,6 +24,7 @@ Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanct
 
 // Users only
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+Route::put('/user', [UserController::class, 'update'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

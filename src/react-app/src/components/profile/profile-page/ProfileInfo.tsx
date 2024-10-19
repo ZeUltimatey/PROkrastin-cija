@@ -1,10 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Constants } from "../../universal/Constants";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../universal/Toast";
+import { FormInput } from "../../universal/FormInput";
+import { Spinner } from "../../universal/Spinner";
+
+interface User {
+  email: string;
+  display_name: string;
+  name: string;
+  surname: string;
+  password: string;
+  password_confirmation: string;
+  phone_number?: string;
+}
 
 export const ProfileInfo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [formData, setFormData] = useState<User>({} as User);
+  const [isLoading, setIsLoading] = useState(false);
   const showToast = useToast();
 
   const navigate = useNavigate();
@@ -20,56 +35,111 @@ export const ProfileInfo = () => {
     }).then((response) => {
       if (response.ok) {
         sessionStorage.removeItem(Constants.SESSION_STORAGE.TOKEN);
+        showToast(true, "Iziešana veiksmīga.");
         navigate("/");
       } else {
-        showToast(false, "pizda");
+        showToast(false, "error");
       }
     });
   };
 
+  const getUserInfo = async () => {
+    await fetch(`${Constants.API_URL}/user`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem(
+          Constants.SESSION_STORAGE.TOKEN
+        )}`,
+      },
+    }).then(async (response) => {
+      const data = await response.json();
+      if (response.ok) {
+        setUser(data);
+        setFormData(data);
+      } else {
+        showToast(false, "error");
+      }
+    });
+  };
+
+  const updateUserInfo = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setIsLoading(true);
+    fetch(`${Constants.API_URL}/user`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem(
+          Constants.SESSION_STORAGE.TOKEN
+        )}`,
+      },
+      body: JSON.stringify(formData),
+    }).then(async (response) => {
+      const data = await response.json();
+      if (response.ok) {
+        showToast(true, "Lietotāja informācija saglabāta.");
+        window.location.reload();
+        setIsModalOpen(false);
+      } else {
+        showToast(false, "Kļūda lieotāja informācijas saglabāšanā.");
+      }
+    });
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+
   return (
-    <div className="bg-light-gray shadow-md rounded-md p-8 border-2 border-medium-brown">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-6">
-          <img
-            className="w-24 h-24 rounded-full object-cover border-4 border-medium-brown"
-            src="https://via.placeholder.com/150"
-            alt="Lietotāja attēls"
-          />
-          <div>
-            <h2 className="text-3xl font-bold text-dark-brown font-poppins">
-              Jānis Bērziņš
-            </h2>
-            <p className="text-sm text-dark-brown font-poppins">
-              janis.berzins@gmail.com
-            </p>
-            <p className="text-sm text-dark-brown font-poppins">
-              Pircējs kopš: 23.01.1999.
-            </p>
+    <div className="bg-light-gray shadow-md rounded-md border-2 h-40 border-medium-brown">
+      {user && (
+        <div className="flex items-center justify-between h-full px-6">
+          <div className="flex items-center gap-4">
+            <img
+              className="w-24 h-24 rounded-full object-cover border-4 border-medium-brown"
+              src="https://via.placeholder.com/150"
+              alt="Lietotāja attēls"
+            />
+            <div>
+              <h2 className="text-3xl font-bold text-dark-brown font-poppins">
+                {user.name} {user.surname}
+              </h2>
+              <h2 className="font-bold text-dark-brown font-poppins">
+                @{user.display_name}
+              </h2>
+              <p className="text-sm text-dark-brown font-poppins">
+                {user.email}
+              </p>
+              <p className="text-sm text-dark-brown font-poppins">
+                Pircējs kopš: {user.created_at.slice(0, 10)}
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <button
+              onClick={handleLogoutClick}
+              className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
+            >
+              <i className="fa-solid fa-right-from-bracket"></i> Iziet
+            </button>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
+            >
+              <i className="fa-solid fa-pen-to-square"></i> Rediģēt profilu
+            </button>
           </div>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={handleLogoutClick}
-            className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
-          >
-            <i className="fa-solid fa-right-from-bracket"></i> Iziet
-          </button>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
-          >
-            <i className="fa-solid fa-pen-to-square"></i> Rediģēt profilu
-          </button>
-        </div>
-      </div>
+      )}
+      {!user && <Spinner />}
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-lg w-1/3 relative">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold text-dark-brown font-poppins">
-                Rediģēt Profila Informāciju
+                Rediģēt profila informāciju
               </h2>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -78,42 +148,106 @@ export const ProfileInfo = () => {
                 <i className="fa-solid fa-x"></i>
               </button>
             </div>
-            <form className="space-y-4">
+            <form onSubmit={updateUserInfo} className="space-y-4">
+              <div className="flex gap-2">
+                <div>
+                  <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
+                    Vārds
+                  </label>
+                  <FormInput
+                    placeholder="Ievadiet vārdu"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
+                    Uzārds
+                  </label>
+                  <FormInput
+                    placeholder="Ievadiet uzvārdu"
+                    value={formData.surname}
+                    onChange={(e) =>
+                      setFormData({ ...formData, surname: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
               <div>
-                <label className="text-sm text-dark-brown font-poppins block mb-1">
-                  Vārds un Uzvārds
+                <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
+                  Lietotājvārds
                 </label>
-                <input
-                  type="text"
-                  defaultValue="Jānis Bērziņš"
-                  className="w-full border border-medium-brown rounded-md p-2"
+                <FormInput
+                  placeholder="Ievadiet lietotājvārdu"
+                  value={formData.display_name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, display_name: e.target.value })
+                  }
                 />
               </div>
               <div>
-                <label className="text-sm text-dark-brown font-poppins block mb-1">
+                <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
                   E-pasts
                 </label>
-                <input
+                <FormInput
+                  placeholder="Ievadiet e-pastu"
+                  value={formData.email}
                   type="email"
-                  defaultValue="janis.berzins@gmail.com"
-                  className="w-full border border-medium-brown rounded-md p-2"
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                 />
               </div>
-
+              <div className="flex gap-2">
+                <div className="w-full">
+                  <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
+                    Parole
+                  </label>
+                  <FormInput
+                    placeholder="Ievadiet jaunu paroli"
+                    value={formData.password}
+                    type="password"
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="w-full">
+                  <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
+                    Paroles apstiprinājums
+                  </label>
+                  <FormInput
+                    placeholder="Apstipriniet paroli"
+                    value={formData.password_confirmation}
+                    type="password"
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        password_confirmation: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
               <div className="flex justify-end space-x-4 mt-6">
                 <button
-                  type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="bg-light-gray text-dark-brown px-4 py-2 rounded-md shadow font-poppins"
+                  className="bg-light-gray text-dark-brown hover:bg-opacity-70 px-4 py-2 rounded-md shadow font-poppins"
                 >
                   Atcelt
                 </button>
-                <button
+                <input
                   type="submit"
-                  className="bg-medium-brown text-white px-6 py-2 rounded-md shadow font-poppins"
-                >
-                  Saglabāt
-                </button>
+                  value="Saglabāt"
+                  disabled={isLoading}
+                  className={`${
+                    isLoading
+                      ? "bg-gray-200 hover:cursor-not-allowed"
+                      : "hover:cursor-pointer bg-medium-brown hover:bg-opacity-70"
+                  }   text-white px-6 py-2 rounded-md shadow font-poppins`}
+                />
               </div>
             </form>
           </div>

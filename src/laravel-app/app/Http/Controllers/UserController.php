@@ -124,10 +124,33 @@ class UserController extends Controller
     /**
      * Update user information.
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'profilepicture_id'     => 'nullable|exists:images,id',
+            'email'                 => 'nullable|string|email|max:255',
+            'password'              => 'nullable|string|min:8|confirmed',
+            'password_confirmation' => 'nullable|same:password',
+            'display_name'          => 'nullable|string|max:255',
+            'name'                  => 'nullable|string|max:255',
+            'surname'               => 'nullable|string|max:255',
+            'phone_number'          => 'nullable|string|max:15',
+            'user_role'             => 'nullable|in:User,Admin',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $user = User::find($request->user()->id);
+
+        $user->update($validator->validated());
+
+        return response()->json(['message' => "User successfully updated"], 200);
     }
+    
 
     /**
      * Delete a user.
