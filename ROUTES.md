@@ -50,7 +50,7 @@ return [
     {
         "id": int,
         "attachments_id": int or null,
-        "product_type": enum('Unlisted', 'Cat', 'Accessory', 'Food', 'Furniture'),
+        "product_type": enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'),
         "display_name": string(255),
         "description": string(65535),
         "pricing": float,
@@ -68,7 +68,7 @@ return [
 return {
     "id": int,
     "attachments_id": int or null,
-    "product_type": enum('Unlisted', 'Cat', 'Accessory', 'Food', 'Furniture'),
+    "product_type": enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'),
     "display_name": string(255),
     "description": string(65535),
     "pricing": float,
