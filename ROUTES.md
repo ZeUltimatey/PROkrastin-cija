@@ -3,6 +3,8 @@ localhost/
 └── api/
     ├── register/ POST (adding a new user) ✅
     ├── login/ POST (authentificating an existing user) ✅
+    ├── user / GET (gets current user using token) ✅
+    ├── logout / POST (deletes current user's token) ✅
     ├── all_users/ GET (getting all users) ✅
     ├── all_cards/ GET (getting all user card information) ✅
     ├── basket/
