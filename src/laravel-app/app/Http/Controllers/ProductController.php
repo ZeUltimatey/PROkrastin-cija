@@ -101,6 +101,6 @@ class ProductController extends Controller
         // Find and delete product by id
         $product = Product::findOrFail($id);
         $product->delete();
-        return response()->json('Product deleted successfully', 200);
+        return response()->json(true, 200);
     }
 }

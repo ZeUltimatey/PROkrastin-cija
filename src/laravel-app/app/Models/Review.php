@@ -17,6 +17,6 @@ class Review extends Model
 
     public function reviewer()
     {
-        return $this->hasOne(User::class, 'user_id', 'reviewer_id');
+        return $this->hasOne(User::class, 'id', 'reviewer_id');
     }
 }

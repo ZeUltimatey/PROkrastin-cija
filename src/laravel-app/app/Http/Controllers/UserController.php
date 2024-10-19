@@ -16,7 +16,7 @@ use Laravel\Sanctum\Http\Controllers\AuthenticatedSessionController;
 class UserController extends Controller
 {
     /**
-     * Show all user.s
+     * Show all users.
      */
     public function index()
     {
@@ -33,15 +33,15 @@ class UserController extends Controller
     {
         // Validator for checking filled information
         $validator = Validator::make($request->all(), [
-            'profilepicture_id' => 'nullable|exists:images,image_id',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'profilepicture_id'     => 'nullable|exists:images,id',
+            'email'                 => 'required|string|email|max:255|unique:users',
+            'password'              => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required|same:password',
-            'display_name' => 'required|string|max:255',
-            'name' => 'required|string|max:255', // added name and surrname because frontend
-            'surname' => 'required|string|max:255',
-            'phone_number' => 'nullable|string|max:15', // temp nullable because frontend
-            'user_role' => 'nullable|in:User,Admin',
+            'display_name'          => 'required|string|max:255',
+            'name'                  => 'required|string|max:255', // added name and surname because frontend
+            'surname'               => 'required|string|max:255',
+            'phone_number'          => 'nullable|string|max:15', // temp nullable because frontend
+            'user_role'             => 'nullable|in:User,Admin',
         ]);
 
         // Check if the data is valid fr
@@ -64,7 +64,7 @@ class UserController extends Controller
             'deactivated'       => false,
         ]);
 
-        // Create an authentification token for the user
+        // Create an authentication token for the user
         $token = $user->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken;
 
         // Return response with user data and token
@@ -131,8 +131,8 @@ class UserController extends Controller
     {
         //
     }
-//29 m
-    public function update_basket_item(Request $request, int $id): JsonResponse
+
+    public function update_basket_item(Request $request): JsonResponse
     {
         // Validate request data
         $validator = Validator::make($request->all(), [
@@ -148,49 +148,18 @@ class UserController extends Controller
         }
 
         // Get the authenticated user
-        $user = User::findOrFail($id);
+        $user = Auth::user();
 
-        // Find the selected product based on user and product ID
-        $selectedProduct = SelectedProducts::where('user_id', $user->id)
-            ->where('product_id', $request->product_id)
-            ->first();
-
-        // Check if the amount is equal to 0
-        if ((int) $request->amount == 0) {
-            // If it exists, delete the selected product record
-            if ($selectedProduct) {
-                $selectedProduct->delete();
-            }
-            // Return a response indicating that the item was removed
-            return response()->json(null, 200); // OK
-        } else {
-            if ($selectedProduct) {
-                // If the product exists, update the amount and save
-                $selectedProduct->amount = (int) $request->amount;
-                $selectedProduct->save();  // Use save() here
-            } else {
-                // If the product doesn't exist, create a new record
-                $selectedProduct = new SelectedProducts();
-                $selectedProduct->user_id = $user->id;
-                $selectedProduct->product_id = $request->product_id;
-                $selectedProduct->amount = (int) $request->amount;
-                $selectedProduct->save();  // Save the new record
-            }
-        }
-
-        // Reload the updated basket item with the product relation
-        $updatedProduct = SelectedProducts::with('product')  // Load related product info
-        ->where('user_id', $user->id)
-            ->where('product_id', $request->product_id)
-            ->first();
-
-        // Return the updated product with the related product information
-        return response()->json($updatedProduct, 200);
+        // Update basket
+        $updated = $user->update_basket_item($request->product_id, (int)$request->amount);
+        if ($updated) { return response()->json($updated, 200); }
+        else { return response()->json(null, 422); }
     }
 
-    public function get_basket(int $id): JsonResponse
+    public function get_basket(): JsonResponse
     {
-        $user = User::findOrFail($id);
+        // Get the authenticated user
+        $user = Auth::user();
 
         return response()->json($user->get_basket(), 200);
     }

@@ -105,6 +105,6 @@ class CatController extends Controller
         // Find and delete product by id
         $cat = Cat::findOrFail($id);
         $cat->delete();
-        return response()->json('Product deleted successfully', 200);
+        return response()->json(true, 200);
     }
 }
