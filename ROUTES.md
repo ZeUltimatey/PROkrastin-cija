@@ -3,10 +3,11 @@ localhost/
 └── api/
     ├── register/ POST (adding a new user) ✅
     ├── login/ POST (authentificating an existing user) ✅
-    ├── user / GET (gets current user using token) ✅
-    ├── logout / POST (deletes current user's token) ✅
+    ├── user/ GET (gets current user using token) ✅
+    ├── logout/ POST (deletes current user's token) ✅
     ├── all_users/ GET (getting all users) ✅
     ├── all_cards/ GET (getting all user card information) ✅
+    ├── all_locations/ GET (getting all user locations) ✅
     ├── basket/
     │   ├── GET (getting the contents of a users basket) ✅
     │   ├── POST (selecting/deselecting a product) ✅
@@ -29,12 +30,18 @@ localhost/
     │   ├── {id} GET (getting the specfified cat breed) ✅
     │   ├── {id} POST (updating the specified cat breed) ✅
     │   └── remove/{id} POST (deleting the specified cat breed) ✅
-    └── cards/
-        ├── GET (getting all card information) ✅
-        ├── POST (adding new card information) ✅
-        ├── {id} GET (getting specific card information) ✅
-        ├── {id} POST (updating specific card information) ✅
-        └── remove/{id} POST (deleting specific card information) ✅
+    ├── cards/
+    │   ├── GET (getting all card information) ✅
+    │   ├── POST (adding new card information) ✅
+    │   ├── {id} GET (getting specific card information) ✅
+    │   ├── {id} POST (updating specific card information) ✅
+    │   └── remove/{id} POST (deleting specific card information) ✅
+    └── locations/
+        ├── GET (getting all locations) ✅
+        ├── POST (adding new location) ✅
+        ├── {id} GET (get specific location) ✅
+        ├── {id} POST (update specific location) ✅
+        └── remove/{id} POST (deleting specific location) ✅
         
 ✅ - Working fine
 🟨 - Subject to change
@@ -150,7 +157,7 @@ or
 return [
     {
         "amount": int,
-        "product_type": enum('Unlisted', 'Cat', 'Accessory', 'Food', 'Furniture'),
+        "product_type": enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'),
         "display_name": string(255),
         "description": string(65535),
         "pricing": float,
@@ -180,6 +187,20 @@ return [
 ]
 ```
 ---
+`localhost/api/locations GET` *authenticated user*
+```php
+return [
+    {
+        "id": int,
+        "city": string(255),
+        "street": string(255),
+        "apartment_number": string(255) or null,
+        "zip_code": string(255)
+    },
+    other locations..
+]
+```
+---
 `localhost/api/cards/{id} GET` *authenticated user*
 ```php
 return {
@@ -195,16 +216,33 @@ or
 {} - code 403 - forbidden
 ```
 ---
-`localhost/api/cards/remove/{id} POST` *authenticated user*
+`localhost/api/locations/{id} GET` *authenticated user*
+```php
+{
+    "id": int,
+    "city": string(255),
+    "street": string(255),
+    "apartment_number": string(255) or null,
+    "zip_code": string(255)
+}
+
+or
+
+{} - code 422 - invalid location id
+{} - code 403 - forbidden
+```
+---
+`localhost/api/cards/remove/{id} POST` *authenticated user* \
+`localhost/api/locations/remove/{id} POST` *authenticated user*
 ```php
 return true
 
 or 
 
-{} - code 422 - invalid card information id
+{} - code 422 - invalid id
 ```
 ---
-`localhost/api/all_users GET`
+`localhost/api/all_users GET` ***authenticated admin***
 ```php
 return [
     {
@@ -225,7 +263,7 @@ return [
 ]
 ```
 ---
-`localhost/api/all_cards GET`
+`localhost/api/all_cards GET` ***authenticated admin***
 ```php
 return [
     {
@@ -239,32 +277,32 @@ return [
 ]
 ```
 ---
-`localhost/api/products/remove/{id} POST` ***authenticated admin***
+`localhost/api/all_locations GET` ***authenticated admin***
 ```php
-return true
-
-or 
-
-{} - code 422 - invalid product id
+return [
+    {
+        "id": int,
+        "creator_id": int,
+        "city": string(255),
+        "street": string(255),
+        "apartment_number": string(255) or null,
+        "zip_code": string(255)
+    },
+    other locations..
+]
 ```
 ---
-`localhost/api/cats/remove/{id} POST` ***authenticated admin***
-```php
-return true
-
-or 
-
-{} - code 422 - invalid cat id
-```
----
+`localhost/api/products/remove/{id} POST` ***authenticated admin*** \
+`localhost/api/cats/remove/{id} POST` ***authenticated admin*** \
 `localhost/api/cat_breeds/remove/{id} POST` ***authenticated admin***
 ```php
 return true
 
 or 
 
-{} - code 422 - invalid cat breed id
+{} - code 422 - invalid id
 ```
+---
 
 ### ↓ Routes with JSON required ↓
 `localhost/api/register POST`
@@ -334,7 +372,7 @@ return {
 ```php
 return {
     "amount": int,
-    "product_type": enum('Unlisted', 'Cat', 'Accessory', 'Food', 'Furniture'),
+    "product_type": enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'),
     "display_name": string(255),
     "description": string(65535),
     "pricing": float,
@@ -346,16 +384,7 @@ or
 {} - code 422 - invalid product id
 ```
 ---
-`localhost/api/cards POST` *authenticated user*
-```php
-{
-    "card_number"     : "required|string|digits:16",
-    "expiration_date" : "required|date_format:m/y|after:today",
-    "cvc_number"      : "nullable|string|digits:3",
-    "card_name"       : "required|string|max:255"
-}
-```
----
+`localhost/api/cards POST` *authenticated user* \
 `localhost/api/cards/{id} POST` *authenticated user*
 ```php
 {
@@ -365,23 +394,38 @@ or
     "card_name"       : "required|string|max:255"
 }
 ```
+```php
+return { "card_number": string(255), ... }
+
+or 
+
+{} - code 422 - invalid input data
+```
+
 ---
-`localhost/api/products POST` ***authenticated admin***
+`localhost/api/locations POST` *authenticated user* \
+`localhost/api/locations/{id} POST` *authenticated user*
 ```php
 {
-    "product_type"     : "required|in:Unlisted,Accessory,Food,Furniture",
-    "display_name"     : "required|string|max:255",
-    "description"      : "required|string",
-    "pricing"          : "required|numeric|min:0",
-    "discount_pricing" : "nullable|numeric|min:0|lt:pricing",
-    "stock"            : "required|integer|min:0"
+    "city"             : "required|string|max:255",
+    "street"           : "required|string|max:255",
+    "apartment_number" : "nullable|string|max:255",
+    "zip_code"         : "required|string|max:255"
 }
 ```
+```php
+return { "city": string(255), ... }
+
+or 
+
+{} - code 422 - invalid input data
+```
 ---
+`localhost/api/products POST` ***authenticated admin*** \
 `localhost/api/products/{id} POST` ***authenticated admin***
 ```php
 {
-    "product_type"     : "required|in:Unlisted,Accessory,Food,Furniture",
+    "product_type"     : "required|in:UNLISTED,ACCESSORIES,FOOD,CARE,TOYS,FURNITURE",
     "display_name"     : "required|string|max:255",
     "description"      : "required|string",
     "pricing"          : "required|numeric|min:0",
@@ -389,7 +433,15 @@ or
     "stock"            : "required|integer|min:0"
 }
 ```
+```php
+return { "product_type": enum('UNLISTED', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'), ... }
+
+or 
+
+{} - code 422 - invalid input data
+```
 ---
+`localhost/api/cats POST` ***authenticated admin*** \
 `localhost/api/cats/{id} POST` ***authenticated admin***
 ```php
 {
@@ -398,7 +450,16 @@ or
     "color"     : "required|string|max:255"
 }
 ```
+```php
+return { "breed_id": int, ... }
+
+or 
+
+{} - code 422 - invalid input data
+```
+
 ---
+`localhost/api/cat_breeds POST` ***authenticated admin*** \
 `localhost/api/cat_breeds/{id} POST` ***authenticated admin***
 ```php
 {
@@ -406,4 +467,11 @@ or
     "display_name"      : "required|string|max:255",
     "breed_information" : "required|string|max:65535"
 }
+```
+```php
+return { "attachments_id": int, ... }
+
+or 
+
+{} - code 422 - invalid input data
 ```

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\CardsController;
 use App\Http\Controllers\CatBreedController;
 use App\Http\Controllers\CatController;
@@ -34,6 +35,12 @@ Route::post('/cards/{id}', [CardsController::class, 'update'])->middleware('auth
 Route::get('/cards/{id}', [CardsController::class, 'show'])->middleware('auth:sanctum');
 Route::post('/cards/remove/{id}', [CardsController::class, 'destroy'])->middleware('auth:sanctum');
 
+Route::get('/locations', [LocationController::class, 'index'])->middleware('auth:sanctum');
+Route::post('/locations', [LocationController::class, 'store'])->middleware('auth:sanctum');
+Route::post('/locations/{id}', [LocationController::class, 'update'])->middleware('auth:sanctum');
+Route::get('/locations/{id}', [LocationController::class, 'show'])->middleware('auth:sanctum');
+Route::post('/locations/remove/{id}', [LocationController::class, 'destroy'])->middleware('auth:sanctum');
+
 Route::get('/basket', [UserController::class, 'get_basket'])->middleware('auth:sanctum');
 Route::post('/basket', [UserController::class, 'update_basket_item'])->middleware('auth:sanctum');
 Route::post('/basket/clear', [UserController::class, 'clear_basket'])->middleware('auth:sanctum');
@@ -41,6 +48,7 @@ Route::post('/basket/clear', [UserController::class, 'clear_basket'])->middlewar
 // Admins only - some routes are for testing purposes - TODO: make them accessible by admins only
 Route::get('/all_users', [UserController::class, 'index'])->middleware('auth:sanctum');
 Route::get('/all_cards', [CardsController::class, 'index_all'])->middleware('auth:sanctum');
+Route::get('/all_locations', [LocationController::class, 'index_all'])->middleware('auth:sanctum');
 
 Route::post('/products', [ProductController::class, 'store'])->middleware('auth:sanctum');
 Route::post('/cats', [CatController::class, 'store'])->middleware('auth:sanctum');
