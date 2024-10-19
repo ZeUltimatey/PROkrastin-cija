@@ -1,14 +1,30 @@
 import { useState } from "react";
+import { Constants } from "../../universal/Constants";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "../../universal/Toast";
 
 export const ProfileInfo = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const showToast = useToast();
 
-  const handleEditClick = () => {
-    setIsModalOpen(true);
-  };
+  const navigate = useNavigate();
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleLogoutClick = async () => {
+    await fetch(`${Constants.API_URL}/logout`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem(
+          Constants.SESSION_STORAGE.TOKEN
+        )}`,
+      },
+    }).then((response) => {
+      if (response.ok) {
+        sessionStorage.removeItem(Constants.SESSION_STORAGE.TOKEN);
+        navigate("/");
+      } else {
+        showToast(false, "pizda");
+      }
+    });
   };
 
   return (
@@ -32,12 +48,20 @@ export const ProfileInfo = () => {
             </p>
           </div>
         </div>
-        <button
-          onClick={handleEditClick}
-          className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
-        >
-          <i className="fa-solid fa-pen-to-square"></i> Rediģēt profilu
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleLogoutClick}
+            className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
+          >
+            <i className="fa-solid fa-right-from-bracket"></i> Iziet
+          </button>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
+          >
+            <i className="fa-solid fa-pen-to-square"></i> Rediģēt profilu
+          </button>
+        </div>
       </div>
 
       {isModalOpen && (
@@ -48,7 +72,7 @@ export const ProfileInfo = () => {
                 Rediģēt Profila Informāciju
               </h2>
               <button
-                onClick={handleCloseModal}
+                onClick={() => setIsModalOpen(false)}
                 className="text-dark-brown rounded-full w-7 h-7 flex items-center justify-center"
               >
                 <i className="fa-solid fa-x"></i>
@@ -79,7 +103,7 @@ export const ProfileInfo = () => {
               <div className="flex justify-end space-x-4 mt-6">
                 <button
                   type="button"
-                  onClick={handleCloseModal}
+                  onClick={() => setIsModalOpen(false)}
                   className="bg-light-gray text-dark-brown px-4 py-2 rounded-md shadow font-poppins"
                 >
                   Atcelt

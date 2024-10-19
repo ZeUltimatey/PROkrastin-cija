@@ -1,4 +1,4 @@
-import { ItemCard } from "../ItemCard";
+import { ItemCard } from "../../product/ItemCard";
 import catItems from "../../../data/cat_items.json";
 import { useState } from "react";
 import Carousel from "react-multi-carousel";

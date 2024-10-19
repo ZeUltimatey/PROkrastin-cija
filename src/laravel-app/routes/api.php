@@ -9,16 +9,23 @@ use Illuminate\Support\Facades\Route;
 // Users
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum');
-Route::get('/basket/{id}', [UserController::class, 'get_basket']); // TODO
-// ->middleware('auth:sanctum');
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 
+Route::get('/basket/{id}', [UserController::class, 'get_basket']); // TODO 
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 // Products
+    Route::apiResource('products', 'App\Http\Controllers\ProductController');
+
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
+
+Route::group(['middleware' => 'auth:sanctum'], function() { //TODO check for admin role
 Route::post('/products', [ProductController::class, 'store']);
 Route::post('/products/{id}', [ProductController::class, 'update']);
 Route::post('/products/remove/{id}', [ProductController::class, 'store']);
-
+});
 // Card information (some might be redundant)
 Route::get('/cards', [CardsController::class, 'index']);
 Route::get('/cards/{id}', [CardsController::class, 'show']);

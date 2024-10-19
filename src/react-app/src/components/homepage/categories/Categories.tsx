@@ -1,7 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { Category } from "./Category";
 import { CategoryList } from "./CategoryList";
 
 export const Categories = () => {
+  const navigate = useNavigate();
+
   return (
     <div
       id="categories"
@@ -29,7 +32,7 @@ export const Categories = () => {
         </div>
         <div className="mx-12 mb-6">
           <button
-            onClick={() => window.location.assign("/catalog")}
+            onClick={() => navigate("/catalog")}
             className="flex place-items-center justify-center h-16 w-full bg-content-white hover:brightness-90 transition-all hover:shadow-lg rounded-md shadow-md"
           >
             <span className="text-2xl font-semibold text-dark-brown font-poppins">

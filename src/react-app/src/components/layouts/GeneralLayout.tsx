@@ -7,6 +7,7 @@ export const GeneralLayout = () => {
     <div style={{ backgroundImage: `url(../cat_pattern_bg.jpg)` }}>
       <div className="lg:px-32 py-6 bg-background-brown bg-opacity-95">
         <Navbar />
+
         <Outlet />
         <Footer />
       </div>

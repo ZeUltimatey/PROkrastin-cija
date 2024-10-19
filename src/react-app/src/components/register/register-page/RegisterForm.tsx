@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { FormInput } from "../../universal/FormInput";
 import { Constants } from "../../universal/Constants";
+import { useNavigate } from "react-router-dom";
 
 export const RegisterForm = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     surname: "",
@@ -14,7 +17,7 @@ export const RegisterForm = () => {
 
   const onSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    await fetch("http://127.0.0.1:8000/api/register", {
+    await fetch(`${Constants.API_URL}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +28,7 @@ export const RegisterForm = () => {
         const data = await response.json();
         if (response.ok) {
           sessionStorage.setItem(Constants.SESSION_STORAGE.TOKEN, data.token);
-          window.location.href = "/";
+          navigate("/");
         } else {
           console.log(data);
           throw new Error(data.error);

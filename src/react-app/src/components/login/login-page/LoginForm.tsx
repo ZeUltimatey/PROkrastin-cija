@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FormInput } from "../../universal/FormInput";
 import { Constants } from "../../universal/Constants";
+import { useNavigate } from "react-router-dom";
 
 export const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -8,9 +9,11 @@ export const LoginForm = () => {
     password: "",
   });
 
+  const navigate = useNavigate();
+
   const onSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    await fetch("http://127.0.0.1:8000/api/login", {
+    await fetch(`${Constants.API_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +24,7 @@ export const LoginForm = () => {
         const data = await response.json();
         if (response.ok) {
           sessionStorage.setItem(Constants.SESSION_STORAGE.TOKEN, data.token);
-          window.location.href = "/";
+          navigate("/");
         } else {
           throw new Error(data.error);
         }

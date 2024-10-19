@@ -18,7 +18,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('attachment_groups');
 
-            $table->enum('product_type', ['Unlisted', 'Cat', 'Accessory', 'Food', 'Furniture']);
+            $table->enum('product_type', ['UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE']);
             $table->string('display_name');
             $table->text('description');
             $table->float('pricing');

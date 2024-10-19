@@ -1,4 +1,4 @@
-import { ItemCard } from "../homepage/ItemCard";
+import { ItemCard } from "../product/ItemCard";
 import { useEffect, useState } from "react";
 import { Filter } from "./catalog-page/Filter";
 import { SearchSort } from "./catalog-page/SearchSort";

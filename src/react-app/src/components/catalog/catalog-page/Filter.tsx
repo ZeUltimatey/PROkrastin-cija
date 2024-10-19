@@ -13,8 +13,8 @@ const FilterCriteria = {
     [CategoryNames.FURNITURE]: false,
   },
   price: {
-    from: null,
-    to: null,
+    from: null as number,
+    to: null as number,
   },
 };
 
