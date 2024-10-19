@@ -8,6 +8,11 @@ class Cat extends Model
 {
     protected $table = 'cats';
     protected $primaryKey = 'id';
+    protected $fillable = [
+        'breed_id',
+        'birthdate',
+        'color',
+    ];
     public $incrementing = false;
     public $timestamps = true;
 

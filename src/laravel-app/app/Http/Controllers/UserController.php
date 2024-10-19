@@ -152,8 +152,8 @@ class UserController extends Controller
 
         // Update basket
         $updated = $user->update_basket_item($request->product_id, (int)$request->amount);
-        if ($updated) { return response()->json($updated, 200); }
-        else { return response()->json(null, 422); }
+        if ($updated) { return response()->json($updated, 200); } // OK
+        else { return response()->json(null, 422); } // Unprocessable entity
     }
 
     public function get_basket(): JsonResponse
@@ -161,6 +161,14 @@ class UserController extends Controller
         // Get the authenticated user
         $user = Auth::user();
 
-        return response()->json($user->get_basket(), 200);
+        return response()->json($user->get_basket(), 200); // OK
+    }
+
+    public function clear_basket(): JsonResponse
+    {
+        // Get the authenticated user
+        $user = Auth::user();
+
+        return response()->json($user->clear_basket(), 202); // Request accepted
     }
 }

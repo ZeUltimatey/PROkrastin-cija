@@ -30,9 +30,11 @@ Route::post('/cards/remove/{id}', [CardsController::class, 'destroy'])->middlewa
 
 Route::get('/basket', [UserController::class, 'get_basket'])->middleware('auth:sanctum');
 Route::post('/basket', [UserController::class, 'update_basket_item'])->middleware('auth:sanctum');
+Route::post('/basket/clear', [UserController::class, 'clear_basket'])->middleware('auth:sanctum');
 
-// Admins only - TODO: make them accessible by admins only
-Route::get('/users', [UserController::class, 'index'])->middleware('auth:sanctum');
+// Admins only - some routes are for testing purposes - TODO: make them accessible by admins only
+Route::get('/all_users', [UserController::class, 'index'])->middleware('auth:sanctum');
+Route::get('/all_cards', [CardsController::class, 'index_all'])->middleware('auth:sanctum');
 
 Route::post('/products', [ProductController::class, 'store'])->middleware('auth:sanctum');
 Route::post('/cats', [CatController::class, 'store'])->middleware('auth:sanctum');

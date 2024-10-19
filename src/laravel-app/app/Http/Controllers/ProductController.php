@@ -40,8 +40,8 @@ class ProductController extends Controller
         // Find the product by id
         $product = Product::find($id);
 
-        if ($product) { return response()->json($product, 200); }
-        else { return response()->json(null, 404); }
+        if ($product) { return response()->json($product, 200); } // OK
+        else { return response()->json(null, 404); } // Not found
     }
 
     /**
@@ -58,12 +58,12 @@ class ProductController extends Controller
         // Return an error if the information is not valid fr
         if ($validator->fails()) {
             $errors = ['errors' => $validator->errors()];
-            return response()->json($errors, 422);
+            return response()->json($errors, 422); // Unprocessable entity
         }
 
         // Create product if everything is correct
         $product = Product::create($validator->validated());
-        return response()->json($product, 201);
+        return response()->json($product, 201); // Content created
     }
 
     /**
@@ -81,13 +81,13 @@ class ProductController extends Controller
         // Return an error if the information is not valid fr
         if ($validator->fails()) {
             $errors = ['errors' => $validator->errors()];
-            return response()->json($errors, 422);
+            return response()->json($errors, 422); // Unprocessable entity
         }
 
         // Update and return product if everything is correct
         $product = Product::findOrFail($id);
         $product->update($validator->validated());
-        return response()->json($product, 201);
+        return response()->json($product, 202); // Request accepted
     }
 
     /**
@@ -96,11 +96,11 @@ class ProductController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         // Find and delete product by id
         $product = Product::findOrFail($id);
         $product->delete();
-        return response()->json(true, 200);
+        return response()->json(true, 202); // Request accepted
     }
 }

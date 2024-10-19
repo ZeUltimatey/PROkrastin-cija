@@ -13,7 +13,7 @@ class CatBreedController extends Controller
     private array $validationRules = [
         'attachments_id'    => 'nullable|integer|exists:attachment_groups,id',
         'display_name'      => 'required|string|max:255',
-        'breed_information' => 'required|text',
+        'breed_information' => 'required|string|max:65535',
     ];
 
     /**

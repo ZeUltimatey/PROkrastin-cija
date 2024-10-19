@@ -12,12 +12,12 @@ use Psy\Util\Json;
 class CatController extends Controller
 {
     private array $validationRules = [
-        'product_type'     => 'required|in:Unlisted,Cat,Accessory,Food,Furniture',
-        'display_name'     => 'required|string|max:255',
-        'description'      => 'required|string',
-        'pricing'          => 'required|numeric|min:0',
-        'discount_pricing' => 'nullable|numeric|min:0|lt:pricing',
-        'stock'            => 'required|integer|min:0',
+//        'product_type'     => 'required|in:Unlisted,Cat,Accessory,Food,Furniture',
+//        'display_name'     => 'required|string|max:255',
+//        'description'      => 'required|string',
+//        'pricing'          => 'required|numeric|min:0',
+//        'discount_pricing' => 'nullable|numeric|min:0|lt:pricing',
+//        'stock'            => 'required|integer|min:0',
         'breed_id'         => 'required|exists:cat_breeds,id',
         'birthdate'        => 'required|date|before:today',
         'color'            => 'required|string|max:255',
@@ -88,7 +88,7 @@ class CatController extends Controller
             return response()->json($errors, 422);
         }
 
-        // Update and return product if everything is correct
+        // Update and return cat if everything is correct
         $cat = Cat::findOrFail($id);
         $cat->update($validator->validated());
         return response()->json($cat, 201);

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -133,11 +134,10 @@ class TestSeeder extends Seeder
 
         DB::table('card_information')->insert([
             [
-                'id' => 1,
                 'cardholder_id' => 2,
-                'card_number' => '5550130966726224',
-                'expiration_date' => '12/24',
-                'cvc_number' => '271',
+                'card_number' => Crypt::encryptString('5550130966726224'),
+                'expiration_date' => Crypt::encryptString('12/24'),
+                'cvc_number' => Crypt::encryptString('271'),
                 'card_name' => 'RYAN GOSLING',
                 'created_at' => now(),
                 'updated_at' => now(),

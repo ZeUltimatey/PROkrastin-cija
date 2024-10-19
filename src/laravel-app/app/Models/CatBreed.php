@@ -16,5 +16,4 @@ class CatBreed extends Model
     ];
     public $incrementing = true;
     public $timestamps = true;
-
 }

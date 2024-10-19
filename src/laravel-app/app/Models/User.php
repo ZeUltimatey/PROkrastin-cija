@@ -138,4 +138,17 @@ class User extends Authenticatable
 
         return $selected_products;
     }
+
+    public function clear_basket()
+    {
+        // Sense
+        $userId = $this->getKey();
+
+        // Delete all selected products for the user
+        $deletedCount = SelectedProducts::where('user_id', $userId)->delete();
+
+        return [
+            'cleared' => $deletedCount
+        ];
+    }
 }
