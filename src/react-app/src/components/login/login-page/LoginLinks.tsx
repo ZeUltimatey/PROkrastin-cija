@@ -9,7 +9,7 @@ export const LoginLinks = () => {
       </div>
       <LoginButton />
       <p className="text-sm text-center text-gray-500">
-        Tev vēl nav profila?{" "}
+        Tev vēl nav profila?
         <a
           href="/register"
           className="text-dark-brown hover:underline font-semibold"

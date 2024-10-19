@@ -3,6 +3,8 @@ localhost/
 └── api/
     ├── register/ POST (adding a new user) ✅
     ├── login/ POST (authentificating an existing user) ✅
+    ├── user / GET (gets current user using token) ✅
+    ├── logout / POST (deletes current user's token) ✅
     ├── all_users/ GET (getting all users) ✅
     ├── all_cards/ GET (getting all user card information) ✅
     ├── basket/
@@ -48,7 +50,7 @@ return [
     {
         "id": int,
         "attachments_id": int or null,
-        "product_type": enum('Unlisted', 'Cat', 'Accessory', 'Food', 'Furniture'),
+        "product_type": enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'),
         "display_name": string(255),
         "description": string(65535),
         "pricing": float,
@@ -66,7 +68,7 @@ return [
 return {
     "id": int,
     "attachments_id": int or null,
-    "product_type": enum('Unlisted', 'Cat', 'Accessory', 'Food', 'Furniture'),
+    "product_type": enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'),
     "display_name": string(255),
     "description": string(65535),
     "pricing": float,

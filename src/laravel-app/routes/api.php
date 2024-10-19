@@ -22,6 +22,12 @@ Route::get('/cat_breeds/{id}', [CatBreedController::class, 'show']);
 Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum')->name('login');
 
 // Users only
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
 Route::get('/cards', [CardsController::class, 'index'])->middleware('auth:sanctum');
 Route::post('/cards', [CardsController::class, 'store'])->middleware('auth:sanctum');
 Route::post('/cards/{id}', [CardsController::class, 'update'])->middleware('auth:sanctum');

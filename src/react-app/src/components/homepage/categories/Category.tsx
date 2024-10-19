@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 export const Category = ({
   name,
   link,
@@ -9,9 +11,10 @@ export const Category = ({
   idx: number;
   image: string;
 }) => {
+  const navigate = useNavigate();
   return (
     <div
-      onClick={() => window.location.assign(link)}
+      onClick={() => navigate(link)}
       className="group w-80 h-80 hover:cursor-pointer"
     >
       <div

@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { NavbarCart } from "./NavbarCart";
 import { CategoryList } from "../homepage/categories/CategoryList";
+import { Constants } from "./Constants";
+import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
   const [navbarToggle, setNavbarToggle] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
   const [showCart, setShowCart] = useState(false);
-  console.log(CategoryList.length);
+
+  const navigate = useNavigate();
+
   const Category = ({
     name,
     link,
@@ -18,14 +22,31 @@ export const Navbar = () => {
   }) => {
     return (
       <li
-        onClick={() => window.location.assign(link)}
-        className={`${idx + 1 == CategoryList.length ? "rounded-br-md" : ""} ${
-          idx == CategoryList.length - 3 ? "rounded-bl-md" : ""
+        onClick={() => navigate(link)}
+        className={`${idx + 1 === CategoryList.length ? "rounded-br-md" : ""} ${
+          idx === CategoryList.length - 3 ? "rounded-bl-md" : ""
         } bg-[#EDEAE1] border-[#d8d6ce] brightness-95 hover:brightness-90 px-4 min-w-24 text-center py-2 h-full`}
       >
         {name}
       </li>
     );
+  };
+
+  const handleUserClick = async () => {
+    await fetch(`${Constants.API_URL}/user`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem(
+          Constants.SESSION_STORAGE.TOKEN
+        )}`,
+      },
+    }).then((response) => {
+      if (response.ok) {
+        navigate("/profile");
+      } else {
+        navigate("/auth/login");
+      }
+    });
   };
 
   return (
@@ -39,7 +60,7 @@ export const Navbar = () => {
         <div className="hidden md:flex text-lg lg:text-xl font-semibold place-items-center grow border-[1.5px] rounded-full border-gray-300 has-[:focus]:border-gray-600">
           <div className="flex grow">
             <input
-              placeholder="Meklēt..."
+              placeholder="Meklēt visā Murrātavā..."
               type="text"
               className="text-xl h-12 px-6 w-[600px] font-semibold grow bg-[#f4f1e9] rounded-s-full focus:outline-none font-poppins"
             />
@@ -93,7 +114,7 @@ export const Navbar = () => {
             <i className="fa-solid fa-basket-shopping text-xl lg:text-2xl"></i>
           </button>
           <button
-            onClick={() => window.location.assign("/auth/login")}
+            onClick={() => handleUserClick()}
             className=" h-full px-6 hover:border-b-4 border-accent-brown transition-all"
           >
             <i className="fa-solid fa-user text-xl lg:text-2xl"></i>
