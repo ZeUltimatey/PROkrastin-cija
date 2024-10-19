@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Validator;
 class CardsController extends Controller
 {
     private array $validationRules = [
-        'cardholder_id'   => 'required|exists:users,user_id',
-        'card_number'     => 'required|string|digits:16|unique:cards,card_number',
+        'cardholder_id'   => 'required|exists:users,id',
+        'card_number'     => 'required|string|digits:16|unique:card_information,card_number',
         'expiration_date' => 'required|date_format:m/y|after:today',
         'cvc_number'      => 'nullable|string|digits:3',
         'card_name'       => 'required|string|max:255',
@@ -61,7 +61,13 @@ class CardsController extends Controller
         }
 
         // Create card information record if everything is correct
-        $card = CardInformation::create($request->validated());
+        $card = CardInformation::create([
+            "cardholder_id"   => $request->cardholder_id,
+            "card_number"     => $request->card_number,
+            "expiration_date" => $request->expiration_date,
+            "cvc_number"      => $request->cvc_number,
+            "card_name"       => $request->card_name
+        ]);
         return response()->json($card, 201);
     }
 
@@ -100,6 +106,6 @@ class CardsController extends Controller
         // Find and delete card information by id
         $card = CardInformation::findOrFail($id);
         $card->delete();
-        return response()->json('Card deleted successfully', 200);
+        return response()->json(true, 200);
     }
 }

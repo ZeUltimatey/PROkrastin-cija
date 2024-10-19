@@ -44,7 +44,7 @@ class CardInformation extends Model
 
     public function getCardholder()
     {
-        return $this->hasOne(User::class, 'user_id', 'cardholder_id');
+        return $this->hasOne(User::class, 'id', 'cardholder_id');
     }
     public function getCardNumberAttribute($value)
     {

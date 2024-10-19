@@ -98,6 +98,6 @@ class CatBreedController extends Controller
         // Find and delete cat breed by id
         $cat_breed = CatBreed::findOrFail($id);
         $cat_breed->delete();
-        return response()->json('Cat breed deleted successfully', 200);
+        return response()->json(true, 200);
     }
 }

@@ -19,6 +19,6 @@ class Location extends Model
 
     public function creator()
     {
-        return $this->hasOne(User::class, 'user_id', 'creator_id');
+        return $this->hasOne(User::class, 'id', 'creator_id');
     }
 }

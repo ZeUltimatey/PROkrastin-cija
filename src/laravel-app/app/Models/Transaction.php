@@ -13,7 +13,7 @@ class Transaction extends Model
 
     public function transactor()
     {
-        return $this->hasOne(User::class, 'user_id', 'transactor_id');
+        return $this->hasOne(User::class, 'id', 'transactor_id');
     }
     public function location()
     {
