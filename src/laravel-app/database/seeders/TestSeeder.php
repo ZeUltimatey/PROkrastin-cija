@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class TestSeeder extends Seeder
 {
@@ -15,10 +16,12 @@ class TestSeeder extends Seeder
      */
     public function run(): void
     {
+        
+
         DB::table('products')->insert([
             [
                 'id' => 1,
-                'product_type' => 'Furniture',
+                'product_type' => 'FURNITURE',
                 'display_name' => 'Cat Hammock Bed',
                 'description' => 'Hanging bed for cats to relax and enjoy their nap time.',
                 'pricing' => 45.00,
@@ -29,7 +32,7 @@ class TestSeeder extends Seeder
             ],
             [
                 'id' => 2,
-                'product_type' => 'Cat',
+                'product_type' => 'CATS',
                 'display_name' => 'Asteroid Destroyer',
                 'description' => 'This kitten was found abandoned in the sewers of Seattle, Washington, D.C.',
                 'pricing' => 1199.99,
@@ -40,12 +43,12 @@ class TestSeeder extends Seeder
             ],
             [
                 "id" => 3,
-                "product_type" => "Food",
+                "product_type" => "FOOD",
                 "display_name" => "Kaķu utilizators",
                 "description" => "Pēc šī kaķis nebūs izsalcis ļoooooti ilgi..",
                 "pricing" => 0.01,
                 "discount_pricing" => null,
-                "stock" => 999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999,
+                "stock" => 9999999,
                 "updated_at" => now(),
                 "created_at" => now(),
             ]
@@ -93,33 +96,29 @@ class TestSeeder extends Seeder
             ]
         ]);
 
-        DB::table('users')->insert([
-            [
-                'id' => 1,
-                'email' => 'admin@murratava.lv',
-                'password' => Hash::make('safe123'),
-                'display_name' => 'Admin',
-                'name' => 'Admin',
-                'surname' => 'Admin',
-                'phone_number' => '+37125565817',
-                'user_role' => 'Admin',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => 2,
-                'email' => 'vardsuzvards@gmail.com',
-                'password' => Hash::make('asd'),
-                'display_name' => 'Vards Uzvards',
-                'name' => 'Vards',
-                'surname' => 'Uzvards',
-                'phone_number' => '+37125565816',
-                'user_role' => 'User',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+        User::create([
+            'email' => 'admin@murratava.lv',
+            'password' => Hash::make('safe123'),
+            'display_name' => 'Admin',
+            'name' => 'Admin',
+            'surname' => 'Admin',
+            'phone_number' => '+37125565817',
+            'user_role' => 'Admin',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
-
+        User::create([
+            'email' => 'vardsuzvards@gmail.com',
+            'password' => Hash::make('asd'),
+            'display_name' => 'Vards Uzvards',
+            'name' => 'Vards',
+            'surname' => 'Uzvards',
+            'phone_number' => '+37125565816',
+            'user_role' => 'User',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+       
         DB::table('reviews')->insert([
             [
                 'id' => 1,
