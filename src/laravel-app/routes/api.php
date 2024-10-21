@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,7 @@ Route::get('/cat_breeds/{id}', [CatBreedController::class, 'show']);
 Route::get('/reviews/{product_id}', [ReviewController::class, 'show']);
 
 // Guests only
-Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum');
+Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum')->name('login');
 
 // Users only
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
@@ -60,24 +61,27 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/basket/clear', [UserController::class, 'clear_basket']);
 });
 
-// Admins only - some routes are for testing purposes - TODO: make them accessible by admins only
-Route::get('/all_users', [UserController::class, 'index'])->middleware('auth:sanctum');
-Route::get('/all_cards', [CardsController::class, 'index_all'])->middleware('auth:sanctum');
-Route::get('/all_locations', [LocationController::class, 'index_all'])->middleware('auth:sanctum');
-Route::get('/all_transactions', [TransactionController::class, 'index_all'])->middleware('auth:sanctum');
-Route::get('/all_reviews', [ReviewController::class, 'index_all'])->middleware('auth:sanctum');
+// Admins only - some routes are for testing purposes
+// Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
+Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
+    Route::get('/all_users', [UserController::class, 'index']);
+    Route::get('/all_cards', [CardsController::class, 'index_all']);
+    Route::get('/all_locations', [LocationController::class, 'index_all']);
+    Route::get('/all_transactions', [TransactionController::class, 'index_all']);
+    Route::get('/all_reviews', [ReviewController::class, 'index_all']);
 
-Route::post('/products', [ProductController::class, 'store'])->middleware('auth:sanctum');
-Route::post('/products/{id}/images/add', [ProductController::class, 'addImage'])->middleware('auth:sanctum'); // gonna need to explain this
-Route::post('/products/images/{image}/remove', [ProductController::class, 'removeImage'])->middleware('auth:sanctum');  //gonna need to explain this
-Route::post('/cats', [CatController::class, 'store'])->middleware('auth:sanctum');
-Route::post('/cat_breeds', [CatBreedController::class, 'store'])->middleware('auth:sanctum');
+    Route::post('/products', [ProductController::class, 'store']);
+    Route::post('/products/{id}/images/add', [ProductController::class, 'addImage']); // gonna need to explain this
+    Route::post('/products/images/{image}/remove', [ProductController::class, 'removeImage']);  //gonna need to explain this
+    Route::post('/cats', [CatController::class, 'store']);
+    Route::post('/cat_breeds', [CatBreedController::class, 'store']);
 
-Route::post('/products/{id}', [ProductController::class, 'update'])->middleware('auth:sanctum');
-Route::post('/cats/{id}', [CatController::class, 'update'])->middleware('auth:sanctum');
-Route::post('/cat_breeds/{id}', [CatBreedController::class, 'update'])->middleware('auth:sanctum');
+    Route::post('/products/{id}', [ProductController::class, 'update']);
+    Route::post('/cats/{id}', [CatController::class, 'update']);
+    Route::post('/cat_breeds/{id}', [CatBreedController::class, 'update']);
 
-Route::post('/products/remove/{id}', [ProductController::class, 'destroy'])->middleware('auth:sanctum');
-Route::post('/cats/remove/{id}', [CatController::class, 'destroy'])->middleware('auth:sanctum');
-Route::post('/cat_breeds/remove/{id}', [CatBreedController::class, 'destroy'])->middleware('auth:sanctum');
-Route::post('/reviews/remove/{id}', [ReviewController::class, 'destroy'])->middleware('auth:sanctum');
+    Route::post('/products/remove/{id}', [ProductController::class, 'destroy']);
+    Route::post('/cats/remove/{id}', [CatController::class, 'destroy']);
+    Route::post('/cat_breeds/remove/{id}', [CatBreedController::class, 'destroy']);
+    Route::post('/reviews/remove/{id}', [ReviewController::class, 'destroy']);
+});
