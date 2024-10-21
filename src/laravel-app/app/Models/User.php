@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'display_name',
+        'image_url',
         'name',
         'surname',
         'phone_number',
@@ -91,20 +92,22 @@ class User extends Authenticatable
                 'pricing' => $product->pricing,
                 'discount_pricing' => $product->discount_pricing,
             ];
-        } else {
-            if ($selectedProduct) {
-                // If the product exists, update the amount and save
-                $selectedProduct->amount = $amount;
-                $selectedProduct->save();  // Use save() here
-            } else {
-                // If the product doesn't exist, create a new record
-                $selectedProduct = new SelectedProducts();
-                $selectedProduct->user_id = $userId;
-                $selectedProduct->product_id = $product_id;
-                $selectedProduct->amount = $amount;
-                $selectedProduct->save();  // Save the new record
-            }
         }
+
+        // Adding to basket
+        if ($selectedProduct) {
+            // If the product exists, update the amount and save
+            $selectedProduct->amount = $amount;
+            $selectedProduct->save();  // Use save() here
+        } else {
+            // If the product doesn't exist, create a new record
+            $selectedProduct = new SelectedProducts();
+            $selectedProduct->user_id = $userId;
+            $selectedProduct->product_id = $product_id;
+            $selectedProduct->amount = $amount;
+            $selectedProduct->save();  // Save the new record
+        }
+        
 
         return [
             'amount' => $selectedProduct->amount,

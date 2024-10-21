@@ -13,11 +13,6 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('attachments_id')->nullable();
-            $table->foreign('attachments_id')
-                ->references('id')
-                ->on('attachment_groups');
-
             $table->enum('product_type', ['UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE']);
             $table->string('display_name');
             $table->text('description');
