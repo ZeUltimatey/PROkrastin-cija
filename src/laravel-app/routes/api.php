@@ -17,11 +17,11 @@ Route::post('/register', [UserController::class, 'register']);
 
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/cats', [CatController::class, 'index']);
-Route::get('/cat_breeds', [CatBreedController::class, 'index']);
+Route::get('/breeds', [CatBreedController::class, 'index']);
 
 Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/cats/{id}', [CatController::class, 'show']);
-Route::get('/cat_breeds/{id}', [CatBreedController::class, 'show']);
+Route::get('/breeds/{id}', [CatBreedController::class, 'show']);
 Route::get('/reviews/{product_id}', [ReviewController::class, 'show']);
 
 // Guests only
@@ -76,14 +76,13 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::post('/products/{id}/images/add', [ProductController::class, 'addImage']); // gonna need to explain this
     Route::post('/products/images/{image}/remove', [ProductController::class, 'removeImage']);  //gonna need to explain this
     Route::post('/cats', [CatController::class, 'store']);
-    Route::post('/cat_breeds', [CatBreedController::class, 'store']);
+    Route::post('/breeds', [CatBreedController::class, 'store']);
 
     Route::post('/products/{id}', [ProductController::class, 'update']);
     Route::post('/cats/{id}', [CatController::class, 'update']);
-    Route::post('/cat_breeds/{id}', [CatBreedController::class, 'update']);
+    Route::post('/breeds/{id}', [CatBreedController::class, 'update']);
 
     Route::post('/products/remove/{id}', [ProductController::class, 'destroy']);
-    Route::post('/cats/remove/{id}', [CatController::class, 'destroy']);
-    Route::post('/cat_breeds/remove/{id}', [CatBreedController::class, 'destroy']);
+    Route::post('/breeds/remove/{id}', [CatBreedController::class, 'destroy']);
     Route::post('/reviews/remove/{id}', [ReviewController::class, 'destroy']);
 });

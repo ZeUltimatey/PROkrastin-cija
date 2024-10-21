@@ -25,8 +25,7 @@ localhost/
     │   ├── GET (getting all cats) ✅
     │   ├── POST (adding new cat) 🟨
     │   ├── {id} GET (getting the specfified cat) ✅
-    │   ├── {id} POST (updating the specified cat) 🟨
-    │   └── remove/{id} POST (deleting the specified cat) ✅
+    │   └── {id} POST (updating the specified cat) 🟨
     ├── cat_breeds/
     │   ├── GET (getting all cat breeds) ✅
     │   ├── POST (adding new cat breed) ✅
@@ -159,11 +158,25 @@ or
 return [
     {
         "id": int,
-        "breed_id": int,
-        "birthdate": timestamp,
-        "color": string(255),
+        "product_type": string(255),
+        "display_name": string(255),
+        "description": string(65535),
+        "pricing": float,
+        "discount_pricing": float or null,
+        "stock": int,
         "created_at": timestamp,
-        "updated_at": timestamp
+        "updated_at": timestamp,
+        "cat": {
+            "breed_id": int,
+            "birthdate": timestamp,
+            "color": string(255),
+            "cat_breed": {
+                "id": int,
+                "attachments_id": int or null,
+                "display_name": string(255),
+                "breed_information": string(65535)
+            }
+        }
     },
     other cats..
 ]
@@ -686,7 +699,30 @@ or
 }
 ```
 ```php
-return { "product_type": enum('UNLISTED', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'), ... }
+return {
+    "id": int,
+    "product_type": string(255),
+    "display_name": string(255),
+    "description": string(65535),
+    "pricing": float,
+    "discount_pricing": float or null,
+    "stock": int,
+    "created_at": timesamp,
+    "updated_at": timesamp,
+    "cat": {
+        "breed_id": int,
+        "birthdate": timestamp,
+        "color": string(255),
+        "cat_breed": {
+            "id": int,
+            "attachments_id": int or null,
+            "display_name": string(255),
+            "breed_information": string(65535),
+            "created_at": timestamp,
+            "updated_at": timestamp
+        }
+    }
+}
 
 or 
 
