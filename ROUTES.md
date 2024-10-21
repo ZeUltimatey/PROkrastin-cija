@@ -49,8 +49,8 @@ localhost/
     │   ├── GET (getting all transactions) ✅
     │   └── {id} GET (getting specific transaction) ❌
     └── reviews/
-        ├── {id} GET (getting all reviews for a product) ✅
-        ├── {id} POST (editing a review for a product) ✅
+        ├── {product_id} GET (getting all reviews for a product) ✅
+        ├── {product_id} POST (creating a review for a product) ✅
         └── remove/{id} POST (deleting a specific review) ✅
         
 ✅ - Working fine
