@@ -69,8 +69,10 @@ max_price=float
 keyword=string
 per_page=int (default 10)
 page=int (default 1)
+keyword=string
 
-Example: /products?type=CATS,FURNITURE&min_price=7.4&per_page=15&page=2
+Example: GET /products?type=CATS,FURNITURE&min_price=7.4&per_page=15&page=2&keyword=purina
+Example: GET /products
 ```
 ```php
 return [
@@ -343,6 +345,29 @@ return true
 or 
 
 {} - code 422 - invalid id
+```
+---
+`localhost/api/users/{id} GET` ***authenticated admin***
+```php
+return {
+    "id": int,
+    "profilepicture_id": int or null,
+    "image_url": string(255) or null,
+    "email": string(255),
+    "display_name": string(255),
+    "name": string(255),
+    "surname": string(255),
+    "phone_number": string(255),
+    "user_role": enum('User', 'Admin'),
+    "deactivated": boolean,
+    "created_at": timestamp,
+    "updated_at": timestamp,
+    "remember_token": string(255) or null
+}
+
+or
+
+{} - code 404 - invalid user id
 ```
 ---
 `localhost/api/all_users GET` ***authenticated admin***
@@ -630,6 +655,22 @@ return {
         "zip_code": string(255)
     } or location can be null
 }
+```
+---
+`localhost/api/users/deactivate/{id} POST` ***authenticated admin***
+```php
+{
+    "deactivate" : "required|boolean"
+}
+```
+```php
+return {
+    "deactivated": boolean
+}
+
+or
+
+{"deactivated": false} - code 403 - cannot activate/deactivate admin users
 ```
 ---
 `localhost/api/products POST` ***authenticated admin*** \

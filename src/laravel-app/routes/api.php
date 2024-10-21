@@ -25,7 +25,7 @@ Route::get('/cat_breeds/{id}', [CatBreedController::class, 'show']);
 Route::get('/reviews/{product_id}', [ReviewController::class, 'show']);
 
 // Guests only
-Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum')->name('login');
+Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum');
 
 // Users only
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
@@ -62,13 +62,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 // Admins only - some routes are for testing purposes
-// Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
 Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::get('/all_users', [UserController::class, 'index']);
     Route::get('/all_cards', [CardsController::class, 'index_all']);
     Route::get('/all_locations', [LocationController::class, 'index_all']);
     Route::get('/all_transactions', [TransactionController::class, 'index_all']);
     Route::get('/all_reviews', [ReviewController::class, 'index_all']);
+
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::post('/users/deactivate/{id}', [UserController::class, 'deactivate']);
 
     Route::post('/products', [ProductController::class, 'store']);
     Route::post('/products/{id}/images/add', [ProductController::class, 'addImage']); // gonna need to explain this

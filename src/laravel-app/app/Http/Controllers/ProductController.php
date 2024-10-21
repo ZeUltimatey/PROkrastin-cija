@@ -74,9 +74,6 @@ class ProductController extends Controller
         return ProductResource::collection($products);
     }
 
-
-
-
     /**
      * Show a singular product.
      *
