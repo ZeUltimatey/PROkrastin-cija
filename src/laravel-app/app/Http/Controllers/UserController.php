@@ -87,14 +87,6 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255',
             'password' => 'required|string',
         ]);
-
-        // $user = User::where('email', $validatedData['email'])->first();
-
-        /**
-        * if (!$user || !Hash::check($validatedData['password'], $user->password)) {
-        *    return response()->json(['error' => 'Invalid credentials'], 401);
-        * }
-        */
         if (!Auth::attempt($validatedData)) {
             return response()->json(['error' => 'Invalid credentials'], 401);
         } else {
@@ -124,10 +116,33 @@ class UserController extends Controller
     /**
      * Update user information.
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'profilepicture_id'     => 'nullable|exists:images,id',
+            'email'                 => 'nullable|string|email|max:255',
+            'password'              => 'nullable|string|min:8|confirmed',
+            'password_confirmation' => 'nullable|same:password',
+            'display_name'          => 'nullable|string|max:255',
+            'name'                  => 'nullable|string|max:255',
+            'surname'               => 'nullable|string|max:255',
+            'phone_number'          => 'nullable|string|max:15',
+            'user_role'             => 'nullable|in:User,Admin',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $user = User::find($request->user()->id);
+
+        $user->update($validator->validated());
+
+        return response()->json(['message' => "User successfully updated"], 200);
     }
+    
 
     /**
      * Delete a user.
@@ -175,5 +190,32 @@ class UserController extends Controller
         $user = Auth::user();
 
         return response()->json($user->clear_basket(), 202); // Request accepted
+    }
+
+    
+    public function addProfilePicture(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $user = Auth::user();
+        $oldImagePath = str_replace('/storage/', '', $user->image_url);
+        Storage::disk('public')->delete($oldImagePath);
+        $path = $request->file('image')->store('images/profile', 'public');
+        $user->image_url = Storage::url($path);
+        $user->save();
+
+        return $user;
+        
+    }
+
+    public function removeProfilePicture(){
+        $user = Auth::user();
+        $oldImagePath = str_replace('/storage/', '', $user->image_url);
+        Storage::disk('public')->delete($oldImagePath);
+        $user->image_url = '';
+        return response()->json(true, 204);
+
     }
 }

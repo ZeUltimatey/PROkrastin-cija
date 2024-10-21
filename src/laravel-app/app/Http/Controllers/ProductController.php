@@ -7,6 +7,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Psy\Util\Json;
+use Illuminate\Support\Facades\Storage;
+use App\Models\ProductImage;
+use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
 {
@@ -22,25 +25,25 @@ class ProductController extends Controller
     /**
      * Show all products.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * 
      */
-    public function index(): JsonResponse
+    public function index()
     {
-        return response()->json(Product::all());
+        return ProductResource::collection(Product::all());
     }
 
     /**
      * Show a singular product.
      *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * 
      */
-    public function show(int $id): JsonResponse
+    public function show(int $id)
     {
         // Find the product by id
         $product = Product::find($id);
 
-        if ($product) { return response()->json($product, 200); } // OK
+        if ($product) { return new ProductResource($product); } // OK
         else { return response()->json(null, 404); } // Not found
     }
 
@@ -103,4 +106,36 @@ class ProductController extends Controller
         $product->delete();
         return response()->json(true, 202); // Request accepted
     }
+
+
+    public function addImage(Request $request, int $id){
+    
+        $validator = Validator::make($request->all(), 
+            [
+                'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            ]
+        );
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422); // Unprocessable Entity
+        }   
+        $image = $request->file('image');
+        $path = $image->store('images/products', 'public');
+        $imageUrl = Storage::url($path);
+
+        return ProductImage::create([
+            'product_id' => $id,
+            'url' => $imageUrl,
+        ]);
+    }
+
+
+    public function removeImage(Request $request, ProductImage $image){ 
+        $oldImagePath = str_replace('/storage/', '', $image->url);
+        Storage::disk('public')->delete($oldImagePath);
+        $image->delete();
+        return response()->json(true, 204); // No content
+    }
 }
+
