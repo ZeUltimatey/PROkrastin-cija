@@ -5,6 +5,8 @@ use App\Http\Controllers\CardsController;
 use App\Http\Controllers\CatBreedController;
 use App\Http\Controllers\CatController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -19,9 +21,10 @@ Route::get('/cat_breeds', [CatBreedController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/cats/{id}', [CatController::class, 'show']);
 Route::get('/cat_breeds/{id}', [CatBreedController::class, 'show']);
+Route::get('/reviews/{product_id}', [ReviewController::class, 'show']);
 
 // Guests only
-Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum')->name('login');
+Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum');
 
 // Users only
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
@@ -47,6 +50,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/locations/{id}', [LocationController::class, 'show']);
     Route::post('/locations/remove/{id}', [LocationController::class, 'destroy']);
 
+    Route::post('/reviews/{id}', [ReviewController::class, 'store']);
+
+    Route::get('/transactions', [TransactionController::class, 'show']);
+    Route::post('/purchase', [TransactionController::class, 'purchase']);
+
     Route::get('/basket', [UserController::class, 'get_basket']);
     Route::post('/basket', [UserController::class, 'update_basket_item']);
     Route::post('/basket/clear', [UserController::class, 'clear_basket']);
@@ -56,6 +64,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::get('/all_users', [UserController::class, 'index'])->middleware('auth:sanctum');
 Route::get('/all_cards', [CardsController::class, 'index_all'])->middleware('auth:sanctum');
 Route::get('/all_locations', [LocationController::class, 'index_all'])->middleware('auth:sanctum');
+Route::get('/all_transactions', [TransactionController::class, 'index_all'])->middleware('auth:sanctum');
+Route::get('/all_reviews', [ReviewController::class, 'index_all'])->middleware('auth:sanctum');
 
 Route::post('/products', [ProductController::class, 'store'])->middleware('auth:sanctum');
 Route::post('/products/{id}/images/add', [ProductController::class, 'addImage'])->middleware('auth:sanctum'); // gonna need to explain this
@@ -70,3 +80,4 @@ Route::post('/cat_breeds/{id}', [CatBreedController::class, 'update'])->middlewa
 Route::post('/products/remove/{id}', [ProductController::class, 'destroy'])->middleware('auth:sanctum');
 Route::post('/cats/remove/{id}', [CatController::class, 'destroy'])->middleware('auth:sanctum');
 Route::post('/cat_breeds/remove/{id}', [CatBreedController::class, 'destroy'])->middleware('auth:sanctum');
+Route::post('/reviews/remove/{id}', [ReviewController::class, 'destroy'])->middleware('auth:sanctum');

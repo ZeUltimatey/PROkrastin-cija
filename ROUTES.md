@@ -5,15 +5,18 @@ localhost/
     ├── login/ POST (authentificating an existing user) ✅
     ├── user/ GET (gets current user using token) ✅
     ├── logout/ POST (deletes current user's token) ✅
+    ├── purchase/ POST (purchase and clear basket) ✅
     ├── all_users/ GET (getting all users) ✅
     ├── all_cards/ GET (getting all user card information) ✅
     ├── all_locations/ GET (getting all user locations) ✅
+    ├── all_transactions/ GET (getting all user transactions) ✅
+    ├── all_reviews/ GET (getting all reviews) ✅
     ├── basket/
     │   ├── GET (getting the contents of a users basket) ✅
     │   ├── POST (selecting/deselecting a product) ✅
     │   └── clear/ POST (clear basket) ✅
     ├── products/
-    │   ├── GET (getting all products) ✅
+    │   ├── {query_options} GET (getting all products) ✅
     │   ├── POST (adding new product) ✅
     │   ├── {id} GET (getting the specfified product) ✅
     │   ├── {id} POST (updating the specified product) ✅
@@ -36,12 +39,19 @@ localhost/
     │   ├── {id} GET (getting specific card information) ✅
     │   ├── {id} POST (updating specific card information) ✅
     │   └── remove/{id} POST (deleting specific card information) ✅
-    └── locations/
-        ├── GET (getting all locations) ✅
-        ├── POST (adding new location) ✅
-        ├── {id} GET (get specific location) ✅
-        ├── {id} POST (update specific location) ✅
-        └── remove/{id} POST (deleting specific location) ✅
+    ├── locations/
+    │   ├── GET (getting all locations) ✅
+    │   ├── POST (adding new location) ✅
+    │   ├── {id} GET (get specific location) ✅
+    │   ├── {id} POST (update specific location) ✅
+    │   └── remove/{id} POST (deleting specific location) ✅
+    ├── transactions/
+    │   ├── GET (getting all transactions) ✅
+    │   └── {id} GET (getting specific transaction) ❌
+    └── reviews/
+        ├── {id} GET (getting all reviews for a product) ✅
+        ├── {id} POST (editing a review for a product) ✅
+        └── remove/{id} POST (deleting a specific review) ✅
         
 ✅ - Working fine
 🟨 - Subject to change
@@ -52,6 +62,16 @@ PS: There are a few unhandled errors for deleting products while they are in use
 
 ### ↓ Routes with no JSON required ↓
 `localhost/api/products GET`
+```php
+type=enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE')
+min_price=float
+max_price=float
+keyword=string
+per_page=int (default 10)
+page=int (default 1)
+
+Example: /products?type=CATS,FURNITURE&min_price=7.4&per_page=15&page=2
+```
 ```php
 return [
     {
@@ -68,6 +88,48 @@ return [
     },
     other products..
 ]
+```
+```php
+return {
+  "data": [
+        {
+        "id": int,
+        "attachments_id": int or null,
+        "product_type": enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'),
+        "display_name": string(255),
+        "description": string(65535),
+        "pricing": float,
+        "discount_pricing": float or null,
+        "stock": int,
+        "created_at": timestamp,
+        "updated_at": timestamp,
+    },
+    other products..
+  ],
+  "links": {
+    "first": string,
+    "last": string,
+    "prev": string or null,
+    "next": string or null
+  },
+  "meta": {
+    "current_page": int,
+    "from": int or null,
+    "last_page": int,
+    "links": [
+      {
+        "url": string or null,
+        "label": string,
+        "active": true or false
+      },
+      more links..
+    ],
+    "path": string,
+    "per_page": int,
+    "to": int or null,
+    "total": int
+  }
+}
 ```
 ---
 `localhost/api/products/{id} GET`
@@ -150,6 +212,47 @@ return {
 or
 
 {} - code 422 - invalid cat breed id
+```
+---
+`localhost/api/reviews/{product_id} GET`
+```php
+return [
+    {
+        "id": int,
+        "attachments_id": int or null,
+        "content": string(65535),
+        "rating": int,
+        "created_at": timestamp,
+        "reviewer": {
+            "id": int,
+            "display_name": string(255),
+            "image_url": string(255) or null,
+            "user_role": enum('User', 'Admin'),
+            "deactivated": boolean
+        }
+    },
+    other reviews..
+]
+```
+---
+`localhost/api/transactions GET` *authenticated user*
+```php
+return [
+    {
+        "id": int,
+        "total_pricing": float,
+        "check_content": string(65535),
+        "created_at": timestamp,
+        "location": {
+            "id": int,
+            "city": string(255),
+            "street": string(255),
+            "apartment_number": string(255) or null,
+            "zip_code": string(255)
+        } or location can be null
+    },
+    other transactions..
+]
 ```
 ---
 `localhost/api/basket GET` *authenticated user*
@@ -292,9 +395,64 @@ return [
 ]
 ```
 ---
+`localhost/api/all_reviews GET` ***authenticated admin***
+```php
+return [
+    {
+        "id": int,
+        "attachments_id": int or null,
+        "content": string(65535),
+        "rating": int,
+        "created_at": timestamp,
+        "product": {
+            "id": int,
+            "display_name": string(255),
+            "pricing": float,
+            "discount_pricing": float or null
+        },
+        "reviewer": {
+            "id": int,
+            "display_name": string(255),
+            "image_url": string(255) or null,
+            "user_role": enum('User', 'Admin')
+            "deactivated": boolean
+        }
+    },
+    other reviews..
+]
+```
+---
+`localhost/api/all_transactions GET` ***authenticated admin***
+```php
+return [
+    {
+        "id": int,
+        "total_pricing": float,
+        "check_content": string(65535),
+        "created_at": timestamp,
+        "transactor": {
+            "id": int,
+            "display_name": string(255),
+            "image_url": string(255) or null,
+            "user_role": enum('User', 'Admin'),
+            "deactivated": boolean
+        },
+        "location": {
+            "id": int,
+            "city": string(255),
+            "street": string(255),
+            "apartment_number": string(255) or null,
+            "zip_code": string(255)
+        } or location can be null
+    },
+    other transactions..
+]
+```
+---
 `localhost/api/products/remove/{id} POST` ***authenticated admin*** \
 `localhost/api/cats/remove/{id} POST` ***authenticated admin*** \
-`localhost/api/cat_breeds/remove/{id} POST` ***authenticated admin***
+`localhost/api/cat_breeds/remove/{id} POST` ***authenticated admin*** \
+`localhost/api/reviews/remove/{id} POST` ***authenticated admin***
 ```php
 return true
 
@@ -419,6 +577,59 @@ return { "city": string(255), ... }
 or 
 
 {} - code 422 - invalid input data
+```
+---
+`localhost/api/reviews/{product_id} POST` *authenticated user*
+```php
+{
+    "attachment_groups" : "nullable|int|exists:attachment_groups,id",
+    "content"           : "required|string|max:65535",
+    "rating"            : "required|int|min:0|max:10"
+}
+```
+```php
+return {
+    "id": int,
+    "attachments_id": int or null,
+    "content": string(65535),
+    "rating": int,
+    "created_at": timestamp,
+    "product": {
+        "id": int,
+        "display_name": string(255),
+        "pricing": float,
+        "discount_pricing": float or null
+    },
+    "reviewer": {
+        "id": int,
+        "display_name": string(255),
+        "image_url": string(255) or null,
+        "user_role": enum('User', 'Admin'),
+        "deactivated": boolean
+    }
+}
+```
+---
+`localhost/api/purchase POST` *authenticated user*
+```php
+{
+    "location_id"   : "nullable|int|exists:locations,id"
+}
+```
+```php
+return {
+    "id": int,
+    "total_pricing": float,
+    "check_content": string(65535),
+    "created_at": timestamp,
+    "location": {
+        "id": int,
+        "city": string(255),
+        "street": string(255),
+        "apartment_number": string(255) or null,
+        "zip_code": string(255)
+    } or location can be null
+}
 ```
 ---
 `localhost/api/products POST` ***authenticated admin*** \

@@ -142,7 +142,7 @@ class UserController extends Controller
 
         return response()->json(['message' => "User successfully updated"], 200);
     }
-    
+
 
     /**
      * Delete a user.
@@ -192,7 +192,7 @@ class UserController extends Controller
         return response()->json($user->clear_basket(), 202); // Request accepted
     }
 
-    
+
     public function addProfilePicture(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -207,7 +207,7 @@ class UserController extends Controller
         $user->save();
 
         return $user;
-        
+
     }
 
     public function removeProfilePicture(){
