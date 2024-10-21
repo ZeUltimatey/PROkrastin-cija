@@ -4,20 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../../universal/Toast";
 import { FormInput } from "../../universal/FormInput";
 import { Spinner } from "../../universal/Spinner";
+import { User } from "../../universal/interfaces/User";
 
-interface User {
-  email: string;
-  display_name: string;
-  name: string;
-  surname: string;
-  password: string;
-  password_confirmation: string;
-  phone_number?: string;
-}
-
-export const ProfileInfo = () => {
+export const ProfileInfo = ({ user }: { user: User }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [user, setUser] = useState(null);
   const [formData, setFormData] = useState<User>({} as User);
   const [isLoading, setIsLoading] = useState(false);
   const showToast = useToast();
@@ -37,25 +27,6 @@ export const ProfileInfo = () => {
         sessionStorage.removeItem(Constants.SESSION_STORAGE.TOKEN);
         showToast(true, "Iziešana veiksmīga.");
         navigate("/");
-      } else {
-        showToast(false, "error");
-      }
-    });
-  };
-
-  const getUserInfo = async () => {
-    await fetch(`${Constants.API_URL}/user`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem(
-          Constants.SESSION_STORAGE.TOKEN
-        )}`,
-      },
-    }).then(async (response) => {
-      const data = await response.json();
-      if (response.ok) {
-        setUser(data);
-        setFormData(data);
       } else {
         showToast(false, "error");
       }
@@ -86,10 +57,6 @@ export const ProfileInfo = () => {
     });
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    getUserInfo();
-  }, []);
 
   return (
     <div className="bg-light-gray shadow-md rounded-md border-2 h-40 border-medium-brown">
@@ -132,7 +99,12 @@ export const ProfileInfo = () => {
           </div>
         </div>
       )}
-      {!user && <Spinner />}
+
+      {!user && (
+        <div className="w-full h-full flex place-items-center justify-center">
+          <Spinner />
+        </div>
+      )}
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

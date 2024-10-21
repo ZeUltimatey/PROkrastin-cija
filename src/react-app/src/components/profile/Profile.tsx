@@ -3,19 +3,51 @@ import { OrderHistory } from "./profile-page/OrderHistory";
 import { SavedAddresses } from "./profile-page/SavedAddresses";
 import { PaymentMethods } from "./profile-page/PaymentMethods";
 import { ProfileSettings } from "./profile-page/ProfileSettings";
+import { useEffect, useState } from "react";
+import { User } from "../universal/interfaces/User";
+import { Constants } from "../universal/Constants";
+import { useNavigate } from "react-router-dom";
 
 export const Profile = () => {
+  const [user, setUser] = useState<User>(null);
+
+  const navigate = useNavigate();
+
+  const getUser = async () => {
+    await fetch(`${Constants.API_URL}/user`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem(
+          Constants.SESSION_STORAGE.TOKEN
+        )}`,
+      },
+    }).then(async (response) => {
+      const data = await response.json();
+      if (response.ok) {
+        setUser(data);
+        return;
+      }
+      navigate("/auth/login"); //TODO: handle this shit
+    });
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return (
     <div className="min-h-screen bg-content-white bg-opacity-95 p-6">
-      <div className="container mx-auto lg:px-32">
-        <ProfileInfo />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-          <OrderHistory />
-          <SavedAddresses />
-          <PaymentMethods />
-          <ProfileSettings />
+      {user && (
+        <div className="container mx-auto lg:px-32">
+          <ProfileInfo user={user} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <OrderHistory />
+            <SavedAddresses />
+            <PaymentMethods />
+            <ProfileSettings />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

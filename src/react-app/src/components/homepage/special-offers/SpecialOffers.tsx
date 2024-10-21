@@ -10,11 +10,11 @@ export const SpecialOffers = () => {
       <ItemCard
         key={item.id}
         id={item.id}
-        imageurl={item.image_url ?? "../car.png"}
-        title={item.title}
+        image_url={item.image_url ?? "../car.png"}
+        display_name={item.title}
         description={item.description}
-        price={item.price}
-        category={item.category}
+        pricing={item.price}
+        product_type={item.category}
       />
     ));
 

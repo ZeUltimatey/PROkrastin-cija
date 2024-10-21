@@ -32,7 +32,7 @@ export const SearchSort = (props: Props) => {
           Atrastas {props.filteredItemAmount ?? 0} preces
         </span>
         <div className="flex gap-6">
-          <div className="flex gap-[1px] rounded-md text-dark-brown bg-dark-brown">
+          <div className="flex gap-[1px] rounded-md text-black bg-black">
             <button
               onClick={() =>
                 props.onSort({
@@ -41,13 +41,13 @@ export const SearchSort = (props: Props) => {
                     props.sortValues.popularity === "desc" ? "" : "desc",
                 })
               }
-              className={`bg-accent-brown py-2 px-4 rounded-s-md hover:opacity-80 transition-opacity ${
+              className={`bg-light-brown py-2 px-4 rounded-s-md hover:opacity-80 transition-opacity ${
                 props.sortValues.popularity === "desc" ? "opacity-80" : ""
               }`}
             >
               <i className="fa-solid fa-arrow-down"></i>
             </button>
-            <span className="font-semibold font-poppins bg-accent-brown py-2 px-3">
+            <span className="font-semibold font-poppins bg-light-brown py-2 px-3">
               Popularitāte
             </span>
             <button
@@ -58,14 +58,14 @@ export const SearchSort = (props: Props) => {
                     props.sortValues.popularity === "asc" ? "" : "asc",
                 })
               }
-              className={`bg-accent-brown py-2 px-4 rounded-e-md hover:opacity-80 transition-opacity ${
+              className={`bg-light-brown py-2 px-4 rounded-e-md hover:opacity-80 transition-opacity ${
                 props.sortValues.popularity === "asc" ? "opacity-80" : ""
               }`}
             >
               <i className="fa-solid fa-arrow-up"></i>
             </button>
           </div>
-          <div className="flex gap-[1px] rounded-md text-dark-brown bg-dark-brown">
+          <div className="flex gap-[1px] rounded-md text-black bg-black">
             <button
               onClick={() =>
                 props.onSort({
@@ -73,13 +73,13 @@ export const SearchSort = (props: Props) => {
                   price: props.sortValues.price === "desc" ? "" : "desc",
                 })
               }
-              className={`bg-accent-brown py-2 px-4 rounded-s-md hover:opacity-80 transition-opacity ${
+              className={`bg-light-brown py-2 px-4 rounded-s-md hover:opacity-80 transition-opacity ${
                 props.sortValues.price === "desc" ? "opacity-80" : ""
               }`}
             >
               <i className="fa-solid fa-arrow-down"></i>
             </button>
-            <span className="font-semibold font-poppins bg-accent-brown py-2 px-3">
+            <span className="font-semibold font-poppins bg-light-brown py-2 px-3">
               Cena
             </span>
             <button
@@ -89,7 +89,7 @@ export const SearchSort = (props: Props) => {
                   price: props.sortValues.price === "asc" ? "" : "asc",
                 })
               }
-              className={`bg-accent-brown py-2 px-4 rounded-e-md hover:opacity-80 transition-opacity ${
+              className={`bg-light-brown py-2 px-4 rounded-e-md hover:opacity-80 transition-opacity ${
                 props.sortValues.price === "asc" ? "opacity-80" : ""
               }`}
             >

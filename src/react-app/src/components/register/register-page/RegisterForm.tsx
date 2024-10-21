@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FormInput } from "../../universal/FormInput";
 import { Constants } from "../../universal/Constants";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../../universal/Toast";
 
 export const RegisterForm = () => {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ export const RegisterForm = () => {
     password_confirmation: "",
   });
 
+  const showToast = useToast();
+
   const onSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     await fetch(`${Constants.API_URL}/register`, {
@@ -27,15 +30,16 @@ export const RegisterForm = () => {
       .then(async (response) => {
         const data = await response.json();
         if (response.ok) {
+          showToast(true, "Reģistrācija veiksmīga!");
           sessionStorage.setItem(Constants.SESSION_STORAGE.TOKEN, data.token);
           navigate("/");
         } else {
-          console.log(data);
+          showToast(false, "Kļūda reģistrācijas procesā."); //TODO: izvadīt informatīvu kļūdas ziņojumu
           throw new Error(data.error);
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   };
 
@@ -140,12 +144,12 @@ export const RegisterForm = () => {
       <div className="">
         <div className="text-center">
           <p className=" text-gray-500">Tev jau ir profils?</p>
-          <a
-            href="/auth/login"
+          <button
+            onClick={() => navigate("/auth/login")}
             className="text-dark-brown hover:underline font-semibold"
           >
             Ienāc šeit!
-          </a>
+          </button>
         </div>
       </div>
     </form>

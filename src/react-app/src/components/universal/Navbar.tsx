@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavbarCart } from "./NavbarCart";
 import { CategoryList } from "../homepage/categories/CategoryList";
 import { Constants } from "./Constants";
 import { useNavigate } from "react-router-dom";
+import { Product } from "./interfaces/Product";
+import { useCart } from "./Cart";
 
 export const Navbar = () => {
   const [navbarToggle, setNavbarToggle] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
   const [showCart, setShowCart] = useState(false);
+  const [cartItems, setCartItems] = useState<Product[]>([]);
+
+  const { getCartItems, removeFromCart } = useCart();
 
   const navigate = useNavigate();
 
@@ -33,21 +38,27 @@ export const Navbar = () => {
   };
 
   const handleUserClick = async () => {
-    await fetch(`${Constants.API_URL}/user`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem(
-          Constants.SESSION_STORAGE.TOKEN
-        )}`,
-      },
-    }).then((response) => {
-      if (response.ok) {
-        navigate("/profile");
-      } else {
-        navigate("/auth/login");
-      }
-    });
+    if (sessionStorage.getItem(Constants.SESSION_STORAGE.TOKEN)) {
+      navigate("/profile");
+      return;
+    }
+    navigate("/auth/login");
   };
+
+  const handleCartClick = async () => {
+    setShowCart(!showCart);
+    const items = await getCartItems();
+    setCartItems(items);
+  };
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      const cartItems = await getCartItems();
+      setCartItems(cartItems);
+    };
+
+    fetchItems();
+  }, [getCartItems]);
 
   return (
     <nav className="bg-content-white rounded-t-md">
@@ -100,13 +111,13 @@ export const Navbar = () => {
             </div>
           )}
         </div>
-        {showCart && <NavbarCart />}
+        {showCart && (
+          <NavbarCart cartItems={cartItems} onRemove={removeFromCart} />
+        )}
 
         <div className="flex h-full ">
           <button
-            onClick={() => {
-              setShowCart(!showCart);
-            }}
+            onClick={handleCartClick}
             className={`h-full px-6 hover:border-b-4 border-accent-brown ${
               showCart ? "border-b-4" : "border-b-0"
             } transition-all`}

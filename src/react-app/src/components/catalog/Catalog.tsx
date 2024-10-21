@@ -4,15 +4,7 @@ import { Filter } from "./catalog-page/Filter";
 import { SearchSort } from "./catalog-page/SearchSort";
 import { Constants } from "../universal/Constants";
 import { Spinner } from "../universal/Spinner";
-
-interface Product {
-  id: number;
-  product_type: string;
-  display_name: string;
-  description: string;
-  pricing: number;
-  discount_pricing: number;
-}
+import { Product } from "../universal/interfaces/Product";
 
 export const Catalog = () => {
   const [search, setSearch] = useState("");
@@ -75,12 +67,12 @@ export const Catalog = () => {
                 <ItemCard
                   key={product.id}
                   id={product.id}
-                  title={product.display_name}
+                  display_name={product.display_name}
                   description={product.description}
-                  price={product.pricing}
-                  discount_price={product.discount_pricing}
-                  category={product.product_type}
-                  imageurl={"../images/products/16.png"}
+                  pricing={product.pricing}
+                  discount_pricing={product.discount_pricing}
+                  product_type={product.product_type}
+                  image_url={"../images/products/16.png"}
                 />
               ))}
             </div>
