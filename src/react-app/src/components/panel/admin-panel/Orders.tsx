@@ -68,11 +68,6 @@ export const Orders = () => {
             <h1 className="text-2xl font-bold text-dark-brown font-poppins">
               Pasūtījumi
             </h1>
-            <div className="flex space-x-4">
-              <button className="bg-medium-brown text-white px-4 py-2 rounded-lg font-poppins">
-                Pievienot pasūtījumu
-              </button>
-            </div>
           </div>
         </header>
 

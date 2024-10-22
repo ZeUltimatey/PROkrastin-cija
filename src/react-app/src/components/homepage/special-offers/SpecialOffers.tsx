@@ -37,7 +37,7 @@ export const SpecialOffers = () => {
   };
 
   return (
-    <div className="p-12 bg-[#EDEAE1] h-auto">
+    <div className="p-12 bg-content-white h-auto">
       <div className="flex flex-col gap-6 bg-light-gray p-8 rounded-md">
         <div className="flex place-items-center gap-6">
           <div className="grow h-[1px] bg-dark-brown" />

@@ -35,6 +35,13 @@ export const Sidebar = () => {
             >
               Lietotāji
             </li>
+
+            <li
+              onClick={() => navigate("/panel/encyclopedia")}
+              className="hover:bg-medium-brown p-3 rounded-lg cursor-pointer"
+            >
+              Enciklopēdija
+            </li>
           </ul>
         </nav>
       </aside>

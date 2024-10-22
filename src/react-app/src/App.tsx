@@ -15,6 +15,11 @@ import { AuthLayout } from "./components/layouts/AuthLayout";
 import { Products } from "./components/panel/admin-panel/Products";
 import { Cart } from "./components/cart/Cart";
 import { ToastProvider } from "./components/universal/Toast";
+import { Reviews } from "./components/product/Reviews";
+import { Receipt } from "./components/receipt/Receipt";
+import { Breeds } from "./components/about/Breeds";
+import { BreedDetails } from "./components/about/BreedDetails";
+import { Encyclopedia } from "./components/panel/admin-panel/Encyclopedia";
 
 function App() {
   return (
@@ -33,6 +38,11 @@ function App() {
             <Route path="/panel/orders" element={<Orders />} />
             <Route path="/panel/products" element={<Products />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/reviews" element={<Reviews />} />
+            <Route path="/receipt" element={<Receipt />} />
+            <Route path="/breeds" element={<Breeds />} />
+            <Route path="/breed/:breedId" element={<BreedDetails />} />
+            <Route path="/panel/encyclopedia" element={<Encyclopedia />} />
           </Route>
           <Route path="/auth" element={<AuthLayout />}>
             <Route path="login" element={<Login />} />
