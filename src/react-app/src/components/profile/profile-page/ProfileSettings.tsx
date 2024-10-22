@@ -1,8 +1,13 @@
 import { useState } from "react";
+import { Constants } from "../../universal/Constants";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "../../universal/Toast";
 
 export const ProfileSettings = () => {
   const [isPreferencesModalOpen, setIsPreferencesModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleOpenPreferences = () => {
     setIsPreferencesModalOpen(true);
@@ -15,6 +20,25 @@ export const ProfileSettings = () => {
   const handleCloseModal = () => {
     setIsPreferencesModalOpen(false);
     setIsPasswordModalOpen(false);
+  };
+
+  const showToast = useToast();
+
+  const handleAccountDelete = async () => {
+    await fetch(`${Constants.API_URL}/user`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem(
+          Constants.SESSION_STORAGE.TOKEN
+        )}`,
+      },
+    }).then((response) => {
+      if (response.ok) {
+        showToast(true, "Konts veiksmīgi izdzēsts.");
+        sessionStorage.removeItem(Constants.SESSION_STORAGE.TOKEN);
+        navigate("/");
+      }
+    });
   };
 
   return (
@@ -51,6 +75,14 @@ export const ProfileSettings = () => {
             className="text-medium-brown hover:underline text-sm font-poppins flex items-center"
           >
             <i className="fa-solid fa-pen-to-square m-1"></i> Mainīt paroli
+          </button>
+        </li>
+        <li>
+          <button
+            onClick={handleAccountDelete}
+            className="bg-red-400 text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-opacity-80 transition-all font-poppins mt-4"
+          >
+            <i className="fa-solid fa-trash mr-2"></i> Dzēst kontu
           </button>
         </li>
       </ul>

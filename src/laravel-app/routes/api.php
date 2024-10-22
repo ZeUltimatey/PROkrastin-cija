@@ -34,6 +34,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/user/image/add', [UserController::class, 'addProfilePicture']);
     Route::post('/user/image/remove', [UserController::class, 'removeProfilePicture']);
 
+    Route::delete('/user', [UserController::class, 'destroy']);
+
     Route::get('/cards', [CardsController::class, 'index']);
     Route::post('/cards', [CardsController::class, 'store']);
     Route::post('/cards/{id}', [CardsController::class, 'update']);
@@ -55,10 +57,11 @@ Route::post('/products/images/{image}/remove', [ProductController::class, 'remov
 Route::post('/cats', [CatController::class, 'store'])->middleware('auth:sanctum');
 Route::post('/cat_breeds', [CatBreedController::class, 'store'])->middleware('auth:sanctum');
 
-Route::post('/products/{id}', [ProductController::class, 'update'])->middleware('auth:sanctum');
+Route::put('/products/{id}', [ProductController::class, 'update'])->middleware('auth:sanctum');
+
 Route::post('/cats/{id}', [CatController::class, 'update'])->middleware('auth:sanctum');
 Route::post('/cat_breeds/{id}', [CatBreedController::class, 'update'])->middleware('auth:sanctum');
 
-Route::post('/products/remove/{id}', [ProductController::class, 'destroy'])->middleware('auth:sanctum');
+Route::delete('/products/{id}', [ProductController::class, 'destroy'])->middleware('auth:sanctum');
 Route::post('/cats/remove/{id}', [CatController::class, 'destroy'])->middleware('auth:sanctum');
 Route::post('/cat_breeds/remove/{id}', [CatBreedController::class, 'destroy'])->middleware('auth:sanctum');

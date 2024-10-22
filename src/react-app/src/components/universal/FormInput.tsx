@@ -14,7 +14,9 @@ export const FormInput = (props: Props) => {
       id={props.id}
       type={props.type ?? "text"}
       className={` ${
-        props.customClass ?? props.disabled
+        props.customClass
+          ? props.customClass
+          : props.disabled
           ? "cursor-not-allowed bg-gray-200 mt-1 w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm"
           : "mt-1 w-full px-4 py-2 border accent-accent-brown font-poppins border-gray-300 rounded-md shadow-sm"
       }`}

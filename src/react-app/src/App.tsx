@@ -20,11 +20,13 @@ import { Receipt } from "./components/receipt/Receipt";
 import { Breeds } from "./components/about/Breeds";
 import { BreedDetails } from "./components/about/BreedDetails";
 import { Encyclopedia } from "./components/panel/admin-panel/Encyclopedia";
+import { CartProvider } from "./components/universal/Cart";
 
 function App() {
   return (
     <BrowserRouter>
       <ToastProvider>
+        <CartProvider>
         <Routes>
           <Route path="/" element={<GeneralLayout />}>
             <Route index element={<Homepage />} />
@@ -50,6 +52,7 @@ function App() {
           </Route>
           <Route path="/catalog/cats" element={<Homepage />} />
         </Routes>
+        </CartProvider>
       </ToastProvider>
     </BrowserRouter>
   );

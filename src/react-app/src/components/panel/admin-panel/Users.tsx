@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sidebar } from "./Sidebar";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  date: string;
-  status: string;
-}
+import { Constants } from "../../universal/Constants";
+import { User } from "../../universal/interfaces/User";
+import { FormInput } from "../../universal/FormInput";
+import { useToast } from "../../universal/Toast";
 
 export const Users = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<User[]>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const showToast = useToast();
 
   const handleEditClick = (user: User) => {
     setSelectedUser(user);
@@ -23,29 +23,51 @@ export const Users = () => {
     setSelectedUser(null);
   };
 
-  const users: User[] = [
-    {
-      id: "#1001",
-      name: "Anna Vītola",
-      email: "anna@epasts.com",
-      date: "2024-01-15",
-      status: "Aktīvs",
-    },
-    {
-      id: "#1002",
-      name: "Jānis Bērziņš",
-      email: "janis@epasts.com",
-      date: "2024-02-20",
-      status: "Aktīvs",
-    },
-    {
-      id: "#1003",
-      name: "Laura Kalniņa",
-      email: "laura@epasts.com",
-      date: "2024-03-12",
-      status: "Bloķēts",
-    },
-  ];
+  const getAllUsers = async () => {
+    await fetch(`${Constants.API_URL}/all_users`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem(
+          Constants.SESSION_STORAGE.TOKEN
+        )}`,
+      },
+    }).then(async (response) => {
+      if (response.ok) {
+        const data = await response.json();
+        setUsers(data);
+      }
+    });
+  };
+
+  const onUserUpdate = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setIsLoading(true);
+    await fetch(`${Constants.API_URL}/user`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem(
+          Constants.SESSION_STORAGE.TOKEN
+        )}`,
+      },
+      body: JSON.stringify(selectedUser),
+    }).then(async (response) => {
+      if (response.ok) {
+        const data = await response.json();
+        setUsers((prev) =>
+          prev.map((user) => (user.id === data.id ? data : user))
+        );
+        closeModal();
+        setIsLoading(false);
+        showToast(true, "Lietotājs atjaunots!");
+        setTimeout(() => window.location.reload(), 1000);
+      }
+    });
+  };
+
+  useEffect(() => {
+    getAllUsers();
+  }, []);
 
   return (
     <div className="min-h-screen flex bg-content-white">
@@ -75,7 +97,7 @@ export const Users = () => {
 
             <table className="w-full text-left">
               <thead>
-                <tr className="border-b border-medium-brown">
+                <tr className="border-b border-medium-brown text-center">
                   <th className="py-4 px-6 font-poppins text-dark-brown">
                     Lietotāja ID
                   </th>
@@ -92,28 +114,38 @@ export const Users = () => {
                     Statuss
                   </th>
                   <th className="py-4 px-6 font-poppins text-dark-brown">
-                    Rediģēt
+                    Darbības
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
-                  <tr className="border-b border-medium-brown" key={user.id}>
-                    <td className="py-4 px-6 text-dark-brown">{user.id}</td>
-                    <td className="py-4 px-6 text-dark-brown">{user.name}</td>
-                    <td className="py-4 px-6 text-dark-brown">{user.email}</td>
-                    <td className="py-4 px-6 text-dark-brown">{user.date}</td>
-                    <td className="py-4 px-6 text-dark-brown">{user.status}</td>
-                    <td className="py-4 px-6">
-                      <button
-                        onClick={() => handleEditClick(user)}
-                        className="bg-medium-brown text-white px-4 py-2 rounded-lg font-poppins"
-                      >
-                        Rediģēt
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {users &&
+                  users.map((user) => (
+                    <tr
+                      className="border-b border-medium-brown text-center"
+                      key={user.id}
+                    >
+                      <td className="py-4 px-6 text-dark-brown">{user.id}</td>
+                      <td className="py-4 px-6 text-dark-brown">{user.name}</td>
+                      <td className="py-4 px-6 text-dark-brown">
+                        {user.email}
+                      </td>
+                      <td className="py-4 px-6 text-dark-brown">
+                        {user.created_at.slice(0, 10)}
+                      </td>
+                      <td className="py-4 px-6 text-dark-brown">
+                        {user.deactivated ? "Bloķēts" : "Aktīvs"}
+                      </td>
+                      <td className="py-4 px-6">
+                        <button
+                          onClick={() => handleEditClick(user)}
+                          className="bg-medium-brown text-white px-4 py-2 rounded-lg font-poppins"
+                        >
+                          Rediģēt
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
@@ -126,55 +158,80 @@ export const Users = () => {
             <h2 className="text-2xl font-bold text-dark-brown mb-4 font-poppins">
               Rediģēt lietotāju
             </h2>
-            <form>
-              <div className="mb-4">
-                <label className="block text-dark-brown font-poppins mb-2">
-                  Vārds:
-                </label>
-                <input
-                  type="text"
-                  className="w-full p-2 border border-medium-brown rounded-lg"
-                  value={selectedUser?.name || ""}
-                  readOnly
-                />
+            <form onSubmit={onUserUpdate}>
+              <div className="flex gap-2">
+                <div className="mb-2">
+                  <label className="block text-dark-brown font-poppins">
+                    Vārds:
+                  </label>
+                  <FormInput
+                    value={selectedUser.name}
+                    onChange={(e) =>
+                      setSelectedUser({ ...selectedUser, name: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="mb-2">
+                  <label className="block text-dark-brown font-poppins">
+                    Vārds:
+                  </label>
+                  <FormInput
+                    value={selectedUser.surname}
+                    onChange={(e) =>
+                      setSelectedUser({
+                        ...selectedUser,
+                        surname: e.target.value,
+                      })
+                    }
+                  />
+                </div>
               </div>
               <div className="mb-4">
-                <label className="block text-dark-brown font-poppins mb-2">
+                <label className="block text-dark-brown font-poppins">
                   E-pasts:
                 </label>
-                <input
-                  type="text"
-                  className="w-full p-2 border border-medium-brown rounded-lg"
-                  value={selectedUser?.email || ""}
-                  readOnly
+                <FormInput
+                  value={selectedUser.email}
+                  onChange={(e) =>
+                    setSelectedUser({ ...selectedUser, email: e.target.value })
+                  }
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-dark-brown font-poppins mb-2">
+                <label className="block text-dark-brown font-poppins">
                   Statuss:
                 </label>
                 <select
-                  className="w-full p-2 border border-medium-brown rounded-lg"
-                  value={selectedUser?.status}
+                  className="mt-1 w-full px-4 py-2 border accent-accent-brown font-poppins border-gray-300 rounded-md shadow-sm"
+                  value={selectedUser?.deactivated ? "Bloķēts" : "Aktīvs"}
+                  onChange={(e) => {
+                    setSelectedUser({
+                      ...selectedUser,
+                      deactivated: e.target.value === "Bloķēts" ? 1 : 0,
+                    });
+                  }}
                 >
                   <option value="Aktīvs">Aktīvs</option>
                   <option value="Bloķēts">Bloķēts</option>
                 </select>
               </div>
-              <div className="flex justify-end space-x-4">
+              <div className="flex justify-end space-x-4 mt-6">
                 <button
-                  type="button"
-                  className="bg-light-gray text-dark-brown px-4 py-2 rounded-md shadow font-poppins"
                   onClick={closeModal}
+                  className="bg-light-gray text-dark-brown hover:bg-opacity-70 px-4 py-2 rounded-md shadow font-poppins"
                 >
                   Atcelt
                 </button>
-                <button
+                <input
                   type="submit"
-                  className="bg-medium-brown text-white px-4 py-2 rounded-lg font-poppins"
-                >
-                  Saglabāt
-                </button>
+                  value="Saglabāt"
+                  disabled={isLoading}
+                  className={`${
+                    isLoading
+                      ? "bg-gray-200 hover:cursor-not-allowed"
+                      : "hover:cursor-pointer bg-medium-brown hover:bg-opacity-70"
+                  }   text-white px-6 py-2 rounded-md shadow font-poppins`}
+                />
               </div>
             </form>
           </div>

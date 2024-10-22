@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FormInput } from "../../universal/FormInput";
 import { Constants } from "../../universal/Constants";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../../universal/Toast";
 
 export const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,8 @@ export const LoginForm = () => {
   });
 
   const navigate = useNavigate();
+
+  const showToast = useToast();
 
   const onSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -21,12 +24,13 @@ export const LoginForm = () => {
       body: JSON.stringify(formData),
     })
       .then(async (response) => {
-        const data = await response.json();
         if (response.ok) {
+          const data = await response.json();
           sessionStorage.setItem(Constants.SESSION_STORAGE.TOKEN, data.token);
+          showToast(true, "Autentifikācija veiksmīga!");
           navigate("/");
         } else {
-          throw new Error(data.error);
+          showToast(false, "Kļūda autentifikācijas procesā.");
         }
       })
       .catch((error) => {
@@ -71,12 +75,12 @@ export const LoginForm = () => {
       ></input>
       <div className="text-center">
         <p className="text-gray-500">Tev vēl nav profila?</p>
-        <a
-          href="/auth/register"
+        <button
+          onClick={() => navigate("/auth/register")}
           className="text-dark-brown hover:underline font-semibold"
         >
           Reģistrējies šeit!
-        </a>
+        </button>
       </div>
     </form>
   );

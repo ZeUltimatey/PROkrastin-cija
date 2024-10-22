@@ -89,6 +89,7 @@ class ProductController extends Controller
 
         // Update and return product if everything is correct
         $product = Product::findOrFail($id);
+        $product['updated_at'] = now();
         $product->update($validator->validated());
         return response()->json($product, 202); // Request accepted
     }
