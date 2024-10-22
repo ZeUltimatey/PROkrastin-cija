@@ -46,7 +46,6 @@ export const ProfileInfo = ({ user }: { user: User }) => {
       },
       body: JSON.stringify(formData),
     }).then(async (response) => {
-      const data = await response.json();
       if (response.ok) {
         showToast(true, "Lietotāja informācija saglabāta.");
         window.location.reload();

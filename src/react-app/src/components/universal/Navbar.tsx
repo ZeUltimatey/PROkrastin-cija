@@ -27,6 +27,7 @@ export const Navbar = () => {
   }) => {
     return (
       <li
+        key={idx}
         onClick={() => navigate(link)}
         className={`${idx + 1 === CategoryList.length ? "rounded-br-md" : ""} ${
           idx === CategoryList.length - 3 ? "rounded-bl-md" : ""
@@ -50,15 +51,15 @@ export const Navbar = () => {
     const items = await getCartItems();
     setCartItems(items);
   };
-
+  const fetchItems = async () => {
+    const cartItems = await getCartItems();
+    setCartItems(cartItems);
+  };
   useEffect(() => {
-    const fetchItems = async () => {
-      const cartItems = await getCartItems();
-      setCartItems(cartItems);
-    };
-
-    fetchItems();
-  }, [getCartItems]);
+    if (sessionStorage.getItem(Constants.SESSION_STORAGE.TOKEN)) {
+      fetchItems();
+    }
+  }, []);
 
   return (
     <nav className="bg-content-white rounded-t-md">
@@ -98,7 +99,7 @@ export const Navbar = () => {
             <span className="font-bold font-poppins">Kategorijas</span>
           </button>
           {showCategories && (
-            <div className="h-12 absolute top-[104px] border-t-4 border-[#A67144] shadow-sm">
+            <div className="h-12 absolute top-20 border-t-4 border-[#A67144] shadow-sm mt-6">
               <ul className="text-base h-full grid grid-cols-3">
                 {CategoryList.map((category, idx) => (
                   <Category
@@ -140,14 +141,14 @@ export const Navbar = () => {
         </div>
       </div>
 
-      {navbarToggle && (
+      {/* {navbarToggle && (
         <ul className="md:hidden bg-content-white font-poppins text-lg font-semibold p-4">
-          <li className="py-2 hover:cursor-pointer">Kaķi</li>
+          <li key={} className="py-2 hover:cursor-pointer">Kaķi</li>
           <li className="py-2 hover:cursor-pointer">Barība</li>
           <li className="py-2 hover:cursor-pointer">Rotaļlietas</li>
           <li className="py-2 hover:cursor-pointer">Aksesuāri</li>
         </ul>
-      )}
+      )} */}
     </nav>
   );
 };

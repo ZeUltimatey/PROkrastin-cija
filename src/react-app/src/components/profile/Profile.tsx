@@ -22,8 +22,8 @@ export const Profile = () => {
         )}`,
       },
     }).then(async (response) => {
-      const data = await response.json();
       if (response.ok) {
+        const data = await response.json();
         setUser(data);
         return;
       }

@@ -128,6 +128,7 @@ class UserController extends Controller
             'surname'               => 'nullable|string|max:255',
             'phone_number'          => 'nullable|string|max:15',
             'user_role'             => 'nullable|in:User,Admin',
+            'deactivated'           => 'nullable|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -147,9 +148,10 @@ class UserController extends Controller
     /**
      * Delete a user.
      */
-    public function destroy(int $id)
+    public function destroy(Request $request)
     {
-        //
+        $request->user()->delete();
+        return response()->json(['message' => "User successfully deleted"], 200);
     }
 
     public function update_basket_item(Request $request): JsonResponse
