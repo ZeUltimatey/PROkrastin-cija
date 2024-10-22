@@ -29,7 +29,7 @@ export const BuyButton = () => {
           type="number"
           max={99}
           min={1}
-          className="bg-[#EDEAE1] font-semibold w-10 h-10  text-lg text-center "
+          className="bg-content-white font-semibold w-10 h-10  text-lg text-center "
         />
 
         <button

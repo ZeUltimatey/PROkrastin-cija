@@ -31,7 +31,7 @@ export const Navbar = () => {
         onClick={() => navigate(link)}
         className={`${idx + 1 === CategoryList.length ? "rounded-br-md" : ""} ${
           idx === CategoryList.length - 3 ? "rounded-bl-md" : ""
-        } bg-[#EDEAE1] border-[#d8d6ce] brightness-95 hover:brightness-90 px-4 min-w-24 text-center py-2 h-full`}
+        } bg-content-white border-[#d8d6ce] brightness-95 hover:brightness-90 px-4 min-w-24 text-center py-2 h-full`}
       >
         {name}
       </li>
