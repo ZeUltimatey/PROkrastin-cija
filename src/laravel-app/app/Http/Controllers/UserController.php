@@ -108,9 +108,13 @@ class UserController extends Controller
     /**
      * Show a singular user.
      */
-    public function show(int $id)
-    {
-        //
+    // Display a single user
+    public function show(int $id){
+        
+        $user = User::find($id);
+
+        if ($user) { return response()->json($user); } // OK
+        else { return response()->json(null, 404); } // Not found
     }
 
     /**
@@ -119,15 +123,13 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'profilepicture_id'     => 'nullable|exists:images,id',
             'email'                 => 'nullable|string|email|max:255',
             'password'              => 'nullable|string|min:8|confirmed',
             'password_confirmation' => 'nullable|same:password',
             'display_name'          => 'nullable|string|max:255',
             'name'                  => 'nullable|string|max:255',
             'surname'               => 'nullable|string|max:255',
-            'phone_number'          => 'nullable|string|max:15',
-            'user_role'             => 'nullable|in:User,Admin',
+            'phone_number'          => 'nullable|string|max:15',    
         ]);
 
         if ($validator->fails()) {
@@ -147,9 +149,16 @@ class UserController extends Controller
     /**
      * Delete a user.
      */
-    public function destroy(int $id)
+    public function destroy(Request $request)
     {
-        //
+        $user = Auth::user();
+        Auth::user()->tokens()->delete();
+        if ($user) {
+            $user->delete();
+            return response()->json(['message' => "User successfully deleted"], 200);
+        } else {
+            return response()->json(null, 404);
+        }
     }
 
     public function update_basket_item(Request $request): JsonResponse
@@ -190,6 +199,15 @@ class UserController extends Controller
         $user = Auth::user();
 
         return response()->json($user->clear_basket(), 202); // Request accepted
+    }
+
+    public function removeFromBasket(int $productId)
+    {
+        $user = Auth::user();
+        // Delete selected product for the user
+        $removedBasketProduct = SelectedProducts::where('user_id', $user->id)->where('product_id', $productId)->delete();
+
+        return response()->json($removedBasketProduct, 204);
     }
 
     

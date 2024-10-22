@@ -23,16 +23,19 @@ Route::get('/cat_breeds/{id}', [CatBreedController::class, 'show']);
 Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum')->name('login');
 
 // Users only
-Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
-Route::put('/user', [UserController::class, 'update'])->middleware('auth:sanctum');
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/logout', [UserController::class, 'logout']);
+    Route::put('/user', [UserController::class, 'update']);
     Route::post('/user/image/add', [UserController::class, 'addProfilePicture']);
     Route::post('/user/image/remove', [UserController::class, 'removeProfilePicture']);
+    Route::get('/user/{id}', [UserController::class, 'show']);  
+    Route::delete('/user/remove', [UserController::class, 'destroy']);
 
     Route::get('/cards', [CardsController::class, 'index']);
     Route::post('/cards', [CardsController::class, 'store']);
@@ -43,6 +46,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/basket', [UserController::class, 'get_basket']);
     Route::post('/basket', [UserController::class, 'update_basket_item']);
     Route::post('/basket/clear', [UserController::class, 'clear_basket']);
+    Route::delete('/basket/remove/{Productid}', [UserController::class, 'removeFromBasket']);
 
 });
 // Admins only - some routes are for testing purposes - TODO: make them accessible by admins only
