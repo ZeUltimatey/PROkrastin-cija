@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\CardsController;
 use App\Http\Controllers\CatBreedController;
@@ -68,6 +69,8 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::get('/all_locations', [LocationController::class, 'index_all']);
     Route::get('/all_transactions', [TransactionController::class, 'index_all']);
     Route::get('/all_reviews', [ReviewController::class, 'index_all']);
+
+    Route::get('/dashboard', [DashboardController::class, 'index']);
 
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::post('/users/deactivate/{id}', [UserController::class, 'deactivate']);
