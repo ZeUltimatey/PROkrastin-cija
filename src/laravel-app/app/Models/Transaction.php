@@ -8,6 +8,12 @@ class Transaction extends Model
 {
     protected $table = 'transactions';
     protected $primaryKey = 'id';
+    protected $fillable = [
+        'transactor_id',
+        'location_id',
+        'total_pricing',
+        'check_content',
+    ];
     public $incrementing = true;
     public $timestamps = true;
 
@@ -17,7 +23,7 @@ class Transaction extends Model
     }
     public function location()
     {
-        if ($this->location == null) { return null; }
-        return $this->hasOne(Location::class, 'location_id', 'location_id');
+        return $this->hasOne(Location::class, 'id', 'location_id');
     }
+
 }

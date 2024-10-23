@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cats', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');  // mazs apjukums par šo
+            $table->unsignedBigInteger('id');
             $table->primary('id');
             $table->foreign('id')
                 ->references('id')
