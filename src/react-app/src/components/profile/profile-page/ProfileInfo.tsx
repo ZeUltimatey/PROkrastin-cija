@@ -57,24 +57,6 @@ export const ProfileInfo = ({ user }: { user: User }) => {
     setIsLoading(false);
   };
 
-  const deleteAccount = async () => {
-    await fetch(`${Constants.API_URL}/user/remove`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem(
-          Constants.SESSION_STORAGE.TOKEN
-        )}`,
-      },
-    }).then((response) => {
-      if (response.ok) {
-        sessionStorage.removeItem(Constants.SESSION_STORAGE.TOKEN);
-        showToast(true, "Lietotājs dzēsts!");
-        navigate("/");
-      } else {
-        showToast(false, "error");
-      }
-    });
-  };
 
   return (
     <div className="bg-light-gray shadow-md rounded-md border-2 h-40 border-medium-brown">
@@ -113,12 +95,6 @@ export const ProfileInfo = ({ user }: { user: User }) => {
               className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
             >
               <i className="fa-solid fa-pen-to-square"></i> Rediģēt profilu
-            </button>
-            <button
-              onClick={deleteAccount}
-              className="bg-red-500 text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
-            >
-              dzēst profilu
             </button>
           </div>
         </div>

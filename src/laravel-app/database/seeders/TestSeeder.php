@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Product;
 
 class TestSeeder extends Seeder
 {
@@ -17,43 +18,31 @@ class TestSeeder extends Seeder
     public function run(): void
     {
         
-
-        DB::table('products')->insert([
-            [
-                'id' => 1,
-                'product_type' => 'FURNITURE',
-                'display_name' => 'Cat Hammock Bed',
-                'description' => 'Hanging bed for cats to relax and enjoy their nap time.',
-                'pricing' => 45.00,
-                'discount_pricing' => null,
-                'stock' => 12,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => 2,
-                'product_type' => 'CATS',
-                'display_name' => 'Asteroid Destroyer',
-                'description' => 'This kitten was found abandoned in the sewers of Seattle, Washington, D.C.',
-                'pricing' => 1199.99,
-                'discount_pricing' => 1200.00,
-                'stock' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                "id" => 3,
-                "product_type" => "FOOD",
-                "display_name" => "Kaķu utilizators",
-                "description" => "Pēc šī kaķis nebūs izsalcis ļoooooti ilgi..",
-                "pricing" => 0.01,
-                "discount_pricing" => null,
-                "stock" => 9999999,
-                "updated_at" => now(),
-                "created_at" => now(),
-            ]
+        Product::create([
+            'product_type' => 'FURNITURE',
+            'display_name' => 'Cat Hammock Bed',
+            'description' => 'Hanging bed for cats to relax and enjoy their nap time.',
+            'pricing' => 45.00,
+            'discount_pricing' => null,
+            'stock' => 12,
         ]);
-
+        Product::create([
+            'product_type' => 'CATS',
+            'display_name' => 'Asteroid Destroyer',
+            'description' => 'This kitten was found abandoned in the sewers of Seattle, Washington, D.C.',
+            'pricing' => 1199.99,
+            'discount_pricing' => 1200.00,
+            'stock' => 1,
+        ]);
+        Product::create([
+             "product_type" => "FOOD",
+            "display_name" => "Kaķu utilizators",
+            "description" => "Pēc šī kaķis nebūs izsalcis ļoooooti ilgi..",
+            "pricing" => 0.01,
+            "discount_pricing" => null,
+            "stock" => 9999999,
+        ]);
+        
         DB::table('cat_breeds')->insert([
             [
                 'id' => 1,
@@ -181,23 +170,23 @@ class TestSeeder extends Seeder
             ]
         ]);
 
-        DB::table('selected_products')->insert([
-            [
-                'id' => 1,
-                'user_id' => 2,
-                'product_id' => 1,
-                'amount' => 3,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => 2,
-                'user_id' => 2,
-                'product_id' => 2,
-                'amount' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+        // DB::table('selected_products')->insert([
+        //     [
+        //         'id' => 1,
+        //         'user_id' => 2,
+        //         'product_id' => 1,
+        //         'amount' => 3,
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ],
+        //     [
+        //         'id' => 2,
+        //         'user_id' => 2,
+        //         'product_id' => 2,
+        //         'amount' => 1,
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ],
+        // ]);
     }
 }

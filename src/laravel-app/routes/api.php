@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SelectedProductController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -46,13 +47,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/cards', [CardsController::class, 'index']);
     Route::post('/cards', [CardsController::class, 'store']);
-    Route::post('/cards/{id}', [CardsController::class, 'update']);
+    Route::put('/cards/{id}', [CardsController::class, 'update']); //put changed
     Route::get('/cards/{id}', [CardsController::class, 'show']);
     Route::post('/cards/remove/{id}', [CardsController::class, 'destroy']);
 
     Route::get('/locations', [LocationController::class, 'index']);
     Route::post('/locations', [LocationController::class, 'store']);
-    Route::post('/locations/{id}', [LocationController::class, 'update']);
+    Route::put('/locations/{id}', [LocationController::class, 'update']); //put changed
     Route::get('/locations/{id}', [LocationController::class, 'show']);
     Route::post('/locations/remove/{id}', [LocationController::class, 'destroy']);
 
@@ -61,10 +62,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/transactions', [TransactionController::class, 'show']);
     Route::post('/purchase', [TransactionController::class, 'purchase']);
 
-    Route::get('/basket', [UserController::class, 'get_basket']);
-    Route::post('/basket', [UserController::class, 'update_basket_item']);
-    Route::post('/basket/clear', [UserController::class, 'clear_basket']);
-    Route::delete('/basket/remove/{Productid}', [UserController::class, 'removeFromBasket']);
+    Route::get('/basket', [SelectedProductController::class, 'get_basket']);
+    Route::post('/basket', [SelectedProductController::class, 'addToBasket']);
+    Route::delete('/basket/clear', [SelectedProductController::class, 'clear_basket']);
+    Route::delete('/basket/remove/{Productid}', [SelectedProductController::class, 'removeFromBasket']);
 
 });
 
@@ -77,7 +78,7 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::get('/all_reviews', [ReviewController::class, 'index_all']);
 
     Route::get('/users/{id}', [UserController::class, 'show']);
-    Route::post('/users/deactivate/{id}', [UserController::class, 'deactivate']);
+    Route::put('/users/deactivate/{id}', [UserController::class, 'deactivate']); //put changed
 
     Route::post('/products', [ProductController::class, 'store']);
     Route::post('/products/{id}/images/add', [ProductController::class, 'addImage']); // gonna need to explain this
@@ -86,9 +87,10 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::post('/breeds', [CatBreedController::class, 'store']);
 
     Route::put('/products/{id}', [ProductController::class, 'update']);
-    Route::post('/cats/{id}', [CatController::class, 'update']);
-    Route::post('/breeds/{id}', [CatBreedController::class, 'update']);
+    Route::put('/cats/{id}', [CatController::class, 'update']); //put changed
+    Route::put('/breeds/{id}', [CatBreedController::class, 'update']); //put changed
 
 Route::delete('/products/{id}', [ProductController::class, 'destroy'])->middleware('auth:sanctum');
 Route::post('/cats/remove/{id}', [CatController::class, 'destroy'])->middleware('auth:sanctum');
 Route::post('/cat_breeds/remove/{id}', [CatBreedController::class, 'destroy'])->middleware('auth:sanctum');
+});
