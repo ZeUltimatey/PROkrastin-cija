@@ -1,6 +1,14 @@
 import { Product } from "../Products";
 
-export const ProductItem = ({ product }: { product: typeof Product }) => {
+export const ProductItem = ({
+  product,
+  onProductEdit,
+  onProductDelete,
+}: {
+  product: typeof Product;
+  onProductEdit: (id: number) => void;
+  onProductDelete: (id: number) => void;
+}) => {
   const formatPrice = (price?: number) => {
     return price?.toFixed(2);
   };
@@ -25,10 +33,10 @@ export const ProductItem = ({ product }: { product: typeof Product }) => {
       <span className="place-self-center  w-48">{product.stock}</span>
       <div className="w-[1px] bg-dark-brown"></div>
       <div className="place-self-center text-center w-48">
-        <button>
+        <button onClick={() => onProductEdit(product.id)}>
           <i className="fa-solid fa-pen-to-square me-3 hover:text-accent-brown"></i>
         </button>
-        <button>
+        <button onClick={() => onProductDelete(product.id)}>
           <i className="fa-solid fa-trash hover:text-red-500"></i>
         </button>
       </div>

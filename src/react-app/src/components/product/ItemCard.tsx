@@ -1,33 +1,16 @@
 import { useNavigate } from "react-router-dom";
-import { useToast } from "../universal/Toast";
+import { Product } from "../universal/interfaces/Product";
+import { useCart } from "../universal/Cart";
 
-interface Props {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  discount_price?: number;
-  category: string;
-  imageurl?: string;
-}
-
-export const ItemCard = (props: Props) => {
-  const showToast = useToast();
-
+export const ItemCard = (props: Product) => {
   const navigate = useNavigate();
 
-  const formatPrice = (price?: number) => {
-    return price?.toFixed(2);
-  };
-
-  const onAddToCart = () => {
-    showToast(true, "Produkts pievienots grozam");
-  };
+  const { addToCart } = useCart();
 
   return (
     <div className="h-[316px] group mx-auto bg-light-gray shadow-sm my-4 brightness-95 flex flex-col w-60 rounded-md  hover:shadow-md transition-all">
       <button
-        onClick={onAddToCart}
+        onClick={() => addToCart(props)}
         className="hover:brightness-90 absolute h-0 group-hover:h-12  bg-light-brown flex transition-all place-items-center w-full justify-center font-poppins gap-4 rounded-t-md shadow-md"
       >
         <span className="text-lg opacity-0 group-hover:opacity-100 transition-all">
@@ -43,23 +26,23 @@ export const ItemCard = (props: Props) => {
       >
         <img
           className="rounded-t-md"
-          src={props.imageurl}
+          src={props.image_url}
           alt={props.description}
         />
 
         <div className="px-2 pt-1">
-          <span className="font-poppins">{props.title}</span>
+          <span className="font-poppins">{props.display_name}</span>
         </div>
         <div className="px-3 place-items-center flex rounded-b-md font-poppins gap-3 h-12">
           <span className="text-2xl font-semibold">
-            {props.discount_price
-              ? formatPrice(props.discount_price)
-              : formatPrice(props.price)}
+            {props.discount_pricing
+              ? props.discount_pricing.toFixed(2)
+              : props.pricing.toFixed(2)}
             &euro;
           </span>
-          {props.discount_price && (
+          {props.discount_pricing && (
             <span className="line-through text-lg">
-              {formatPrice(props.price)}&euro;
+              {props.pricing.toFixed(2)}&euro;
             </span>
           )}
         </div>
