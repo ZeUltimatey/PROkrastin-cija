@@ -1,4 +1,13 @@
 import { useState } from "react";
+import { FormInput } from "../../universal/FormInput";
+
+interface Address {
+  city: string;
+  street: string;
+  apartment_number: string;
+  zip_code: string;
+  display_name: string;
+}
 
 export const SavedAddresses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,6 +54,8 @@ export const SavedAddresses = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  const [formData, setFormData] = useState<Address>({} as Address);
 
   return (
     <div className="bg-light-gray shadow-md rounded-md p-8 border-2 border-medium-brown">
@@ -106,30 +117,69 @@ export const SavedAddresses = () => {
                 <label className="text-sm text-dark-brown font-poppins block mb-1">
                   Adreses Nosaukums
                 </label>
-                <input
-                  type="text"
-                  value={newAddress.label}
+                <FormInput
+                  value={formData.display_name}
                   onChange={(e) =>
-                    setNewAddress({ ...newAddress, label: e.target.value })
+                    setFormData({ ...formData, display_name: e.target.value })
                   }
-                  className="w-full border border-medium-brown rounded-md p-2"
                   placeholder="Piem., Mājas adrese"
                 />
               </div>
               <div>
                 <label className="text-sm text-dark-brown font-poppins block mb-1">
-                  Adrese
+                  Pilsēta
                 </label>
-                <input
-                  type="text"
-                  value={newAddress.address}
+                <FormInput
+                  value={formData.city}
                   onChange={(e) =>
-                    setNewAddress({ ...newAddress, address: e.target.value })
+                    setFormData({ ...formData, city: e.target.value })
                   }
-                  className="w-full border border-medium-brown rounded-md p-2"
-                  placeholder="Piem., Čaka iela 69, Rīga"
+                  placeholder="Piem., Rīga"
                 />
               </div>
+              <div>
+                <label className="text-sm text-dark-brown font-poppins block mb-1">
+                  Iela
+                </label>
+                <FormInput
+                  value={formData.street}
+                  onChange={(e) =>
+                    setFormData({ ...formData, street: e.target.value })
+                  }
+                  placeholder="Piem., Čaka iela"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-dark-brown font-poppins block mb-1">
+                  Dzīvokļa vai mājas numurs
+                </label>
+                <FormInput
+                  value={formData.apartment_number}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      apartment_number: e.target.value,
+                    })
+                  }
+                  placeholder="Piem., 69"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-dark-brown font-poppins block mb-1">
+                  Pasta indekss
+                </label>
+                <FormInput
+                  value={formData.zip_code}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      zip_code: e.target.value,
+                    })
+                  }
+                  placeholder="Piem., LV-3301"
+                />
+              </div>
+
               <div className="flex justify-end space-x-4 mt-4">
                 <button
                   type="button"

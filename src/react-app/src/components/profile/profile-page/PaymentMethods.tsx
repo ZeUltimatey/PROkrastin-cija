@@ -1,4 +1,12 @@
 import { useState } from "react";
+import { FormInput } from "../../universal/FormInput";
+
+interface PaymentMethod {
+  card_number: string;
+  expirtation_date: string;
+  cvc_nuber: string;
+  card_name: string;
+}
 
 export const PaymentMethods = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +41,8 @@ export const PaymentMethods = () => {
     const updatedPayments = paymentMethods.filter((_, i) => i !== index);
     setPaymentMethods(updatedPayments);
   };
+
+  const [formData, setFormData] = useState<PaymentMethod>({} as PaymentMethod);
 
   return (
     <div className="bg-light-gray shadow-md rounded-md p-8 border-2 border-medium-brown">
@@ -88,13 +98,12 @@ export const PaymentMethods = () => {
                 <label className="text-sm text-dark-brown font-poppins block mb-1">
                   Kartes tips
                 </label>
-                <input
+                <FormInput
                   type="text"
                   value={newPayment.type}
                   onChange={(e) =>
                     setNewPayment({ ...newPayment, type: e.target.value })
                   }
-                  className="w-full border border-medium-brown rounded-md p-2"
                   placeholder="Piem., Visa vai Mastercard"
                 />
               </div>
@@ -102,13 +111,11 @@ export const PaymentMethods = () => {
                 <label className="text-sm text-dark-brown font-poppins block mb-1">
                   Kartes numurs
                 </label>
-                <input
-                  type="text"
-                  value={newPayment.cardNumber}
+                <FormInput
+                  value={formData.card_number}
                   onChange={(e) =>
-                    setNewPayment({ ...newPayment, cardNumber: e.target.value })
+                    setFormData({ ...formData, card_number: e.target.value })
                   }
-                  className="w-full border border-medium-brown rounded-md p-2"
                   placeholder="**** **** **** 1234"
                 />
               </div>
@@ -116,13 +123,14 @@ export const PaymentMethods = () => {
                 <label className="text-sm text-dark-brown font-poppins block mb-1">
                   Derīguma termiņš
                 </label>
-                <input
-                  type="text"
-                  value={newPayment.expiryDate}
+                <FormInput
+                  value={formData.expirtation_date}
                   onChange={(e) =>
-                    setNewPayment({ ...newPayment, expiryDate: e.target.value })
+                    setFormData({
+                      ...formData,
+                      expirtation_date: e.target.value,
+                    })
                   }
-                  className="w-full border border-medium-brown rounded-md p-2"
                   placeholder="MM/YY"
                 />
               </div>

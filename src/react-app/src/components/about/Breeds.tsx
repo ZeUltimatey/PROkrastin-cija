@@ -1,3 +1,11 @@
+import { useState } from "react";
+import { FormInput } from "../universal/FormInput";
+
+interface Breed {
+  id: number;
+  display_name: string;
+  breed_information: string;
+}
 export const Breeds = () => {
   const breeds = [
     { id: 1, name: "Meinkūns", description: "Liels un draudzīgs mīlulis." },
@@ -14,6 +22,8 @@ export const Breeds = () => {
       description: "Bez apmatojuma un enerģisks kaķis.",
     },
   ];
+
+  const [formData, setFormData] = useState<Breed>({} as Breed);
 
   return (
     <div className="bg-content-white">
@@ -42,10 +52,13 @@ export const Breeds = () => {
         <div className="flex flex-col grow gap-1">
           <div className="hidden mx-8 md:flex text-lg lg:text-xl font-semibold place-items-center border-2 rounded-full border-light-gray">
             <div className="flex grow">
-              <input
+              <FormInput
                 placeholder="Meklēt šķirni..."
                 type="text"
-                className="text-xl max-h-12 px-6 font-semibold grow bg-white rounded-s-full"
+                value={formData.display_name}
+                onChange={(e) =>
+                  setFormData({ ...formData, display_name: e.target.value })
+                }
                 disabled
               />
               <button
