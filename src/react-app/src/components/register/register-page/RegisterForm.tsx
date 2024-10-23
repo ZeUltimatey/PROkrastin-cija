@@ -28,14 +28,13 @@ export const RegisterForm = () => {
       body: JSON.stringify(formData),
     })
       .then(async (response) => {
-        const data = await response.json();
         if (response.ok) {
+          const data = await response.json();
           showToast(true, "Reģistrācija veiksmīga!");
           sessionStorage.setItem(Constants.SESSION_STORAGE.TOKEN, data.token);
           navigate("/");
         } else {
           showToast(false, "Kļūda reģistrācijas procesā."); //TODO: izvadīt informatīvu kļūdas ziņojumu
-          throw new Error(data.error);
         }
       })
       .catch((error) => {

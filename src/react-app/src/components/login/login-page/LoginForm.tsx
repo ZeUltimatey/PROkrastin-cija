@@ -24,14 +24,13 @@ export const LoginForm = () => {
       body: JSON.stringify(formData),
     })
       .then(async (response) => {
-        const data = await response.json();
         if (response.ok) {
+          const data = await response.json();
           sessionStorage.setItem(Constants.SESSION_STORAGE.TOKEN, data.token);
           showToast(true, "Autentifikācija veiksmīga!");
           navigate("/");
         } else {
           showToast(false, "Kļūda autentifikācijas procesā.");
-          throw new Error(data.error);
         }
       })
       .catch((error) => {

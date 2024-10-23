@@ -44,8 +44,8 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
       },
     });
 
-    const data = await response.json();
     if (response.ok) {
+      const data = await response.json();
       setCartItems(data);
       sessionStorage.setItem(
         Constants.SESSION_STORAGE.CART,

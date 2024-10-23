@@ -129,7 +129,9 @@ class UserController extends Controller
             'display_name'          => 'nullable|string|max:255',
             'name'                  => 'nullable|string|max:255',
             'surname'               => 'nullable|string|max:255',
-            'phone_number'          => 'nullable|string|max:15',    
+            'phone_number'          => 'nullable|string|max:15',
+            'user_role'             => 'nullable|in:User,Admin',
+            'deactivated'           => 'nullable|boolean',
         ]);
 
         if ($validator->fails()) {

@@ -20,8 +20,9 @@ export const Product = {
 export const Products = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState(Product);
-  const [products, setProducts] = useState<(typeof Product)[]>([]);
+  const [products, setProducts] = useState<(typeof Product)[]>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const showToast = useToast();
 
@@ -29,9 +30,9 @@ export const Products = () => {
     await fetch(`${Constants.API_URL}/products`, {
       method: "GET",
     }).then(async (response) => {
-      const data = await response.json();
       if (response.ok) {
-        setProducts(data);
+        const data = await response.json();
+        setProducts(data.data);
       } else {
         showToast(false, "Kļūda iegūstot produktus.");
       }
@@ -41,6 +42,37 @@ export const Products = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  const onProductEdit = async (id: number) => {
+    setIsEditing(true);
+    await fetch(`${Constants.API_URL}/products/${id}`, {
+      method: "GET",
+    }).then(async (response) => {
+      if (response.ok) {
+        const data = await response.json();
+        setFormData(data.data);
+        setIsModalOpen(true);
+      }
+    });
+  };
+
+  const onProductDelete = async (id: number) => {
+    await fetch(`${Constants.API_URL}/products/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem(
+          Constants.SESSION_STORAGE.TOKEN
+        )}`,
+      },
+    }).then((response) => {
+      if (response.ok) {
+        showToast(true, "Produkts veiksmīgi dzēsts!");
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        showToast(false, "Kļūda dzēšot produktu.");
+      }
+    });
+  };
 
   const onFormSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -58,11 +90,43 @@ export const Products = () => {
       if (response.ok) {
         showToast(true, "Produkts veiksmīgi pievienots!");
         setIsModalOpen(false);
+        setTimeout(() => window.location.reload(), 1000);
       } else {
         showToast(false, "Kļūda produkta izveidē.");
       }
     });
     setIsLoading(false);
+  };
+
+  const onEditSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setIsEditing(false);
+    setIsLoading(true);
+    await fetch(`${Constants.API_URL}/products/${formData.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem(
+          Constants.SESSION_STORAGE.TOKEN
+        )}`,
+      },
+      body: JSON.stringify(formData),
+    }).then((response) => {
+      if (response.ok) {
+        showToast(true, "Produkts veiksmīgi atjaunināts!");
+        setIsModalOpen(false);
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        showToast(false, "Kļūda produkta atjaunināšanā.");
+      }
+    });
+    setIsLoading(false);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setIsEditing(false);
+    setFormData(Product);
   };
 
   return (
@@ -83,24 +147,31 @@ export const Products = () => {
           <h3 className="text-xl font-semibold text-dark-brown font-poppins mb-4">
             Esošie Produkti
           </h3>
-          <ProductTable products={products} />
+          <ProductTable
+            products={products}
+            onProductEdit={onProductEdit}
+            onProductDelete={onProductDelete}
+          />
         </div>
 
         {isModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-poppins">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-1/3 relative overflow-auto max-h-[80vh]">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-1/3 relative overflow-auto ">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-dark-brown font-poppins">
                   Jauna produkta pievienošana
                 </h2>
                 <button
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={closeModal}
                   className="text-dark-brown rounded-full w-7 h-7 flex items-center justify-center"
                 >
                   <i className="fa-solid fa-x"></i>
                 </button>
               </div>
-              <form onSubmit={onFormSubmit} className="space-y-4">
+              <form
+                onSubmit={isEditing ? onEditSubmit : onFormSubmit}
+                className="space-y-4"
+              >
                 <div>
                   <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
                     Produkta nosaukums
@@ -229,7 +300,7 @@ export const Products = () => {
                 </div>
                 <div className="flex justify-end space-x-4 mt-6">
                   <button
-                    onClick={() => setIsModalOpen(false)}
+                    onClick={closeModal}
                     className="bg-light-gray text-dark-brown hover:bg-opacity-70 px-4 py-2 rounded-md shadow font-poppins"
                   >
                     Atcelt

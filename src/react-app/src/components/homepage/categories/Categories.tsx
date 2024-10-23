@@ -22,6 +22,7 @@ export const Categories = () => {
           <div className="grid grid-cols-3 gap-y-16 place-items-center">
             {CategoryList.map((category, idx) => (
               <Category
+                key={idx}
                 image={category.image}
                 name={category.name}
                 link={category.link}

@@ -9,7 +9,7 @@ import { Product } from "../universal/interfaces/Product";
 export const Catalog = () => {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState({ popularity: "", price: "" });
-  const [products, setProducts] = useState<Product[]>();
+  const [products, setProducts] = useState<Product[]>(null);
 
   const fetchItems = async () => {
     await fetch(`${Constants.API_URL}/products`, {
@@ -19,14 +19,16 @@ export const Catalog = () => {
       },
     })
       .then(async (response) => {
-        const data = await response.json();
         if (response.ok) {
+          const data = await response.json();
           if (data.length === 0) {
             setProducts([]);
+            return;
           }
-          setProducts(data);
+          setProducts(data.data);
+          console.log(products);
         } else {
-          throw new Error(data.error);
+          throw new Error(response.statusText);
         }
       })
       .catch((error) => {
@@ -63,18 +65,19 @@ export const Catalog = () => {
           />
           <div className="mx-8 h-auto mb-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 place-items-center gap-12">
-              {products?.map((product) => (
-                <ItemCard
-                  key={product.id}
-                  id={product.id}
-                  display_name={product.display_name}
-                  description={product.description}
-                  pricing={product.pricing}
-                  discount_pricing={product.discount_pricing}
-                  product_type={product.product_type}
-                  image_url={"../images/products/16.png"}
-                />
-              ))}
+              {products &&
+                products?.map((product) => (
+                  <ItemCard
+                    key={product.id}
+                    id={product.id}
+                    display_name={product.display_name}
+                    description={product.description}
+                    pricing={product.pricing}
+                    discount_pricing={product.discount_pricing}
+                    product_type={product.product_type}
+                    image_url={"../images/products/16.png"}
+                  />
+                ))}
             </div>
           </div>
           {products?.length === 0 && (
@@ -82,7 +85,7 @@ export const Catalog = () => {
               Nekas netika atrasts :(
             </div>
           )}
-          <div className="mx-auto">{products === undefined && <Spinner />}</div>
+          <div className="mx-auto">{products === null && <Spinner />}</div>
         </div>
         <Filter />
       </div>

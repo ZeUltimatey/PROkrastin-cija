@@ -10,4 +10,5 @@ export interface User {
   user_role: string;
   created_at: string;
   updated_at: string;
+  deactivated?: number;
 }

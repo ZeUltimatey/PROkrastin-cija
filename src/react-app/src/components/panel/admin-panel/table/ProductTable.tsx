@@ -3,8 +3,12 @@ import { ProductItem } from "./ProductItem";
 
 export const ProductTable = ({
   products,
+  onProductEdit,
+  onProductDelete,
 }: {
   products: (typeof Product)[];
+  onProductEdit: (id: number) => void;
+  onProductDelete: (id: number) => void;
 }) => {
   return (
     <div className="w-full">
@@ -22,7 +26,12 @@ export const ProductTable = ({
       <div className="w-full flex flex-col my-3 gap-2">
         {products &&
           products?.map((product) => (
-            <ProductItem key={product.id} product={product} />
+            <ProductItem
+              key={product.id}
+              product={product}
+              onProductEdit={onProductEdit}
+              onProductDelete={onProductDelete}
+            />
           ))}
       </div>
     </div>
