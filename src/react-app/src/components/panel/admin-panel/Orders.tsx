@@ -26,7 +26,7 @@ export const Orders = () => {
 
   const handleCancelOrder = () => {
     if (selectedOrder) {
-      console.log(`Canceling order ${selectedOrder.id}`);
+      console.log(`Cancelling order ${selectedOrder.id}`);
       setIsModalOpen(false);
     }
   };
@@ -59,9 +59,7 @@ export const Orders = () => {
   ];
 
   return (
-    <div className="min-h-screen flex bg-content-white">
-      <Sidebar />
-
+    <div className="min-h-screen flex bg-content-white w-full">
       <div className="flex-1">
         <header className="bg-content-white shadow p-8 border-b-2 border-medium-brown">
           <div className="flex justify-between items-center">

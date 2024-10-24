@@ -18,13 +18,14 @@ export const ProfileInfo = ({ user }: { user: User }) => {
     await fetch(`${Constants.API_URL}/logout`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem(
-          Constants.SESSION_STORAGE.TOKEN
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
         )}`,
       },
     }).then((response) => {
       if (response.ok) {
-        sessionStorage.removeItem(Constants.SESSION_STORAGE.TOKEN);
+        localStorage.removeItem(Constants.LOCAL_STORAGE.TOKEN);
+        localStorage.removeItem(Constants.LOCAL_STORAGE.CART);
         showToast(true, "Iziešana veiksmīga.");
         navigate("/");
       } else {
@@ -40,8 +41,8 @@ export const ProfileInfo = ({ user }: { user: User }) => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem(
-          Constants.SESSION_STORAGE.TOKEN
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
         )}`,
       },
       body: JSON.stringify(formData),
@@ -56,7 +57,6 @@ export const ProfileInfo = ({ user }: { user: User }) => {
     });
     setIsLoading(false);
   };
-
 
   return (
     <div className="bg-light-gray shadow-md rounded-md border-2 h-40 border-medium-brown">
@@ -84,6 +84,14 @@ export const ProfileInfo = ({ user }: { user: User }) => {
             </div>
           </div>
           <div className="flex gap-4">
+            {user.user_role == "Admin" && (
+              <button
+                onClick={() => navigate("/panel")}
+                className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
+              >
+                <i className="fa-solid fa-screwdriver-wrench"></i>
+              </button>
+            )}
             <button
               onClick={handleLogoutClick}
               className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"

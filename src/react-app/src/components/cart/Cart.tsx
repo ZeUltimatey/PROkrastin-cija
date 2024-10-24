@@ -1,48 +1,19 @@
 import React, { useState } from "react";
-import CartProduct from "../cart/cart-page/CartProduct"; 
-import products from "../../data/cat_items.json";
-
-interface CartItem {
-  id: number;
-  quantity: number;
-}
-
-const sampleCartItems: CartItem[] = [
-  { id: 1, quantity: 2 },
-  { id: 2, quantity: 1 },
-];
+import CartProduct from "../cart/cart-page/CartProduct";
+import { useCart } from "../universal/Cart";
 
 export const Cart = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>(sampleCartItems);
-
-  const cartProducts = products.filter((product) =>
-    cartItems.some((cartItem) => cartItem.id === product.id)
-  );
-
-  const handleRemoveItem = (id: number) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
-  };
-
-  const handleQuantityChange = (id: number, delta: number) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      )
-    );
-  };
+  const { cartItems, removeFromCart, addToCart } = useCart();
 
   const getTotalPrice = () => {
-    return cartProducts.reduce((total, product) => {
-      const cartItem = cartItems.find((item) => item.id === product.id);
-      return total + product.price * (cartItem?.quantity || 0);
+    return cartItems.reduce((acc, item) => {
+      return acc + item.product.pricing * item.amount;
     }, 0);
   };
 
   return (
-    <div className="flex min-h-screen bg-light-gray">
-      <div className="flex-1 bg-white p-8">
+    <div className="flex min-h-screen  font-poppins">
+      <div className="flex-1 bg-content-white p-8">
         <h2 className="text-4xl font-bold text-dark-brown mb-6">
           Iepirkumu grozs
         </h2>
@@ -67,17 +38,14 @@ export const Cart = () => {
                 </tr>
               </thead>
               <tbody>
-                {cartProducts.map((product) => {
-                  const cartItem = cartItems.find(
-                    (item) => item.id === product.id
-                  );
+                {cartItems.map((product) => {
                   return (
                     <CartProduct
-                      key={product.id}
-                      product={product}
-                      quantity={cartItem?.quantity || 0}
-                      onRemove={handleRemoveItem}
-                      onQuantityChange={handleQuantityChange}
+                      key={product.product_id}
+                      product={product.product}
+                      quantity={product.amount}
+                      onRemove={() => removeFromCart(product)}
+                      onQuantityChange={addToCart}
                     />
                   );
                 })}
@@ -88,7 +56,7 @@ export const Cart = () => {
                 Kopējā summa:
               </span>
               <span className="font-bold text-lg text-dark-brown">
-                {getTotalPrice().toFixed(2)} EUR
+                {getTotalPrice().toFixed(2)}&euro;
               </span>
             </div>
             <div className="flex justify-between items-center mt-4">
@@ -105,14 +73,14 @@ export const Cart = () => {
                 Kopā apmaksai:
               </span>
               <span className="font-bold text-lg text-dark-brown">
-                {getTotalPrice().toFixed(2)} EUR
+                {getTotalPrice().toFixed(2)}&euro;
               </span>
             </div>
           </div>
         )}
       </div>
 
-      <div className="w-1/4 bg-white p-6 shadow-lg ml-6">
+      <div className=" bg-content-white p-6 shadow-lg w-1/4">
         <h3 className="text-xl font-bold text-dark-brown mb-4">Apmaksāt</h3>
         <button className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown font-poppins mt-4">
           <i className="fa-regular fa-credit-card mr-2"></i>

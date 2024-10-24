@@ -26,7 +26,7 @@ export const LoginForm = () => {
       .then(async (response) => {
         if (response.ok) {
           const data = await response.json();
-          sessionStorage.setItem(Constants.SESSION_STORAGE.TOKEN, data.token);
+          localStorage.setItem(Constants.LOCAL_STORAGE.TOKEN, data.token);
           showToast(true, "Autentifikācija veiksmīga!");
           navigate("/");
         } else {

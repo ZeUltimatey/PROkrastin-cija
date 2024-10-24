@@ -26,7 +26,6 @@ export const Catalog = () => {
             return;
           }
           setProducts(data.data);
-          console.log(products);
         } else {
           throw new Error(response.statusText);
         }

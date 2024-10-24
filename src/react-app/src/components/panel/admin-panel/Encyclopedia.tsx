@@ -8,28 +8,36 @@ interface Encyclopedia {
   breed_information: string;
 }
 
+const data: Encyclopedia = {
+  id: 0,
+  display_name: "",
+  breed_information: "",
+};
+
 export const Encyclopedia = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [formData, setFormData] = useState<Encyclopedia>(null);
+  const [formData, setFormData] = useState<Encyclopedia>(data);
 
   return (
-    <div className="flex">
-      <Sidebar />
-      <div className="flex-1 bg-content-white p-8">
-        <h2 className="text-2xl font-bold text-dark-brown font-poppins mb-4">
-          Kaķu Enciklopēdija
-        </h2>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown font-poppins"
-        >
-          <i className="fa-solid fa-plus"></i> Pievienot rakstu
-        </button>
-
+    <div className="flex w-full">
+      <div className="flex-1 bg-content-white">
+        <header className="bg-content-white shadow p-8 border-b-2 border-medium-brown">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-dark-brown font-poppins">
+              Kaķu enciklopēdija
+            </h1>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-medium-brown text-white px-4 min-w-48 hover:bg-opacity-85 transition-all py-2 rounded-lg font-poppins"
+            >
+              <i className="fa-solid fa-plus" /> Pievienot rakstu
+            </button>
+          </div>
+        </header>
         {isModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-poppins">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-1/2 relative overflow-auto max-h-[30rem]">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-1/2 relative overflow-auto h-[45rem]">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-dark-brown font-poppins">
                   Enciklopēdijas raksta pievienošana
@@ -48,7 +56,9 @@ export const Encyclopedia = () => {
                   </label>
                   <FormInput
                     value={formData.display_name}
-                    onChange={(value) => setFormData({ ...formData, display_name: value })}
+                    onChange={(value) =>
+                      setFormData({ ...formData, display_name: value })
+                    }
                     placeholder="Ievadiet šķirnes nosaukumu"
                   />
                 </div>

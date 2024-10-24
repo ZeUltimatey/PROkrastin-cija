@@ -10,9 +10,8 @@ export const Navbar = () => {
   const [navbarToggle, setNavbarToggle] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
   const [showCart, setShowCart] = useState(false);
-  const [cartItems, setCartItems] = useState<Product[]>([]);
 
-  const { getCartItems, removeFromCart } = useCart();
+  const { fetchCart } = useCart();
 
   const navigate = useNavigate();
 
@@ -31,7 +30,7 @@ export const Navbar = () => {
         onClick={() => navigate(link)}
         className={`${idx + 1 === CategoryList.length ? "rounded-br-md" : ""} ${
           idx === CategoryList.length - 3 ? "rounded-bl-md" : ""
-        } bg-content-white border-[#d8d6ce] brightness-95 hover:brightness-90 px-4 min-w-24 text-center py-2 h-full`}
+        } bg-content-white border-[#d8d6ce] hover:brightness-90 px-4 min-w-24 text-center py-2 h-full`}
       >
         {name}
       </li>
@@ -39,7 +38,7 @@ export const Navbar = () => {
   };
 
   const handleUserClick = async () => {
-    if (sessionStorage.getItem(Constants.SESSION_STORAGE.TOKEN)) {
+    if (localStorage.getItem(Constants.LOCAL_STORAGE.TOKEN)) {
       navigate("/profile");
       return;
     }
@@ -47,19 +46,9 @@ export const Navbar = () => {
   };
 
   const handleCartClick = async () => {
+    fetchCart();
     setShowCart(!showCart);
-    const items = await getCartItems();
-    setCartItems(items);
   };
-  const fetchItems = async () => {
-    const cartItems = await getCartItems();
-    setCartItems(cartItems);
-  };
-  useEffect(() => {
-    if (sessionStorage.getItem(Constants.SESSION_STORAGE.TOKEN)) {
-      fetchItems();
-    }
-  }, []);
 
   return (
     <nav className="bg-content-white rounded-t-md">
@@ -112,9 +101,7 @@ export const Navbar = () => {
             </div>
           )}
         </div>
-        {showCart && (
-          <NavbarCart cartItems={cartItems} onRemove={removeFromCart} />
-        )}
+        {showCart && <NavbarCart />}
 
         <div className="flex h-full ">
           <button

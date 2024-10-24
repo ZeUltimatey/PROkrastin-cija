@@ -1,35 +1,33 @@
 import React from "react";
+import { Product } from "../../universal/interfaces/Product";
 
 interface CartProductProps {
-  product: {
-    id: number;
-    title: string;
-    price: number;
-    image_url: string;
-  };
+  product: Product;
   quantity: number;
   onRemove: (id: number) => void;
-  onQuantityChange: (id: number, delta: number) => void;
+  onQuantityChange: (product: Product, delta: number) => void;
 }
 
 export const CartProduct = (props: CartProductProps) => {
   const { product, quantity, onRemove, onQuantityChange } = props;
-  const totalPrice = product.price * quantity;
+  const totalPrice = product.pricing * quantity;
 
   return (
     <tr className="border-b border-gray-200">
       <td className="flex items-center py-4">
         <img
-          src={product.image_url}
-          alt={product.title}
+          src={product.image_url ?? "https://via.placeholder.com/150"}
+          alt={product.display_name}
           className="h-24 w-24 object-cover mr-4"
         />
-        <span className="text-dark-brown font-semibold">{product.title}</span>
+        <span className="text-dark-brown font-semibold">
+          {product.display_name}
+        </span>
       </td>
       <td className="text-center py-4">
         <div className="flex items-center justify-center">
           <button
-            onClick={() => onQuantityChange(product.id, -1)}
+            onClick={() => onQuantityChange(product, quantity - 1)}
             className="bg-light-brown h-8 w-8 flex items-center justify-center rounded-l-md hover:bg-opacity-80 transition-opacity"
           >
             <i className="fa-solid fa-minus text-white text-sm"></i>
@@ -38,7 +36,7 @@ export const CartProduct = (props: CartProductProps) => {
             {quantity}
           </span>
           <button
-            onClick={() => onQuantityChange(product.id, 1)}
+            onClick={() => onQuantityChange(product, quantity + 1)}
             className="bg-light-brown h-8 w-8 flex items-center justify-center rounded-r-md hover:bg-opacity-80 transition-opacity"
           >
             <i className="fa-solid fa-plus text-white text-sm"></i>

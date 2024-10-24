@@ -60,8 +60,8 @@ export const Products = () => {
     await fetch(`${Constants.API_URL}/products/${id}`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem(
-          Constants.SESSION_STORAGE.TOKEN
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
         )}`,
       },
     }).then((response) => {
@@ -81,8 +81,8 @@ export const Products = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem(
-          Constants.SESSION_STORAGE.TOKEN
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
         )}`,
       },
       body: JSON.stringify(formData),
@@ -106,8 +106,8 @@ export const Products = () => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem(
-          Constants.SESSION_STORAGE.TOKEN
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
         )}`,
       },
       body: JSON.stringify(formData),
@@ -130,23 +130,23 @@ export const Products = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <div className="flex-1 bg-content-white p-8">
-        <h2 className="text-2xl font-bold text-dark-brown font-poppins mb-4">
-          Preču Saraksts
-        </h2>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
-        >
-          <i className="fa-solid fa-plus"></i> Pievienot produktu
-        </button>
+    <div className="flex min-h-screen w-full">
+      <div className="flex-1 bg-content-white">
+        <header className="bg-content-white shadow p-8 border-b-2 border-medium-brown">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-dark-brown font-poppins">
+              Produktu saraksts
+            </h1>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="bg-medium-brown text-white px-4 min-w-48 hover:bg-opacity-85 transition-all py-2 rounded-lg font-poppins"
+            >
+              <i className="fa-solid fa-plus" /> Pievienot produktu
+            </button>
+          </div>
+        </header>
 
-        <div className="mt-6">
-          <h3 className="text-xl font-semibold text-dark-brown font-poppins mb-4">
-            Esošie Produkti
-          </h3>
+        <div className="">
           <ProductTable
             products={products}
             onProductEdit={onProductEdit}

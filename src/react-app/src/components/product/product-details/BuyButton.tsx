@@ -1,7 +1,12 @@
 import { useState } from "react";
+import { Product } from "../../universal/interfaces/Product";
+import { useCart } from "../../universal/Cart";
 
-export const BuyButton = () => {
+export const BuyButton = ({ product }: { product: Product }) => {
   const [count, setCount] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { addToCart } = useCart();
 
   const countPlus = () => {
     setCount(count + 1);
@@ -39,8 +44,18 @@ export const BuyButton = () => {
           <i className="fa-solid fa-plus text-[#3e2a19]"></i>
         </button>
       </div>
-      <button className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md font-poppins shadow hover:bg-medium-brown transition-all">
-        Pievienot grozam
+      <button
+        disabled={isLoading}
+        onClick={() => {
+          addToCart(product, count);
+        }}
+        className={`${
+          isLoading
+            ? "bg-gray-200 hover:cursor-not-allowed"
+            : "hover:cursor-pointer bg-medium-brown hover:bg-opacity-70"
+        }   text-white px-6 py-2 rounded-md shadow font-poppins flex gap-2 place-items-center`}
+      >
+        <i className="fa-solid fa-cart-arrow-down"></i>Pievienot grozam
       </button>
     </div>
   );

@@ -17,8 +17,8 @@ export const Profile = () => {
     await fetch(`${Constants.API_URL}/user`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem(
-          Constants.SESSION_STORAGE.TOKEN
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
         )}`,
       },
     }).then(async (response) => {

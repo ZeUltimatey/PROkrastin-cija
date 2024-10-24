@@ -27,8 +27,8 @@ export const Users = () => {
     await fetch(`${Constants.API_URL}/all_users`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem(
-          Constants.SESSION_STORAGE.TOKEN
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
         )}`,
       },
     }).then(async (response) => {
@@ -46,8 +46,8 @@ export const Users = () => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem(
-          Constants.SESSION_STORAGE.TOKEN
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
         )}`,
       },
       body: JSON.stringify(selectedUser),
@@ -70,20 +70,13 @@ export const Users = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex bg-content-white">
-      <Sidebar />
-
+    <div className="bg-content-white w-full">
       <div className="flex-1">
         <header className="bg-content-white shadow p-8 border-b-2 border-medium-brown">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-dark-brown font-poppins">
               Lietotāji
             </h1>
-            <div className="flex space-x-4">
-              <button className="bg-medium-brown text-white px-4 py-2 rounded-lg font-poppins">
-                Pievienot lietotāju
-              </button>
-            </div>
           </div>
         </header>
 
@@ -95,7 +88,7 @@ export const Users = () => {
               </h2>
             </div>
 
-            <table className="w-full text-left">
+            <table className="w-full text-left font-poppins">
               <thead>
                 <tr className="border-b border-medium-brown text-center">
                   <th className="py-4 px-6 font-poppins text-dark-brown">

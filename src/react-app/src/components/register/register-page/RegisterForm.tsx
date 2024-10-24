@@ -31,7 +31,7 @@ export const RegisterForm = () => {
         if (response.ok) {
           const data = await response.json();
           showToast(true, "Reģistrācija veiksmīga!");
-          sessionStorage.setItem(Constants.SESSION_STORAGE.TOKEN, data.token);
+          localStorage.setItem(Constants.LOCAL_STORAGE.TOKEN, data.token);
           navigate("/");
         } else {
           showToast(false, "Kļūda reģistrācijas procesā."); //TODO: izvadīt informatīvu kļūdas ziņojumu

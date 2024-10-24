@@ -2,8 +2,16 @@ import { ItemCard } from "../../product/ItemCard";
 import catItems from "../../../data/cat_items.json";
 import { useState } from "react";
 import Carousel from "react-multi-carousel";
+import { Product } from "../../universal/interfaces/Product";
+import { Constants } from "../../universal/Constants";
 
 export const SpecialOffers = () => {
+  const [discountItems, setDiscountItems] = useState<Product[]>(null);
+
+  const getDiscountItems = async () => {
+    await fetch(`${Constants.API_URL}/products`);
+  };
+
   const items = catItems
     //.slice(startItem, startItem + 5)
     .map((item) => (
@@ -46,7 +54,7 @@ export const SpecialOffers = () => {
           </span>
           <div className="grow h-[1px] bg-dark-brown" />
         </div>
-        <div className="px-12">
+        <div className="">
           <Carousel
             infinite={true}
             responsive={responsive}

@@ -28,14 +28,14 @@ export const ProfileSettings = () => {
     await fetch(`${Constants.API_URL}/user`, {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${sessionStorage.getItem(
-          Constants.SESSION_STORAGE.TOKEN
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
         )}`,
       },
     }).then((response) => {
       if (response.ok) {
         showToast(true, "Konts veiksmīgi izdzēsts.");
-        sessionStorage.removeItem(Constants.SESSION_STORAGE.TOKEN);
+        localStorage.removeItem(Constants.LOCAL_STORAGE.TOKEN);
         navigate("/");
       }
     });
