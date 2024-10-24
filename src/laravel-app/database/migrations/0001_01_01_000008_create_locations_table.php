@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('street');
             $table->string('apartment_number')->nullable();
             $table->string('zip_code');
+            $table->string('locationName')->nullable();
             $table->timestamps();
         });
     }

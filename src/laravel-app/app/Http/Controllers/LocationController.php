@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\Validator;
 
 class LocationController extends Controller
 {
+    
     private array $validationRules = [
         'city' => 'required|string|max:255',
         'street' => 'required|string|max:255',
         'apartment_number' => 'nullable|string|max:255',
+        'locationName' => 'nullable|string|max:255',
         'zip_code' => 'required|string|max:255'
     ];
 
