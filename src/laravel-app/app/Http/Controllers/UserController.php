@@ -122,11 +122,19 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
+        $cUser = Auth::user();
+        if ($request->input('display_name') === $cUser->display_name) {
+            $request->request->remove('display_name');
+        }
+        if ($request->input('email') === $cUser->email) {
+            $request->request->remove('email');
+        }
+
         $validator = Validator::make($request->all(), [
-            'email'                 => 'nullable|string|email|max:255',
+            'email'                 => 'sometimes|string|email|unique:users|max:255',
             'password'              => 'nullable|string|min:8|confirmed',
             'password_confirmation' => 'nullable|same:password',
-            'display_name'          => 'nullable|string|max:255',
+            'display_name'          => 'sometimes|string|unique:users|max:255',
             'name'                  => 'nullable|string|max:255',
             'surname'               => 'nullable|string|max:255',
             'phone_number'          => 'nullable|string|max:15',
@@ -139,7 +147,7 @@ class UserController extends Controller
                 'errors' => $validator->errors(),
             ], 422);
         }
-
+        
         $user = User::find($request->user()->id);
 
         $user->update($validator->validated());
