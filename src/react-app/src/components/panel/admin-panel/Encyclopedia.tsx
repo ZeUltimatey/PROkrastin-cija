@@ -1,8 +1,17 @@
 import { useState } from "react";
 import { Sidebar } from "../admin-panel/Sidebar";
+import { FormInput } from "../../universal/FormInput";
+
+interface Encyclopedia {
+  id: number;
+  display_name: string;
+  breed_information: string;
+}
 
 export const Encyclopedia = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [formData, setFormData] = useState<Encyclopedia>(null);
 
   return (
     <div className="flex">
@@ -37,10 +46,10 @@ export const Encyclopedia = () => {
                   <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
                     Šķirnes nosaukums
                   </label>
-                  <input
-                    type="text"
+                  <FormInput
+                    value={formData.display_name}
+                    onChange={(value) => setFormData({ ...formData, display_name: value })}
                     placeholder="Ievadiet šķirnes nosaukumu"
-                    className="mt-1 w-full px-4 py-2 border font-poppins border-gray-300 rounded-md shadow-sm"
                   />
                 </div>
                 <div>
