@@ -57,6 +57,7 @@ export const ProfileInfo = ({ user }: { user: User }) => {
     setIsLoading(false);
   };
 
+
   return (
     <div className="bg-light-gray shadow-md rounded-md border-2 h-40 border-medium-brown">
       {user && (

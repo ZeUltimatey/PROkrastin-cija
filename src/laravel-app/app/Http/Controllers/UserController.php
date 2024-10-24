@@ -108,9 +108,13 @@ class UserController extends Controller
     /**
      * Show a singular user.
      */
-    public function show(int $id)
-    {
-        //
+    // Display a single user
+    public function show(int $id){
+        
+        $user = User::find($id);
+
+        if ($user) { return response()->json($user); } // OK
+        else { return response()->json(null, 404); } // Not found
     }
 
     /**
@@ -119,7 +123,6 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'profilepicture_id'     => 'nullable|exists:images,id',
             'email'                 => 'nullable|string|email|max:255',
             'password'              => 'nullable|string|min:8|confirmed',
             'password_confirmation' => 'nullable|same:password',
@@ -143,58 +146,58 @@ class UserController extends Controller
 
         return response()->json(['message' => "User successfully updated"], 200);
     }
-    
+
 
     /**
      * Delete a user.
      */
     public function destroy(Request $request)
     {
-        $request->user()->delete();
-        return response()->json(['message' => "User successfully deleted"], 200);
+        $user = Auth::user();
+        Auth::user()->tokens()->delete();
+        if ($user) {
+            $user->delete();
+            return response()->json(['message' => "User successfully deleted"], 200);
+        } else {
+            return response()->json(null, 404);
+        }
     }
 
-    public function update_basket_item(Request $request): JsonResponse
-    {
-        // Validate request data
-        $validator = Validator::make($request->all(), [
-            'product_id' => 'required|int|exists:products,id',
-            'amount' => 'required|int|min:0',
-        ]);
 
-        // Check if validation fails
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors(),
-            ], 422); // Unprocessable Entity
+    /**
+     * Ban or unban an user.
+     */
+    public function deactivate(Request $request, int $id)
+    {
+        // Find the user by id
+        $user = User::find($id);
+
+        // Check if the user exists
+        if (!$user) {
+            return response()->json(['error' => 'User not found.'], 404); // Not found
         }
 
-        // Get the authenticated user
-        $user = Auth::user();
+        // Prevent deactivating Admin users
+        if ($user->user_role === 'Admin') {
+            return response()->json(['deactivated' => false], 403); // Forbidden
+        }
 
-        // Update basket
-        $updated = $user->update_basket_item($request->product_id, (int)$request->amount);
-        if ($updated) { return response()->json($updated, 200); } // OK
-        else { return response()->json(null, 422); } // Unprocessable entity
+        // Validate the request to ensure 'deactivate' is a boolean
+        $request->validate([
+            'deactivate' => 'required|boolean',
+        ]);
+
+        // Set the 'deactivated' field based on the 'deactivate' request
+        $user->deactivated = $request->input('deactivate');
+
+        // Save the updated user model
+        $user->save();
+
+        // Return the updated user state
+        return response()->json(['deactivated' => $user->deactivated], 200); // OK
     }
 
-    public function get_basket(): JsonResponse
-    {
-        // Get the authenticated user
-        $user = Auth::user();
 
-        return response()->json($user->get_basket(), 200); // OK
-    }
-
-    public function clear_basket(): JsonResponse
-    {
-        // Get the authenticated user
-        $user = Auth::user();
-
-        return response()->json($user->clear_basket(), 202); // Request accepted
-    }
-
-    
     public function addProfilePicture(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -209,7 +212,7 @@ class UserController extends Controller
         $user->save();
 
         return $user;
-        
+
     }
 
     public function removeProfilePicture(){

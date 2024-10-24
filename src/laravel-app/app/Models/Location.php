@@ -9,6 +9,7 @@ class Location extends Model
     protected $table = 'locations';
     protected $primaryKey = 'id';
     protected $fillable = [
+        'creator_id',
         'city',
         'street',
         'apartment_number',

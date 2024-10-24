@@ -9,6 +9,7 @@ class Cat extends Model
     protected $table = 'cats';
     protected $primaryKey = 'id';
     protected $fillable = [
+        'id',
         'breed_id',
         'birthdate',
         'color',
@@ -18,6 +19,11 @@ class Cat extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'cat_id', 'product_id');
+        return $this->belongsTo(Product::class, 'id', 'id');
+    }
+
+    public function cat_breed()
+    {
+        return $this->belongsTo(CatBreed::class, 'breed_id', 'id');
     }
 }

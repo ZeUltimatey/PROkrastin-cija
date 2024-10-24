@@ -9,6 +9,9 @@ class Review extends Model
     protected $table = 'reviews';
     protected $primaryKey = 'id';
     protected $fillable = [
+        'reviewer_id',
+        'product_id',
+        'attachment_groups',
         'content',
         'rating',
     ];
@@ -18,5 +21,10 @@ class Review extends Model
     public function reviewer()
     {
         return $this->hasOne(User::class, 'id', 'reviewer_id');
+    }
+
+    public function product()
+    {
+        return $this->hasOne(Product::class, 'id', 'product_id');
     }
 }
