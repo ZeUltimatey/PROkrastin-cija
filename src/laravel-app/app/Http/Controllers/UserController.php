@@ -125,7 +125,6 @@ class UserController extends Controller
         if ($request->input('email') === $cUser->email) {
             $request->request->remove('email');
         }
-        dd($request->all());
         $validator = Validator::make($request->all(), [
             'email'                 => 'sometimes|string|email|unique:users|max:255',
             'password'              => 'nullable|string|min:8|confirmed',
