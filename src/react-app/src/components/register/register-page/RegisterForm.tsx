@@ -29,12 +29,15 @@ export const RegisterForm = () => {
     })
       .then(async (response) => {
         if (response.ok) {
-          const data = await response.json();
           showToast(true, "Reģistrācija veiksmīga!");
-          localStorage.setItem(Constants.LOCAL_STORAGE.TOKEN, data.token);
-          navigate("/");
+          setTimeout(() => navigate("/auth/login"), 1000);
         } else {
-          showToast(false, "Kļūda reģistrācijas procesā."); //TODO: izvadīt informatīvu kļūdas ziņojumu
+          const data = await response.json();
+          console.log(data);
+          showToast(
+            false,
+            data.error ?? data.errors[Object.keys(data.errors)[0]][0]
+          );
         }
       })
       .catch((error) => {

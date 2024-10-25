@@ -8,7 +8,7 @@ import { User } from "../../universal/interfaces/User";
 
 export const ProfileInfo = ({ user }: { user: User }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState<User>({} as User);
+  const [formData, setFormData] = useState<User>(user);
   const [isLoading, setIsLoading] = useState(false);
   const showToast = useToast();
 

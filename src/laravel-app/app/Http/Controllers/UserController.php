@@ -64,13 +64,9 @@ class UserController extends Controller
             'deactivated'       => false,
         ]);
 
-        // Create an authentication token for the user
-        $token = $user->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken;
-
         // Return response with user data and token
         return response()->json([
             'user' => $user,
-            'token' => $token,
         ], 201); // HTTP status code 201 indicates resource creation
     }
 
@@ -129,7 +125,7 @@ class UserController extends Controller
         if ($request->input('email') === $cUser->email) {
             $request->request->remove('email');
         }
-
+        dd($request->all());
         $validator = Validator::make($request->all(), [
             'email'                 => 'sometimes|string|email|unique:users|max:255',
             'password'              => 'nullable|string|min:8|confirmed',
