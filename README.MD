@@ -38,3 +38,18 @@ cd src/react-app
 ```sh
 npm run start
 ```
+
+laravel, backend, enter this in project bash:
+
+```sh
+cd src/laravel-app
+```
+
+```sh
+docker-compose -f docker-compose-local.yml up --build -d
+docker-compose -f docker-compose-local.yml exec app bash
+composer install
+php artisan migrate --force
+php artisan db:seed --class=TestSeeder --force
+php artisan serve --host=0.0.0.0 --port=8000
+```

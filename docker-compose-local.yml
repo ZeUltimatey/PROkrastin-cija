@@ -26,7 +26,6 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-secret}
       - APP_KEY=base64:YrvAlCVWQcvusn76oJb7Ysa7e3FxZenFir09RmH0lr0= 
 
-
   react:
     build:
       context: .
@@ -36,7 +35,7 @@ services:
         source: ./src/react-app
         target: /app
     ports:
-      - "3000:3000"
+      - "3005:3005"
 
   web:
     build:
@@ -64,3 +63,15 @@ services:
       - MYSQL_USER=${DB_USERNAME:-phper}
       - MYSQL_PASSWORD=${DB_PASSWORD:-secret}
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-secret}
+
+  ftpd:
+    build:
+      context: .
+      dockerfile: ./infra/docker/ftpd/Dockerfile
+    ports:
+        - "20-21:20-21"
+        - "65500-65515:65500-65515"
+    volumes:
+        - "/tmp:/var/ftp:ro"
+    environment:
+        - FTPD_BANNER=FTP server

@@ -12,6 +12,7 @@ services:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
       target: ${APP_BUILD_TARGET:-development}
+    user: phper
     volumes:
       - type: bind
         source: ./src/laravel-app
@@ -60,3 +61,15 @@ services:
       - MYSQL_USER=${DB_USERNAME:-phper}
       - MYSQL_PASSWORD=${DB_PASSWORD:-secret}
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-secret}
+
+  ftpd:
+    build:
+      context: .
+      dockerfile: ./infra/docker/ftpd/Dockerfile
+    ports:
+        - "20-21:20-21"
+        - "65500-65515:65500-65515"
+    volumes:
+        - "/tmp:/var/ftp:ro"
+    environment:
+        - FTPD_BANNER=FTP server
