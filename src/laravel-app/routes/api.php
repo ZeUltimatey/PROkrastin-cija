@@ -22,7 +22,7 @@ Route::get('/cats', [CatController::class, 'index']);
 Route::get('/breeds', [CatBreedController::class, 'index']);
 
 Route::get('/products/{id}', [ProductController::class, 'show']);
-Route::get('/cats/{id}', [CatController::class, 'show']);
+//Route::get('/cats/{id}', [CatController::class, 'show']);
 Route::get('/breeds/{id}', [CatBreedController::class, 'show']);
 Route::get('/reviews/{product_id}', [ReviewController::class, 'show']);
 
@@ -30,33 +30,27 @@ Route::get('/reviews/{product_id}', [ReviewController::class, 'show']);
 Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum');
 
 // Users only
-
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [UserController::class, 'logout']);
+    Route::get('/user', [UserController::class, 'get']);
     Route::put('/user', [UserController::class, 'update']);
     Route::post('/user/image/add', [UserController::class, 'addProfilePicture']);
     Route::post('/user/image/remove', [UserController::class, 'removeProfilePicture']);
 
     Route::delete('/user', [UserController::class, 'destroy']);
-    Route::get('/user/{id}', [UserController::class, 'show']);  
-
+    Route::get('/user/{id}', [UserController::class, 'show']); // uh
 
     Route::get('/cards', [CardsController::class, 'index']);
     Route::post('/cards', [CardsController::class, 'store']);
     Route::put('/cards/{id}', [CardsController::class, 'update']); //put changed
     Route::get('/cards/{id}', [CardsController::class, 'show']);
-    Route::post('/cards/remove/{id}', [CardsController::class, 'destroy']);
+    Route::delete('/cards/{id}', [CardsController::class, 'destroy']);
 
     Route::get('/locations', [LocationController::class, 'index']);
     Route::post('/locations', [LocationController::class, 'store']);
     Route::put('/locations/{id}', [LocationController::class, 'update']); //put changed
     Route::get('/locations/{id}', [LocationController::class, 'show']);
-    Route::post('/locations/remove/{id}', [LocationController::class, 'destroy']);
+    Route::delete('/locations/{id}', [LocationController::class, 'destroy']);
 
     Route::post('/reviews/{id}', [ReviewController::class, 'store']);
 
@@ -67,7 +61,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/basket', [SelectedProductController::class, 'addToBasket']);
     Route::delete('/basket/clear', [SelectedProductController::class, 'clear_basket']);
     Route::delete('/basket/remove/{Productid}', [SelectedProductController::class, 'removeFromBasket']);
-
 });
 
 // Admins only - some routes are for testing purposes
@@ -93,7 +86,8 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::put('/cats/{id}', [CatController::class, 'update']); //put changed
     Route::put('/breeds/{id}', [CatBreedController::class, 'update']); //put changed
 
-Route::delete('/products/{id}', [ProductController::class, 'destroy'])->middleware('auth:sanctum');
-Route::post('/cats/remove/{id}', [CatController::class, 'destroy'])->middleware('auth:sanctum');
-Route::post('/cat_breeds/remove/{id}', [CatBreedController::class, 'destroy'])->middleware('auth:sanctum');
+//    Route::delete('/cats/{id}', [CatController::class, 'destroy']); // No
+    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+    Route::delete('/breeds/{id}', [CatBreedController::class, 'destroy']);
+    Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);
 });

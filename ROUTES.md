@@ -3,58 +3,70 @@ localhost/
 └── api/
     ├── register/ POST (adding a new user) ✅
     ├── login/ POST (authentificating an existing user) ✅
-    ├── user/ GET (gets current user using token) ✅
     ├── logout/ POST (deletes current user's token) ✅
     ├── purchase/ POST (purchase and clear basket) ✅
+    ├── dashboard/ GET (get project statistics) ✅
     ├── all_users/ GET (getting all users) ✅
     ├── all_cards/ GET (getting all user card information) ✅
     ├── all_locations/ GET (getting all user locations) ✅
     ├── all_transactions/ GET (getting all user transactions) ✅
     ├── all_reviews/ GET (getting all reviews) ✅
+    ├── user/
+    │   ├── GET (gets current user using token) ✅
+    │   ├── PUT (update user information) ✅
+    │   ├── DELETE (delete the current user) ✅
+    │   ├── {id} GET () ✅
+    │   └── image/
+    │       ├── add/ POST (add profile picture) ✅
+    │       └── remove/ POST (remove profile picture) ✅
+    ├── users/
+    │   ├── {id} GET (getting a specific user) ✅
+    │   └── deactivate/{id} PUT (banning/unbanning an user) ✅
     ├── basket/
     │   ├── GET (getting the contents of a users basket) ✅
-    │   ├── POST (selecting/deselecting a product) ✅
-    │   └── clear/ POST (clear basket) ✅
+    │   ├── POST (selecting/deselecting a product) ❓
+    │   ├── clear/ POST (clear basket) ✅
+    │   └── remove/{Productid} POST () ✅
     ├── products/
     │   ├── {query_options} GET (getting all products) ✅
     │   ├── POST (adding new product) ✅
     │   ├── {id} GET (getting the specfified product) ✅
-    │   ├── {id} POST (updating the specified product) ✅
-    │   └── remove/{id} POST (deleting the specified product) ✅
+    │   ├── {id} PUT (updating the specified product) ✅
+    │   └── {id} DELETE (deleting the specified product) ✅
     ├── cats/
-    │   ├── GET (getting all cats) ✅
+    │   ├── GET (getting all cats) 🟨
     │   ├── POST (adding new cat) 🟨
-    │   ├── {id} GET (getting the specfified cat) ✅
+    │   ├── {id} GET (getting the specfified cat) ⬜
     │   └── {id} POST (updating the specified cat) 🟨
-    ├── cat_breeds/
+    ├── breeds/
     │   ├── GET (getting all cat breeds) ✅
     │   ├── POST (adding new cat breed) ✅
     │   ├── {id} GET (getting the specfified cat breed) ✅
     │   ├── {id} POST (updating the specified cat breed) ✅
-    │   └── remove/{id} POST (deleting the specified cat breed) ✅
+    │   └── {id} DELETE (deleting the specified cat breed) ✅
     ├── cards/
     │   ├── GET (getting all card information) ✅
     │   ├── POST (adding new card information) ✅
     │   ├── {id} GET (getting specific card information) ✅
-    │   ├── {id} POST (updating specific card information) ✅
-    │   └── remove/{id} POST (deleting specific card information) ✅
+    │   ├── {id} PUT (updating specific card information) ✅
+    │   └── {id} DELETE (deleting specific card information) ✅
     ├── locations/
     │   ├── GET (getting all locations) ✅
     │   ├── POST (adding new location) ✅
     │   ├── {id} GET (get specific location) ✅
     │   ├── {id} POST (update specific location) ✅
-    │   └── remove/{id} POST (deleting specific location) ✅
+    │   └── {id} DELETE (deleting specific location) ✅
     ├── transactions/
-    │   ├── GET (getting all transactions) ✅
-    │   └── {id} GET (getting specific transaction) ❌
+    │   └── GET (getting all transactions) ✅
     └── reviews/
-        ├── {product_id} GET (getting all reviews for a product) ✅
-        ├── {product_id} POST (creating a review for a product) ✅
-        └── remove/{id} POST (deleting a specific review) ✅
+        ├── {id} GET (getting all reviews for a product) ✅
+        ├── {id} POST (editing a review for a product) ✅
+        └── {id} DELETE (deleting a specific review) ✅
         
 ✅ - Working fine
 🟨 - Subject to change
 ❌ - Incomplete
+⬜ - Obsolete
 
 PS: There are a few unhandled errors for deleting products while they are in users baskets
 ```
@@ -74,78 +86,37 @@ Example: GET /products?type=CATS,FURNITURE&min_price=7.4&per_page=15&page=2&keyw
 Example: GET /products
 ```
 ```php
-return [
-    {
-        "id": int,
-        "attachments_id": int or null,
-        "product_type": enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'),
-        "display_name": string(255),
-        "description": string(65535),
-        "pricing": float,
-        "discount_pricing": float or null,
-        "stock": int,
-        "created_at": timestamp,
-        "updated_at": timestamp,
-    },
-    other products..
-]
-```
-```php
 return {
-  "data": [
+    "data": [
         {
-        "id": int,
-        "attachments_id": int or null,
-        "product_type": enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'),
-        "display_name": string(255),
-        "description": string(65535),
-        "pricing": float,
-        "discount_pricing": float or null,
-        "stock": int,
-        "created_at": timestamp,
-        "updated_at": timestamp,
-    },
-    other products..
-  ],
-  "links": {
-    "first": string,
-    "last": string,
-    "prev": string or null,
-    "next": string or null
-  },
-  "meta": {
-    "current_page": int,
-    "from": int or null,
-    "last_page": int,
-    "links": [
-      {
-        "url": string or null,
-        "label": string,
-        "active": true or false
-      },
-      more links..
+            "id": int,
+            "display_name": string(255),
+            "description": string(65535),
+            "pricing": float,
+            "discount_pricing": float or null,
+            "product_type": enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'),
+            "stock": int,
+            "images": [string, ...]
+        },
+        other products..
     ],
-    "path": string,
-    "per_page": int,
-    "to": int or null,
-    "total": int
-  }
+    pageify kwargs..
 }
 ```
 ---
 `localhost/api/products/{id} GET`
 ```php
 return {
-    "id": int,
-    "attachments_id": int or null,
-    "product_type": enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'),
-    "display_name": string(255),
-    "description": string(65535),
-    "pricing": float,
-    "discount_pricing": float or null,
-    "stock": int,
-    "created_at": timestamp,
-    "updated_at": timestamp,
+    "data": {
+        "id": int,
+        "display_name": string(255),
+        "description": string(65535),
+        "pricing": float,
+        "discount_pricing": float or null,
+        "product_type": enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'),
+        "stock": int,
+        "images": [string, ...]
+    }
 }
 
 or
@@ -198,7 +169,7 @@ or
 {} - code 422 - invalid cat id
 ```
 ---
-`localhost/api/cat_breeds GET`
+`localhost/api/breeds GET`
 ```php
 return [
     {
@@ -213,7 +184,7 @@ return [
 ]
 ```
 ---
-`localhost/api/cat_breeds/{id} GET` 
+`localhost/api/breeds/{id} GET` 
 ```php
 return {
     "id": int,
@@ -248,6 +219,30 @@ return [
     },
     other reviews..
 ]
+```
+---
+`localhost/api/user GET` *authenticated user*
+```php
+return {
+    "id": int,
+    "profilepicture_id": int or null,
+    "image_url": string(255) or null,
+    "email": string(255),
+    "display_name": string(255),
+    "name": string(255),
+    "surname": string(255),
+    "phone_number": string(255),
+    "user_role": enum('User', 'Admin'),
+    "deactivated": boolean,
+    "created_at": timestamp,
+    "updated_at": timestamp,
+    "remember_token": string(255) or null
+}
+```
+---
+`localhost/api/logout POST` *authenticated user*
+```php
+return 200
 ```
 ---
 `localhost/api/transactions GET` *authenticated user*
@@ -313,6 +308,7 @@ return [
         "city": string(255),
         "street": string(255),
         "apartment_number": string(255) or null,
+        "locationName": string(255) or null,
         "zip_code": string(255)
     },
     other locations..
@@ -341,6 +337,7 @@ or
     "city": string(255),
     "street": string(255),
     "apartment_number": string(255) or null,
+    "locationName": string(255) or null,
     "zip_code": string(255)
 }
 
@@ -350,7 +347,7 @@ or
 {} - code 403 - forbidden
 ```
 ---
-`localhost/api/cards/remove/{id} POST` *authenticated user* \
+`localhost/api/cards/{id} DELETE` *authenticated user* \
 `localhost/api/locations/remove/{id} POST` *authenticated user*
 ```php
 return true
@@ -446,6 +443,7 @@ return [
         "city": string(255),
         "street": string(255),
         "apartment_number": string(255) or null,
+        "locationName": string(255) or null,
         "zip_code": string(255)
     },
     other locations..
@@ -508,7 +506,7 @@ return [
 ---
 `localhost/api/products/remove/{id} POST` ***authenticated admin*** \
 `localhost/api/cats/remove/{id} POST` ***authenticated admin*** \
-`localhost/api/cat_breeds/remove/{id} POST` ***authenticated admin*** \
+`localhost/api/breeds/remove/{id} POST` ***authenticated admin*** \
 `localhost/api/reviews/remove/{id} POST` ***authenticated admin***
 ```php
 return true
@@ -543,10 +541,10 @@ return {
         "name": string(255),
         "surname": string(255),
         "phone_number": string(15),
+        "deactivated": boolean,
         "updated_at": timestamp,
         "created_at": timestamp
-    },
-    "token": string(255)
+    }
 }
 ```
 ---
@@ -576,27 +574,30 @@ return {
     "token": string(255)
 }
 ```
---- 
-`localhost/api/basket POST` *authenticated user*
+---
+`localhost/api/user PUT` *authenticated user*
 ```php
 {
-    "product_id" : "required|int|exists:products,id",
-    "amount"     : "required|int"
+    "email"                 : "sometimes|string|email|unique:users|max:255",
+    "password"              : "nullable|string|min:8|confirmed",
+    "password_confirmation" : "nullable|same:password",
+    "display_name"          : "sometimes|string|unique:users|max:255",
+    "name"                  : "nullable|string|max:255",
+    "surname"               : "nullable|string|max:255",
+    "phone_number"          : "nullable|string|max:15",
+    "user_role"             : "nullable|in:User,Admin",
+    "deactivated"           : "nullable|boolean",
 }
 ```
 ```php
 return {
-    "amount": int,
-    "product_type": enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'),
-    "display_name": string(255),
-    "description": string(65535),
-    "pricing": float,
-    "discount_pricing": float or null,
+    "message": "User successfully updated"
 }
-
-or
-
-{} - code 422 - invalid product id
+```
+---
+`localhost/api/basket POST` *authenticated user*
+```php
+???
 ```
 ---
 `localhost/api/cards POST` *authenticated user* \
@@ -625,6 +626,7 @@ or
     "city"             : "required|string|max:255",
     "street"           : "required|string|max:255",
     "apartment_number" : "nullable|string|max:255",
+    "locationName"     : "nullable|string|max:255",
     "zip_code"         : "required|string|max:255"
 }
 ```
@@ -766,8 +768,8 @@ or
 ```
 
 ---
-`localhost/api/cat_breeds POST` ***authenticated admin*** \
-`localhost/api/cat_breeds/{id} POST` ***authenticated admin***
+`localhost/api/breeds POST` ***authenticated admin*** \
+`localhost/api/breeds/{id} POST` ***authenticated admin***
 ```php
 {
     "attachments_id"    : "nullable|integer|exists:attachment_groups,id",

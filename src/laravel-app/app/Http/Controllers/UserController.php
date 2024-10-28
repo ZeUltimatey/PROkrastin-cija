@@ -106,7 +106,7 @@ class UserController extends Controller
      */
     // Display a single user
     public function show(int $id){
-        
+
         $user = User::find($id);
 
         if ($user) { return response()->json($user); } // OK
@@ -142,7 +142,7 @@ class UserController extends Controller
                 'errors' => $validator->errors(),
             ], 422);
         }
-        
+
         $user = User::find($request->user()->id);
 
         $user->update($validator->validated());
@@ -150,6 +150,13 @@ class UserController extends Controller
         return response()->json(['message' => "User successfully updated"], 200);
     }
 
+    /**
+     * Get own user.
+     */
+    public function get(Request $request)
+    {
+        return $request->user();
+    }
 
     /**
      * Delete a user.
