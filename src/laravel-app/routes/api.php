@@ -21,8 +21,8 @@ Route::get('/products', [ProductController::class, 'index']);
 Route::get('/cats', [CatController::class, 'index']);
 Route::get('/breeds', [CatBreedController::class, 'index']);
 
-Route::get('/products/{id}', [ProductController::class, 'show']);
 //Route::get('/cats/{id}', [CatController::class, 'show']);
+Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/breeds/{id}', [CatBreedController::class, 'show']);
 Route::get('/reviews/{product_id}', [ReviewController::class, 'show']);
 
