@@ -360,6 +360,25 @@ or
 {} - code 422 - invalid id
 ```
 ---
+`localhost/api/dashboard GET` ***authenticated admin***
+```php
+return {
+    "earnings": float,
+    "transactions": int,
+    "clients": int,
+    "products": int,
+    "recent": [
+        {
+            "transaction_id": int,
+            "display_name": string(255),
+            "total_pricing": float,
+            "created_at": timestamp
+        },
+        other recent transactions..
+    ]
+}
+```
+---
 `localhost/api/users/{id} GET` ***authenticated admin***
 ```php
 return {
