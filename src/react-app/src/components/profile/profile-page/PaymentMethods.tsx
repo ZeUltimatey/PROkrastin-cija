@@ -1,114 +1,188 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormInput } from "../../universal/FormInput";
+import { useToast } from "../../universal/Toast";
+import { Constants } from "../../universal/Constants";
 
-interface PaymentMethod {
-  card_number: string;
-  expirtation_date: string;
-  cvc_nuber: string;
-  card_name: string;
-}
+export const paymentMethod = {
+  id: 0,
+  card_number: "",
+  expiration_date: "",
+  // cvc_number: "",
+  card_name: "",
+};
 
 export const PaymentMethods = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState(paymentMethod);
+  const [methods, setMethods] = useState<(typeof paymentMethod)[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const [paymentMethods, setPaymentMethods] = useState([
-    { type: "Visa", cardNumber: "**** **** **** 1234", expiryDate: "08/26" },
-    {
-      type: "Mastercard",
-      cardNumber: "**** **** **** 5678",
-      expiryDate: "12/25",
-    },
-  ]);
-  const [newPayment, setNewPayment] = useState({
-    type: "",
-    cardNumber: "",
-    expiryDate: "",
-  });
+  const showToast = useToast();
 
-  const handleAddNewPayment = () => {
-    setIsModalOpen(true);
+  const fetchPaymentMethods = async () => {
+    await fetch(`${Constants.API_URL}/cards`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+    }).then(async (response) => {
+      if (response.ok) {
+        const data = await response.json();
+
+        setMethods(data);
+      } else {
+        showToast(false, "Kļūda iegūstot karšu informāciju.");
+      }
+    });
   };
 
-  const handleSavePayment = () => {
-    if (newPayment.type && newPayment.cardNumber && newPayment.expiryDate) {
-      setPaymentMethods([...paymentMethods, newPayment]);
-      setNewPayment({ type: "", cardNumber: "", expiryDate: "" });
-      setIsModalOpen(false);
-    }
+  useEffect(() => {
+    fetchPaymentMethods();
+  }, []);
+
+  const onMethodEdit = async (id: number) => {
+    setIsEditing(true);
+    await fetch(`${Constants.API_URL}/cards/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+    }).then(async (response) => {
+      if (response.ok) {
+        const data = await response.json();
+        setFormData(data);
+        setIsModalOpen(true);
+      }
+    });
   };
 
-  const handleDeletePayment = (index: number) => {
-    const updatedPayments = paymentMethods.filter((_, i) => i !== index);
-    setPaymentMethods(updatedPayments);
+  const onMethodDelete = async (id: number) => {
+    await fetch(`${Constants.API_URL}/cards/remove/${id}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+    }).then((response) => {
+      if (response.ok) {
+        showToast(true, "Maksājuma karte veiksmīgi dzēsta!");
+        const newMethods = methods.filter((methods) => methods.id !== id);
+        setMethods(newMethods);
+      } else {
+        showToast(false, "Kļūda dzēšot maksājuma karti.");
+      }
+    });
   };
 
-  const [formData, setFormData] = useState<PaymentMethod>({} as PaymentMethod);
+  const onFormSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setIsLoading(true);
+    await fetch(`${Constants.API_URL}/cards`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+      body: JSON.stringify(formData),
+    }).then((response) => {
+      if (response.ok) {
+        showToast(true, "Maksājuma karte veiksmīgi pievienota!");
+        setIsModalOpen(false);
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        showToast(false, "Kļūda maksājuma kartes pievienošanā.");
+      }
+    });
+    setIsLoading(false);
+  };
+
+  
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setIsEditing(false);
+    setFormData(paymentMethod);
+  };
 
   return (
-    <div className="bg-light-gray shadow-md rounded-md p-8 border-2 border-medium-brown">
-      <h3 className="text-2xl font-bold text-dark-brown font-poppins mb-4">
+    <div className="p-8 border-2 rounded-md shadow-md bg-light-gray border-medium-brown">
+      <h3 className="mb-4 text-2xl font-bold text-dark-brown font-poppins">
         Saglabātās maksājumu metodes
       </h3>
       <ul className="space-y-4">
-        {paymentMethods.map((payment, index) => (
+        {methods.map((payment, index) => (
           <li
             key={index}
-            className="border-b border-dark-brown pb-4 flex justify-between items-center"
+            className="flex items-center justify-between pb-4 border-b border-dark-brown"
           >
             <div>
               <p className="text-dark-brown font-poppins">
-                {payment.type} - {payment.cardNumber}
+                {payment.card_name} - {payment.card_number}
               </p>
               <p className="text-sm text-dark-brown font-poppins">
-                Beidzas: {payment.expiryDate}
+                Beidzas: {payment.expiration_date}
               </p>
             </div>
-            <button
-              onClick={() => handleDeletePayment(index)}
-              className="text-red-600 hover:underline text-sm font-poppins"
-            >
-              <i className="fa-solid fa-trash"></i>
-            </button>
+            <div className="flex items-center">
+              <button
+                onClick={() => onMethodDelete(payment.id)}
+                className="flex items-center justify-center w-8 h-8 text-red-600 hover:underline font-poppins"
+              >
+                <i className="fa-solid fa-trash"></i>
+              </button>
+            </div>
           </li>
         ))}
       </ul>
       <button
-        onClick={handleAddNewPayment}
+        onClick={() => setIsModalOpen(true)}
         className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown font-poppins mt-4"
       >
-        <i className="fa-solid fa-plus mr-2"></i> Pievienot jaunu
+        <i className="mr-2 fa-solid fa-plus"></i> Pievienot jaunu
       </button>
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-2/4">
-            <div className="flex justify-between items-center mb-4">
+          <div className="w-2/4 p-8 bg-white rounded-lg shadow-lg">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold text-dark-brown font-poppins">
                 Pievienot jaunu maksājumu karti
               </h2>
               <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-dark-brown rounded-full w-7 h-7 flex items-center justify-center"
+                onClick={closeModal}
+                className="flex items-center justify-center rounded-full text-dark-brown w-7 h-7"
               >
                 <i className="fa-solid fa-x"></i>
               </button>
             </div>
-            <form className="space-y-4">
+            <form
+              className="space-y-4"
+            >
               <div>
-                <label className="text-sm text-dark-brown font-poppins block mb-1">
-                  Kartes tips
+                <label className="block mb-1 text-sm text-dark-brown font-poppins">
+                  Kartes īpāšnieka vārds
                 </label>
                 <FormInput
-                  type="text"
-                  value={newPayment.type}
+                  value={formData.card_name}
                   onChange={(e) =>
-                    setNewPayment({ ...newPayment, type: e.target.value })
+                    setFormData({
+                      ...formData,
+                      card_name: e.target.value,
+                    })
                   }
-                  placeholder="Piem., Visa vai Mastercard"
+                  placeholder="Vārds Uzvārds"
                 />
               </div>
               <div>
-                <label className="text-sm text-dark-brown font-poppins block mb-1">
+                <label className="block mb-1 text-sm text-dark-brown font-poppins">
                   Kartes numurs
                 </label>
                 <FormInput
@@ -120,32 +194,31 @@ export const PaymentMethods = () => {
                 />
               </div>
               <div>
-                <label className="text-sm text-dark-brown font-poppins block mb-1">
+                <label className="block mb-1 text-sm text-dark-brown font-poppins">
                   Derīguma termiņš
                 </label>
                 <FormInput
-                  value={formData.expirtation_date}
+                  value={formData.expiration_date}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      expirtation_date: e.target.value,
+                      expiration_date: e.target.value,
                     })
                   }
                   placeholder="MM/YY"
                 />
               </div>
-              <div className="flex justify-end space-x-4 mt-6">
+              <div className="flex justify-end mt-6 space-x-4">
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="bg-light-gray text-dark-brown px-4 py-2 rounded-md shadow font-poppins"
+                  onClick={closeModal}
+                  className="px-4 py-2 rounded-md shadow bg-light-gray text-dark-brown font-poppins"
                 >
                   Atcelt
                 </button>
                 <button
-                  type="button"
-                  onClick={handleSavePayment}
-                  className="bg-medium-brown text-white px-6 py-2 rounded-md shadow font-poppins"
+                  type="submit"
+                  className="px-6 py-2 text-white rounded-md shadow bg-medium-brown font-poppins"
                 >
                   Saglabāt
                 </button>

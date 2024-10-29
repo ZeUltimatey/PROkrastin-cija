@@ -13,6 +13,7 @@ class Location extends Model
         'city',
         'street',
         'apartment_number',
+        'locationName',
         'zip_code',
     ];
     public $incrementing = true;
