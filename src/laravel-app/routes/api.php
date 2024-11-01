@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 // Free for all
+Route::get('/login', function () {
+    return response()->json(['error' => 'Unauthorized'], 401);
+})->name('login');
 Route::post('/register', [UserController::class, 'register']);
 
 Route::get('/products', [ProductController::class, 'index']);
