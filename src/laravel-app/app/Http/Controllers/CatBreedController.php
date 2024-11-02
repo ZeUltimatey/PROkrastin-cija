@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CatBreedResource;
+use App\Models\Cat;
 use App\Models\CatBreed;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,9 +13,11 @@ use Psy\Util\Json;
 class CatBreedController extends Controller
 {
     private array $validationRules = [
-        'attachments_id'    => 'nullable|integer|exists:attachment_groups,id',
         'display_name'      => 'required|string|max:255',
-        'breed_information' => 'required|string|max:65535',
+        'feeding_info'      => 'required|string|max:65535',
+        'personality_info'  => 'required|string|max:65535',
+        'environment_info'  => 'required|string|max:65535',
+        'tips_info'         => 'required|string|max:65535',
     ];
 
     /**
@@ -21,9 +25,9 @@ class CatBreedController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(): JsonResponse
+    public function index()
     {
-        return response()->json(Catbreed::all());
+        return CatBreedResource::collection(CatBreed::all());
     }
 
     /**
@@ -32,12 +36,12 @@ class CatBreedController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $id): JsonResponse
+    public function show(int $id)
     {
         // Find the cat breed by id
         $cat_breed = CatBreed::find($id);
 
-        if ($cat_breed) { return response()->json($cat_breed, 200); }
+        if ($cat_breed) { return new CatBreedResource($cat_breed); }
         else { return response()->json(null, 404); }
     }
 

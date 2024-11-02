@@ -24,8 +24,6 @@ class ProductController extends Controller
 
     /**
      * Show all products.
-     *
-     *
      */
     public function index(Request $request)
     {

@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Constants } from "../../universal/Constants";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../universal/Toast";
+import { User } from "../../universal/interfaces/User";
 
-export const ProfileSettings = () => {
+export const ProfileSettings = ({ user }: { user: User }) => {
   const [isPreferencesModalOpen, setIsPreferencesModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 

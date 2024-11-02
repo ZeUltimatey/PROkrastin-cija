@@ -44,7 +44,7 @@ export const Profile = () => {
             <OrderHistory />
             <SavedAddresses />
             <PaymentMethods />
-            <ProfileSettings />
+            <ProfileSettings user={user} />
           </div>
         </div>
       )}
