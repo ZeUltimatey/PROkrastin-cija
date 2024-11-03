@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { Sidebar } from "../admin-panel/Sidebar";
 import { FormInput } from "../../universal/FormInput";
 import { Constants } from "../../universal/Constants";
 import { useToast } from "../../universal/Toast";
 import { CategoryNames } from "../../universal/CategoryNames";
-import { ProductTable } from "./table/ProductTable";
 import { useConfirmation } from "../../universal/Confirmation";
 import {
   createColumnHelper,
@@ -13,6 +11,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { Breed } from "./Breeds";
+
+const Cat = {
+  breed_name: "",
+  birthdate: "",
+  color: "",
+};
 
 export const Product = {
   id: 0,
@@ -20,15 +25,17 @@ export const Product = {
   description: "",
   pricing: 0,
   discount_pricing: null as number,
-  product_type: "CATS",
-  stock: 0,
+  breed_id: 0,
   image_url: "",
+  stock: 1,
+  cat: Cat,
 };
 
-export const Products = () => {
+export const Cats = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState(Product);
-  const [products, setProducts] = useState<(typeof Product)[]>(null);
+  const [cats, setCats] = useState<(typeof Product)[]>(null);
+  const [breeds, setBreeds] = useState<(typeof Breed)[]>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -36,13 +43,27 @@ export const Products = () => {
 
   const confirm = useConfirmation();
 
-  const fetchProducts = async () => {
-    await fetch(`${Constants.API_URL}/products`, {
+  const fetchCats = async () => {
+    await fetch(`${Constants.API_URL}/cats`, {
       method: "GET",
     }).then(async (response) => {
       if (response.ok) {
         const data = await response.json();
-        setProducts(data.data);
+        setCats(data.data);
+      } else {
+        showToast(false, "Kļūda iegūstot kaķus.");
+      }
+    });
+  };
+
+  const fetchBreeds = async () => {
+    await fetch(`${Constants.API_URL}/breeds`, {
+      method: "GET",
+    }).then(async (response) => {
+      if (response.ok) {
+        const data = await response.json();
+        setFormData({ ...formData, breed_id: data.data[0].id });
+        setBreeds(data.data);
       } else {
         showToast(false, "Kļūda iegūstot produktus.");
       }
@@ -50,7 +71,8 @@ export const Products = () => {
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchCats();
+    fetchBreeds();
   }, []);
 
   const onProductEdit = async (id: number) => {
@@ -67,7 +89,7 @@ export const Products = () => {
   };
 
   const onProductDelete = async (id: number) => {
-    if (await confirm("Dzēst produktu?")) {
+    if (await confirm("Dzēst kaķi?")) {
       await fetch(`${Constants.API_URL}/products/${id}`, {
         method: "DELETE",
         headers: {
@@ -77,10 +99,10 @@ export const Products = () => {
         },
       }).then((response) => {
         if (response.ok) {
-          showToast(true, "Produkts veiksmīgi dzēsts!");
+          showToast(true, "Kaķis veiksmīgi dzēsts!");
           setTimeout(() => window.location.reload(), 1000);
         } else {
-          showToast(false, "Kļūda dzēšot produktu.");
+          showToast(false, "Kļūda dzēšot kaķi.");
         }
       });
     }
@@ -99,21 +121,20 @@ export const Products = () => {
         header: "Nosaukums",
         cell: (info) => info.getValue(),
       }),
-      columnHelper.accessor("product_type", {
-        header: "Produkta tips",
-        cell: (info) =>
-          CategoryNames[info.getValue() as keyof typeof CategoryNames],
+      columnHelper.accessor("cat.breed_name", {
+        header: "Šķirne",
+        cell: (info) => <div>{info.getValue()}</div>,
       }),
       columnHelper.accessor("pricing", {
         header: "Cena",
-        cell: (info) => <div>{info.getValue().toFixed(2)}&euro;</div>,
+        cell: (info) => <div>{info.getValue()}&euro;</div>,
       }),
-      columnHelper.accessor("discount_pricing", {
-        header: "Atlaide",
-        cell: (info) => <div>{info.getValue()?.toFixed(2) ?? "- "}&euro;</div>,
+      columnHelper.accessor("cat.birthdate", {
+        header: "Dz. datums",
+        cell: (info) => info.getValue(),
       }),
-      columnHelper.accessor("stock", {
-        header: "Daudzums",
+      columnHelper.accessor("cat.color", {
+        header: "Krāsa",
         cell: (info) => info.getValue(),
       }),
       columnHelper.display({
@@ -136,7 +157,7 @@ export const Products = () => {
   const onFormSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsLoading(true);
-    await fetch(`${Constants.API_URL}/products`, {
+    await fetch(`${Constants.API_URL}/cats`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -144,14 +165,18 @@ export const Products = () => {
           Constants.LOCAL_STORAGE.TOKEN
         )}`,
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({
+        ...formData,
+        birthdate: formData.cat.birthdate,
+        color: formData.cat.color,
+      }),
     }).then((response) => {
       if (response.ok) {
-        showToast(true, "Produkts veiksmīgi pievienots!");
+        showToast(true, "Kaķis veiksmīgi pievienots!");
         setIsModalOpen(false);
         setTimeout(() => window.location.reload(), 1000);
       } else {
-        showToast(false, "Kļūda produkta izveidē.");
+        showToast(false, "Kļūda kaķa izveidē.");
       }
     });
     setIsLoading(false);
@@ -161,7 +186,7 @@ export const Products = () => {
     e.preventDefault();
     setIsEditing(false);
     setIsLoading(true);
-    await fetch(`${Constants.API_URL}/products/${formData.id}`, {
+    await fetch(`${Constants.API_URL}/cats/${formData.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -190,7 +215,7 @@ export const Products = () => {
 
   const table = useReactTable({
     columns,
-    data: products,
+    data: cats,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     enableSortingRemoval: false,
@@ -202,18 +227,27 @@ export const Products = () => {
         <header className="bg-content-white shadow p-8 border-b-2 border-medium-brown">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-dark-brown font-poppins">
-              Produktu saraksts
+              Kaķu saraksts
             </h1>
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-medium-brown text-white px-4 min-w-48 hover:bg-opacity-85 transition-all py-2 rounded-lg font-poppins"
-            >
-              <i className="fa-solid fa-plus" /> Pievienot produktu
-            </button>
+            <div>
+              <button
+                onClick={() => {
+                  breeds?.length > 0
+                    ? setIsModalOpen(true)
+                    : showToast(
+                        false,
+                        "Nav šķirņu, lūdzu, pievienojiet šķirnu sadaļā!"
+                      );
+                }}
+                className="bg-medium-brown text-white px-4 min-w-48 hover:bg-opacity-85 transition-all py-2 rounded-lg font-poppins"
+              >
+                <i className="fa-solid fa-plus" /> Pievienot kaķi
+              </button>
+            </div>
           </div>
         </header>
-        {products && (
-          <table className="text-center font-poppins w-full">
+        {cats && (
+          <table className="w-full text-center font-poppins">
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
@@ -261,24 +295,21 @@ export const Products = () => {
               ))}
             </thead>
             <tbody>
-              {table.getRowModel().rows.map((row) => {
-                if (row.original.product_type == "CATS") return;
-                return (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        className="h-8 border-b border-light-brown bg-light-gray text-dark-brown font-semibold"
-                        key={cell.id}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                );
-              })}
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td
+                      className="h-8 border-b border-light-brown bg-light-gray text-dark-brown font-semibold"
+                      key={cell.id}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
             </tbody>
           </table>
         )}
@@ -287,7 +318,7 @@ export const Products = () => {
             <div className="bg-white p-8 rounded-lg shadow-lg w-1/3 relative overflow-auto ">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-dark-brown font-poppins">
-                  Jauna produkta pievienošana
+                  Jauna kaķa pievienošana
                 </h2>
                 <button
                   onClick={closeModal}
@@ -302,10 +333,10 @@ export const Products = () => {
               >
                 <div>
                   <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
-                    Produkta nosaukums
+                    Kaķa nosaukums
                   </label>
                   <FormInput
-                    placeholder="Ievadiet produkta nosaukumu"
+                    placeholder="Ievadiet kaķa nosaukumu"
                     value={formData.display_name}
                     onChange={(e) =>
                       setFormData({ ...formData, display_name: e.target.value })
@@ -318,7 +349,7 @@ export const Products = () => {
                       Cena (EUR)
                     </label>
                     <FormInput
-                      placeholder="Ievadiet produkta cenu"
+                      placeholder="Ievadiet kaķa cenu"
                       value={formData.pricing}
                       onChange={(e) =>
                         setFormData({ ...formData, pricing: e.target.value })
@@ -330,7 +361,7 @@ export const Products = () => {
                       Atlaide?
                     </label>
                     <input
-                      placeholder="Ievadiet produkta cenu"
+                      placeholder="Ievadiet kaķa cenu"
                       type="checkbox"
                       className="w-8 h-8 mx-3 my-2 accent-accent-brown"
                       checked={formData.discount_pricing !== null}
@@ -378,26 +409,25 @@ export const Products = () => {
                 <div className="flex gap-2">
                   <div className="w-full">
                     <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
-                      Produkta kategorija
+                      Šķirne
                     </label>
                     <select
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          product_type: e.target.value,
+                          breed_id: parseInt(e.target.value),
                         })
                       }
                       className="mt-1 w-full px-4 py-2 border bg-transparent font-poppins border-gray-300 rounded-md shadow-sm"
                     >
-                      {Object.keys(CategoryNames).map((key) => {
-                        const categoryKey = key as keyof typeof CategoryNames;
+                      {Object.keys(breeds).map((breed, key) => {
                         return (
                           <option
                             className="font-poppins"
                             key={key}
-                            value={categoryKey}
+                            value={breeds[key].id}
                           >
-                            {CategoryNames[categoryKey]}
+                            {breeds[key].display_name}
                           </option>
                         );
                       })}
@@ -405,16 +435,35 @@ export const Products = () => {
                   </div>
                   <div className="w-full">
                     <label className="text-sm text-dark-brown font-poppins mb-1 font-semibold">
-                      Daudzums (gab.)
+                      Krāsa
                     </label>
                     <FormInput
-                      placeholder="Ievadiet produkta daudzumu"
-                      value={formData.stock}
+                      placeholder="Ievadiet kaķa krāsu"
+                      value={formData.cat.color}
                       onChange={(e) =>
-                        setFormData({ ...formData, stock: e.target.value })
+                        setFormData({
+                          ...formData,
+                          cat: { ...formData.cat, color: e.target.value },
+                        })
                       }
                     />
                   </div>
+                </div>
+                <div className="w-full">
+                  <label className="text-sm text-dark-brown font-poppins mb-1 font-semibold">
+                    Dzimšanas datums
+                  </label>
+                  <FormInput
+                    placeholder="Ievadiet kaķa krāsu"
+                    type="date"
+                    value={formData.cat.birthdate}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        cat: { ...formData.cat, birthdate: e.target.value },
+                      })
+                    }
+                  />
                 </div>
                 <div>
                   <label className="text-sm text-dark-brown font-poppins mb-1 font-semibold">

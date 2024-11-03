@@ -45,7 +45,7 @@ export const Navbar = () => {
     navigate("/auth/login");
   };
 
-  const handleCartClick = async () => {
+  const handleCartHover = async () => {
     fetchCart();
     setShowCart(!showCart);
   };
@@ -101,17 +101,22 @@ export const Navbar = () => {
             </div>
           )}
         </div>
-        {showCart && <NavbarCart />}
 
         <div className="flex h-full ">
-          <button
-            onClick={handleCartClick}
-            className={`h-full px-6 hover:border-b-4 border-accent-brown ${
-              showCart ? "border-b-4" : "border-b-0"
-            } transition-all`}
+          <div
+            onPointerEnter={handleCartHover}
+            onPointerLeave={() => setShowCart(false)}
           >
-            <i className="fa-solid fa-basket-shopping text-xl lg:text-2xl"></i>
-          </button>
+            <button
+              onClick={() => navigate("/cart")}
+              className={`h-full px-6 hover:border-b-4 border-accent-brown ${
+                showCart ? "border-b-4" : "border-b-0"
+              } transition-all`}
+            >
+              <i className="fa-solid fa-basket-shopping text-xl lg:text-2xl"></i>
+            </button>
+            {showCart && <NavbarCart />}
+          </div>
           <button
             onClick={() => handleUserClick()}
             className=" h-full px-6 hover:border-b-4 border-accent-brown transition-all"

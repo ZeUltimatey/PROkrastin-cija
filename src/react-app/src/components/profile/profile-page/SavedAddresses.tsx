@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import { FormInput } from "../../universal/FormInput";
 import { useToast } from "../../universal/Toast";
 import { Constants } from "../../universal/Constants";
+import cities from "../../../data/cities.json";
+import { useConfirmation } from "../../universal/Confirmation";
+import { Spinner } from "../../universal/Spinner";
 
 export const SavedAddress = {
   id: 0,
   locationName: "",
-  city: "",
+  city: "Ainaži",
   street: "",
   apartment_number: "",
   zip_code: "",
@@ -15,11 +18,12 @@ export const SavedAddress = {
 export const SavedAddresses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState(SavedAddress);
-  const [addresses, setAddresses] = useState<(typeof SavedAddress)[]>([]);
+  const [addresses, setAddresses] = useState<(typeof SavedAddress)[]>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
   const showToast = useToast();
+  const confirm = useConfirmation();
 
   const fetchSavedAddresses = async () => {
     await fetch(`${Constants.API_URL}/locations`, {
@@ -63,27 +67,35 @@ export const SavedAddresses = () => {
   };
 
   const onAddressDelete = async (id: number) => {
-    await fetch(`${Constants.API_URL}/locations/remove/${id}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem(
-          Constants.LOCAL_STORAGE.TOKEN
-        )}`,
-      },
-    }).then((response) => {
-      if (response.ok) {
-        showToast(true, "Adrese veiksmīgi dzēsta!");
-        const newAddresses = addresses.filter((address) => address.id !== id);
-        setAddresses(newAddresses);
-      } else {
-        showToast(false, "Kļūda dzēšot adresi.");
-      }
-    });
+    if (await confirm("Dzēst adresi?")) {
+      await fetch(`${Constants.API_URL}/locations/${id}`, {
+        method: "delete",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            Constants.LOCAL_STORAGE.TOKEN
+          )}`,
+        },
+      }).then((response) => {
+        if (response.ok) {
+          showToast(true, "Adrese veiksmīgi dzēsta!");
+          const newAddresses = addresses.filter((address) => address.id !== id);
+          setAddresses(newAddresses);
+        } else {
+          showToast(false, "Kļūda dzēšot adresi.");
+        }
+      });
+    }
+    return;
   };
 
   const onFormSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsLoading(true);
+    if (!validatePostalCode()) {
+      showToast(false, "Nepareizs pasta indekss");
+      setIsLoading(false);
+      return;
+    }
     await fetch(`${Constants.API_URL}/locations`, {
       method: "POST",
       headers: {
@@ -107,8 +119,12 @@ export const SavedAddresses = () => {
 
   const onEditSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    setIsEditing(false);
     setIsLoading(true);
+    if (!validatePostalCode()) {
+      showToast(false, "Nepareizs pasta indekss");
+      setIsLoading(false);
+      return;
+    }
     await fetch(`${Constants.API_URL}/locations/${formData.id}`, {
       method: "PUT",
       headers: {
@@ -128,6 +144,12 @@ export const SavedAddresses = () => {
       }
     });
     setIsLoading(false);
+    setIsEditing(false);
+  };
+
+  const validatePostalCode = () => {
+    const regex = /^[LV-]{3}[0-9]{4}$/;
+    return regex.test(formData.zip_code);
   };
 
   const closeModal = () => {
@@ -141,6 +163,7 @@ export const SavedAddresses = () => {
       <h3 className="mb-4 text-2xl font-bold text-dark-brown font-poppins">
         Saglabātās adreses
       </h3>
+      {addresses == null && <Spinner />}
       <ul className="space-y-4">
         {addresses &&
           addresses.map((address) => (
@@ -215,13 +238,25 @@ export const SavedAddresses = () => {
                 <label className="block mb-1 text-sm text-dark-brown font-poppins">
                   Pilsēta
                 </label>
-                <FormInput
+                {/* <FormInput
                   value={formData.city}
                   onChange={(e) =>
                     setFormData({ ...formData, city: e.target.value })
                   }
                   placeholder="Piem., Rīga"
-                />
+                /> */}
+                <select
+                  onChange={(e) =>
+                    setFormData({ ...formData, city: e.target.value })
+                  }
+                  className="mt-1 w-full px-4 py-2 border accent-accent-brown bg-transparent font-poppins border-gray-300 rounded-md shadow-sm"
+                >
+                  {cities.map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="block mb-1 text-sm text-dark-brown font-poppins">
@@ -259,7 +294,7 @@ export const SavedAddresses = () => {
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      zip_code: e.target.value,
+                      zip_code: e.target.value.toUpperCase(),
                     })
                   }
                   placeholder="Piem., LV-3301"
