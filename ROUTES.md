@@ -17,6 +17,7 @@ localhost/
     │   ├── DELETE (delete the current user) ✅
     │   ├── {id} GET (getting a specific user) ✅
     │   ├── {id} PUT (change other user information) ❌
+    │   ├── {id} DELETE (delete other user) ❌
     │   └── image/
     │       ├── add/ POST (add profile picture) ✅
     │       └── remove/ POST (remove profile picture) ✅
@@ -510,8 +511,35 @@ return [
     },
     other transactions..
 ]
+
+
+return {
+    "data": [
+        {
+            "id": int,
+            "total_pricing": float,
+            "check_content": string(65535),
+            "transactor": {
+                "id": int,
+                "name": "Vards",
+                "surname": "Uzvards",
+                "image_url": string(255) or null,
+                "deactivated": boolean
+            } or transactor can be null,
+            "location": {
+                "id": int,
+                "city": string(255),
+                "street": string(255),
+                "apartment_number": string(255) or null,
+                "zip_code": string(255)
+            } or location can be null
+        },
+        other transactions..
+    ]
+}
 ```
 ---
+`localhost/api/user/{id} DELETE` ***authenticated admin*** \
 `localhost/api/products/{id} DELETE` ***authenticated admin*** \
 `localhost/api/cats/{id} DELETE` ***authenticated admin*** \
 `localhost/api/breeds/{id} DELETE` ***authenticated admin*** \

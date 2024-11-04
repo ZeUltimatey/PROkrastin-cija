@@ -166,6 +166,7 @@ class UserController extends Controller
         $user = Auth::user();
         Auth::user()->tokens()->delete();
         if ($user) {
+
             $user->delete();
             return response()->json(['message' => "User successfully deleted"], 200);
         } else {

@@ -15,14 +15,14 @@ class ProductResource extends JsonResource
     public function toArray(Request $request): array {
 
         $product = [
-            'id' => $this->id,
-            'display_name' => $this->display_name,
-            'description' => $this->description,
-            'pricing' => $this->pricing,
+            'id'               => $this->id,
+            'display_name'     => $this->display_name,
+            'description'      => $this->description,
+            'pricing'          => $this->pricing,
             'discount_pricing' => $this->discount_pricing,
-            'product_type' => $this->product_type,
-            'stock' => $this->stock,
-            'images' => ProductImageResource::collection($this->images),
+            'product_type'     => $this->product_type,
+            'stock'            => $this->stock,
+            'images'           => ProductImageResource::collection($this->images),
         ];
 
         if ($this->product_type === 'CATS' && $this->cat) {

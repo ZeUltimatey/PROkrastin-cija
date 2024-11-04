@@ -88,6 +88,7 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::put('/cats/{id}', [CatController::class, 'update']); //put changed
     Route::put('/breeds/{id}', [CatBreedController::class, 'update']); //put changed
 
+//    Route::delete('/user/{id}', [UserController::class, 'destroy']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
     Route::delete('/breeds/{id}', [CatBreedController::class, 'destroy']);
     Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);

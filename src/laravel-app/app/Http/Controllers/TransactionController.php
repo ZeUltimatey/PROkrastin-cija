@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TransactionResource;
 use App\Models\Product;
 use App\Models\SelectedProducts;
 use App\Models\Transaction;
@@ -18,26 +19,12 @@ class TransactionController extends Controller
 
     /**
      * Show all transactions.
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function index_all(): JsonResponse
+    public function index_all()
     {
-        // Fetch all transactions with the associated transactor and location
-        $transactions = Transaction::with(['transactor' => function($query) {
-            // Select only the fields you want from the users table
-            $query->select('id', 'display_name', 'image_url', 'user_role', 'deactivated'); // Adjust fields as needed
-        }, 'location' => function($query) {
-            // Select only the fields you want from the location table if needed
-            $query->select('id', 'city', 'street', 'apartment_number', 'zip_code'); // Adjust fields as needed
-        }])->get();
-
-        // Optionally, you can hide unnecessary fields from each transaction if desired
-        foreach ($transactions as $transaction) {
-            $transaction->makeHidden(['transactor_id', 'location_id', 'updated_at']); // Hide the updated_at field if needed
-        }
-
-        return response()->json($transactions, 200); // OK, return all transactions with transactors and locations
+        return TransactionResource::collection(Transaction::all())->each(function ($transaction) {
+            $transaction->with_transactor();
+        });
     }
 
     /**
