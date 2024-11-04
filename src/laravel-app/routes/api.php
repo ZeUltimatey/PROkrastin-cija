@@ -24,7 +24,6 @@ Route::get('/products', [ProductController::class, 'index']);
 Route::get('/cats', [CatController::class, 'index']);
 Route::get('/breeds', [CatBreedController::class, 'index']);
 
-//Route::get('/cats/{id}', [CatController::class, 'show']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/breeds/{id}', [CatBreedController::class, 'show']);
 Route::get('/reviews/{product_id}', [ReviewController::class, 'show']);
@@ -89,7 +88,6 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::put('/cats/{id}', [CatController::class, 'update']); //put changed
     Route::put('/breeds/{id}', [CatBreedController::class, 'update']); //put changed
 
-//    Route::delete('/cats/{id}', [CatController::class, 'destroy']); // No
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
     Route::delete('/breeds/{id}', [CatBreedController::class, 'destroy']);
     Route::delete('/reviews/{id}', [ReviewController::class, 'destroy']);

@@ -1,7 +1,9 @@
 <?php
 
 namespace Database\Seeders;
+//namespace Database\Factories;
 
+use Database\Seeders\ProductFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +37,7 @@ class TestSeeder extends Seeder
             'stock' => 1,
         ]);
         Product::create([
-             "product_type" => "FOOD",
+            "product_type" => "FOOD",
             "display_name" => "Kaķu utilizators",
             "description" => "Pēc šī kaķis nebūs izsalcis ļoooooti ilgi..",
             "pricing" => 0.01,
@@ -139,6 +141,7 @@ class TestSeeder extends Seeder
             "discount_pricing" => null,
             "stock" => 7620,
         ]);
+//        Product::factory()->count(1000)->create();
 
         DB::table('cat_breeds')->insert([
             [
