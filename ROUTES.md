@@ -13,15 +13,13 @@ localhost/
     ├── all_reviews/ GET (getting all reviews) ✅
     ├── user/
     │   ├── GET (gets current user using token) ✅
-    │   ├── PUT (update user information) ✅
+    │   ├── PUT (update own user information) ❌
     │   ├── DELETE (delete the current user) ✅
-    │   ├── {id} GET () ✅
+    │   ├── {id} GET (getting a specific user) ✅
+    │   ├── {id} PUT (change other user information) ❌
     │   └── image/
     │       ├── add/ POST (add profile picture) ✅
     │       └── remove/ POST (remove profile picture) ✅
-    ├── users/
-    │   ├── {id} GET (getting a specific user) ✅
-    │   └── deactivate/{id} PUT (banning/unbanning an user) ✅
     ├── basket/
     │   ├── GET (getting the contents of a users basket) ✅
     │   ├── POST (selecting/deselecting a product) ✅
@@ -587,17 +585,7 @@ return {
 ---
 `localhost/api/user PUT` *authenticated user*
 ```php
-{
-    "email"                 : "sometimes|string|email|unique:users|max:255",
-    "password"              : "nullable|string|min:8|confirmed",
-    "password_confirmation" : "nullable|same:password",
-    "display_name"          : "sometimes|string|unique:users|max:255",
-    "name"                  : "nullable|string|max:255",
-    "surname"               : "nullable|string|max:255",
-    "phone_number"          : "nullable|string|max:15",
-    "user_role"             : "nullable|in:User,Admin",
-    "deactivated"           : "nullable|boolean",
-}
+--
 ```
 ```php
 return {
@@ -697,6 +685,11 @@ return {
         "zip_code": string(255)
     } or location can be null
 }
+```
+---
+`localhost/api/user/{id} PUT` ***authenticated admin***
+```php
+--
 ```
 ---
 `localhost/api/users/deactivate/{id} POST` ***authenticated admin***
