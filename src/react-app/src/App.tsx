@@ -17,45 +17,52 @@ import { Cart } from "./components/cart/Cart";
 import { ToastProvider } from "./components/universal/Toast";
 import { Reviews } from "./components/product/Reviews";
 import { Receipt } from "./components/receipt/Receipt";
-import { Breeds } from "./components/about/Breeds";
+import { BreedCatalog } from "./components/about/BreedCatalog";
 import { BreedDetails } from "./components/about/BreedDetails";
 import { Encyclopedia } from "./components/panel/admin-panel/Encyclopedia";
 import { CartProvider } from "./components/universal/Cart";
 import { Statistics } from "./components/panel/admin-panel/Statistics";
+import { ConfirmationProvider } from "./components/universal/Confirmation";
+import { Cats } from "./components/panel/admin-panel/Cats";
+import { Breeds } from "./components/panel/admin-panel/Breeds";
 
 function App() {
   return (
     <BrowserRouter>
       <ToastProvider>
-        <CartProvider>
-          <Routes>
-            <Route path="/" element={<GeneralLayout />}>
-              <Route index element={<Homepage />} />
-              <Route path="/product/:productId" element={<ProductView />} />
-              <Route path="/catalog" element={<Catalog />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/policy" element={<Policy />} />
-              <Route path="/contact" element={<ContactInfo />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/reviews" element={<Reviews />} />
-              <Route path="/receipt" element={<Receipt />} />
-              <Route path="/breeds" element={<Breeds />} />
-              <Route path="/breed/:breedId" element={<BreedDetails />} />
-            </Route>
-            <Route path="/panel" element={<PanelLayout />}>
-              <Route path="/panel/statistics" element={<Statistics />} />
-              <Route path="/panel/users" element={<Users />} />
-              <Route path="/panel/orders" element={<Orders />} />
-              <Route path="/panel/products" element={<Products />} />
-              <Route path="/panel/encyclopedia" element={<Encyclopedia />} />
-            </Route>
-            <Route path="/auth" element={<AuthLayout />}>
-              <Route path="login" element={<Login />} />
-              <Route path="register" element={<Register />} />
-            </Route>
-            <Route path="/catalog/cats" element={<Homepage />} />
-          </Routes>
-        </CartProvider>
+        <ConfirmationProvider>
+          <CartProvider>
+            <Routes>
+              <Route path="/" element={<GeneralLayout />}>
+                <Route index element={<Homepage />} />
+                <Route path="/product/:productId" element={<ProductView />} />
+                <Route path="/products" element={<Catalog />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/policy" element={<Policy />} />
+                <Route path="/contact" element={<ContactInfo />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/reviews" element={<Reviews />} />
+                <Route path="/receipt" element={<Receipt />} />
+                <Route path="/breeds" element={<BreedCatalog />} />
+                <Route path="/breed/:breedId" element={<BreedDetails />} />
+              </Route>
+              <Route path="/panel" element={<PanelLayout />}>
+                <Route path="/panel/statistics" element={<Statistics />} />
+                <Route path="/panel/users" element={<Users />} />
+                <Route path="/panel/orders" element={<Orders />} />
+                <Route path="/panel/products" element={<Products />} />
+                <Route path="/panel/cats" element={<Cats />} />
+                <Route path="/panel/breeds" element={<Breeds />} />
+                <Route path="/panel/encyclopedia" element={<Encyclopedia />} />
+              </Route>
+              <Route path="/auth" element={<AuthLayout />}>
+                <Route path="login" element={<Login />} />
+                <Route path="register" element={<Register />} />
+              </Route>
+              <Route path="/catalog/cats" element={<Homepage />} />
+            </Routes>
+          </CartProvider>
+        </ConfirmationProvider>
       </ToastProvider>
     </BrowserRouter>
   );

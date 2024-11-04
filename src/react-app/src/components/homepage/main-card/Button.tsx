@@ -2,10 +2,11 @@ import { useNavigate } from "react-router-dom";
 
 export const Button = ({ isInfoButton }: { isInfoButton: boolean }) => {
   const navigate = useNavigate();
+
   if (!isInfoButton) {
     return (
       <button
-        onClick={() => navigate("/catalog")}
+        onClick={() => navigate("/products?product_type=cats")}
         className="bg-accent-brown text-dark-brown min-w-64 justify-center hover:gap-4 hover:brightness-90 text-lg transition-all hover:shadow-xl rounded-full px-8 py-3.5 flex gap-2 place-items-center shadow-md"
       >
         <span className="font-semibold font-poppins">Skatīt kaķus</span>
