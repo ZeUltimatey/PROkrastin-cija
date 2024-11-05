@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Product;
 
 class SelectedProductRequest extends FormRequest
 {
@@ -21,10 +22,20 @@ class SelectedProductRequest extends FormRequest
      */
     public function rules(): array
     {
+        $product = Product::find($this->input('product_id'));
+        $amountInStock = $product->stock + 1;
         return [
-            //'user_id' => 'required|int|exists:users,id',
             'product_id' => 'required|int|exists:products,id',
-            'amount' => 'nullable|int|min:0|max:10'
+            'amount' => "nullable|int|min:0|max:$amountInStock",
+        ];
+    }
+
+    public function messages(): array
+    {
+        $product = Product::find($this->input('product_id'));
+        $amountInStock = $product->stock;
+        return [
+            'amount.max' => 'Atvaino, bet noliktavā piejams šāds skaits :max ar produktu: ' . $product->display_name ,
         ];
     }
 }

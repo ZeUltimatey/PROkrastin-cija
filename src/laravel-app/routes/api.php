@@ -10,6 +10,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SelectedProductController;
+use App\Http\Controllers\AdminController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -41,7 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/user/image/remove', [UserController::class, 'removeProfilePicture']);
 
     Route::delete('/user', [UserController::class, 'destroy']);
-    Route::get('/user/{id}', [UserController::class, 'show']); // uh
+    //Route::get('/user/{id}', [UserController::class, 'show']); // uh
 
     Route::get('/cards', [CardsController::class, 'index']);
     Route::post('/cards', [CardsController::class, 'store']);
@@ -77,7 +78,7 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
 
     Route::get('/users/{id}', [UserController::class, 'show']);
-    Route::put('/users/deactivate/{id}', [UserController::class, 'deactivate']); //put changed
+    Route::put('/users/update/{id}', [AdminController::class, 'update']); //put changed
 
     Route::post('/products', [ProductController::class, 'store']);
     Route::post('/products/{id}/images/add', [ProductController::class, 'addImage']); // gonna need to explain this
