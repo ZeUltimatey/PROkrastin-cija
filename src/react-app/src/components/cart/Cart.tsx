@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CartProduct from "../cart/cart-page/CartProduct";
 import { useCart } from "../universal/Cart";
 
 export const Cart = () => {
-  const { cartItems, removeFromCart, addToCart } = useCart();
+  const { cartItems, removeFromCart, addToCart, fetchCart } = useCart();
 
   const getTotalPrice = () => {
     return cartItems.reduce((acc, item) => {
       return acc + item.product.pricing * item.amount;
     }, 0);
   };
+
+  useEffect(() => {
+    fetchCart();
+  }, []);
 
   return (
     <div className="flex min-h-screen  font-poppins">

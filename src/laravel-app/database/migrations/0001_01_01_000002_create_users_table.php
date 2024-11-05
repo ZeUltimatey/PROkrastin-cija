@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('profilepicture_id')->nullable();
             $table->string('image_url')->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->string('display_name');
-            $table->string('name'); 
+            $table->string('name');
             $table->string('surname');
             $table->string('phone_number')->nullable(); // temp nullable because frontend
             $table->enum('user_role', ['User', 'Admin'])->default('User');
