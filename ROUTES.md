@@ -4,7 +4,7 @@ localhost/
     ├── register/ POST (adding a new user) ✅
     ├── login/ POST (authentificating an existing user) ✅
     ├── logout/ POST (deletes current user's token) ✅
-    ├── purchase/ POST (purchase and clear basket) ❌
+    ├── purchase/ POST (purchase and clear basket) ✅
     ├── dashboard/ GET (get project statistics) ✅
     ├── all_users/ GET (getting all users) ✅
     ├── all_cards/ GET (getting all user card information) ✅
@@ -623,7 +623,10 @@ return {
 ---
 `localhost/api/basket POST` *authenticated user*
 ```php
-???
+{
+    "product_id" : "required|int|exists:products,id",
+    "amount"     : "nullable|int|min:0|max:10"
+}
 ```
 ---
 `localhost/api/cards POST` *authenticated user* \
