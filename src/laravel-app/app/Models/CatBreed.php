@@ -12,10 +12,7 @@ class CatBreed extends Model
     protected $fillable = [
         'attachments_id',
         'display_name',
-        'feeding_info',
-        'personality_info',
-        'environment_info',
-        'tips_info',
+        'breed_information'
     ];
     public $incrementing = true;
     public $timestamps = true;

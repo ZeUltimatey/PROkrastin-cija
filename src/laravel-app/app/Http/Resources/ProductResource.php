@@ -13,8 +13,8 @@ class ProductResource extends JsonResource
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array {
-
-        $product = [
+    
+        return [
             'id' => $this->id,
             'display_name' => $this->display_name,
             'description' => $this->description,
@@ -24,15 +24,5 @@ class ProductResource extends JsonResource
             'stock' => $this->stock,
             'images' => ProductImageResource::collection($this->images),
         ];
-
-        if ($this->product_type === 'CATS' && $this->cat) {
-            $exclude_fields = ['id', 'breed_id', 'created_at', 'updated_at'];
-            $product['cat'] = collect($this->cat->toArray())->except($exclude_fields)->all();
-
-            if ($this->cat->cat_breed) {
-                $product['cat']['breed_name'] = $this->cat->cat_breed->display_name;
-            }
-        }
-        return $product;
     }
 }

@@ -8,12 +8,10 @@ html {
 
 .react-multiple-carousel__arrow--left {
   left: 0px !important;
-  z-index: 1 !important;
 }
 
 .react-multiple-carousel__arrow--right {
   right: 0px !important;
-  z-index: 1 !important;
 }
 
 /* Chrome, Safari, Edge, Opera */
