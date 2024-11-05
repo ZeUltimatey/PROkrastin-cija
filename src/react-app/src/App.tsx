@@ -22,6 +22,9 @@ import { BreedDetails } from "./components/about/BreedDetails";
 import { Encyclopedia } from "./components/panel/admin-panel/Encyclopedia";
 import { CartProvider } from "./components/universal/Cart";
 import { Statistics } from "./components/panel/admin-panel/Statistics";
+import { ConfirmationProvider } from "./components/universal/Confirmation";
+import { Cats } from "./components/panel/admin-panel/Cats";
+import { Breeds } from "./components/panel/admin-panel/Breeds";
 import { ProfileSettings } from "./components/instruction/ProfileSettings";
 import { BuyInfo } from "./components/instruction/BuyInfo";
 import { ContactUse } from "./components/instruction/ContactUse";
@@ -42,14 +45,14 @@ function App() {
             <Route path="/" element={<GeneralLayout />}>
               <Route index element={<Homepage />} />
               <Route path="/product/:productId" element={<ProductView />} />
-              <Route path="/catalog" element={<Catalog />} />
+              <Route path="/products" element={<Catalog />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/policy" element={<Policy />} />
               <Route path="/contact" element={<ContactInfo />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/reviews" element={<Reviews />} />
               <Route path="/receipt" element={<Receipt />} />
-              <Route path="/breeds" element={<Breeds />} />
+              <Route path="/breeds" element={<BreedCatalog />} />
               <Route path="/breed/:breedId" element={<BreedDetails />} />
               <Route
                 path="/instruction/encyclopediause"
@@ -83,6 +86,8 @@ function App() {
               <Route path="/panel/users" element={<Users />} />
               <Route path="/panel/orders" element={<Orders />} />
               <Route path="/panel/products" element={<Products />} />
+              <Route path="/panel/cats" element={<Cats />} />
+              <Route path="/panel/breeds" element={<Breeds />} />
               <Route path="/panel/encyclopedia" element={<Encyclopedia />} />
             </Route>
             <Route path="/auth" element={<AuthLayout />}>
