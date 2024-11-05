@@ -38,7 +38,7 @@ class UserController extends Controller
             'password'              => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required|same:password',
             'display_name'          => 'required|string|max:255',
-            'name'                  => 'required|string|max:255', // added name and surname because frontend
+            'name'                  => 'required|string|max:255',
             'surname'               => 'required|string|max:255',
             'phone_number'          => 'nullable|string|max:15', // temp nullable because frontend
             'user_role'             => 'nullable|in:User,Admin',
@@ -117,7 +117,7 @@ class UserController extends Controller
     }
 
     /**
-     * Update user information.
+     * Update other user information.
      */
     public function update(Request $request)
     {
@@ -150,7 +150,7 @@ class UserController extends Controller
 
         $user->update($validator->validated());
 
-        return response()->json(['message' => "User successfully updated"], 200);
+        return response()->json(['message' => "User successfully updated"], 202);
     }
 
     /**
@@ -176,6 +176,13 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Change own user information.
+     */
+    public function change(Request $request)
+    {
+        //
+    }
 
     public function addProfilePicture(Request $request)
     {

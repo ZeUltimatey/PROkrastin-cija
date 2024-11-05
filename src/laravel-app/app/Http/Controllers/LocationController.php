@@ -60,15 +60,23 @@ class LocationController extends Controller
         // Find location information by id
         $location = Location::find($id);
 
-        if (!$location) { return response()->json(null, 404); } // Not found
+        if (!$location) {
+            return response()->json(null, 404);
+        } // Not found
         $location->makeHidden(['creator_id']);
 
         // Check if the user owns the location
         $userId = Auth::user()->id;
-        if ($location->creator_id != $userId) { return response()->json(null, 403); } // Forbidden
+        if ($location->creator_id != $userId) {
+            return response()->json(null, 403);
+        } // Forbidden
 
-        if ($location) { return response()->json($location, 200); } // OK
-        else { return response()->json(null, 404); } // Not found
+        if ($location) {
+            return response()->json($location, 200);
+        } // OK
+        else {
+            return response()->json(null, 404);
+        } // Not found
     }
 
     /**
@@ -121,7 +129,9 @@ class LocationController extends Controller
 
         // Check if the user owns the location
         $userId = Auth::user()->id;
-        if ($location->creator_id != $userId) { return response()->json(null, 403); } // Forbidden
+        if ($location->creator_id != $userId) {
+            return response()->json(null, 403);
+        } // Forbidden
 
         $location->update($validator->validated());
         $location->makeHidden(['creator_id']);

@@ -1,7 +1,15 @@
 <?php
 
 namespace Database\Seeders;
+//namespace Database\Factories;
 
+use App\Models\CardInformation;
+use App\Models\Cat;
+use App\Models\CatBreed;
+use App\Models\Location;
+use App\Models\Review;
+use App\Models\Transaction;
+use Database\Seeders\ProductFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +43,7 @@ class TestSeeder extends Seeder
             'stock' => 1,
         ]);
         Product::create([
-             "product_type" => "FOOD",
+            "product_type" => "FOOD",
             "display_name" => "Kaķu utilizators",
             "description" => "Pēc šī kaķis nebūs izsalcis ļoooooti ilgi..",
             "pricing" => 0.01,
@@ -139,59 +147,42 @@ class TestSeeder extends Seeder
             "discount_pricing" => null,
             "stock" => 7620,
         ]);
+//        Product::factory()->count(1000)->create();
 
-        DB::table('cat_breeds')->insert([
-            [
-                'id' => 1,
-                'display_name' => 'Munchkin',
-                'feeding_info' => 'Munchkins should be fed high-quality cat food that provides balanced nutrition. They enjoy both wet and dry food, with a focus on protein-rich ingredients.',
-                'personality_info' => 'Munchkins are known for their playful and outgoing nature. They are friendly, sociable, and tend to get along well with children and other pets.',
-                'environment_info' => 'They thrive in indoor environments but appreciate having safe outdoor access if possible. They enjoy interactive toys and need space to play and explore.',
-                'tips_info' => 'Regular playtime is essential to keep them stimulated. Provide scratching posts and climbing structures to satisfy their natural instincts.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => 2,
-                'display_name' => 'Maine Coon',
-                'feeding_info' => 'Maine Coons require a diet rich in protein and fat to support their large size. High-quality dry food and occasional wet food will keep them healthy.',
-                'personality_info' => 'They are gentle giants, known for their affectionate and playful demeanor. Maine Coons are intelligent and can be trained to follow commands.',
-                'environment_info' => 'These cats adapt well to various living situations but prefer a home where they have space to roam. They enjoy being around people and can be quite social.',
-                'tips_info' => 'Regular grooming is necessary to prevent matting in their long fur. Ensure they have plenty of toys to engage their curiosity.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => 3,
-                'display_name' => 'Bengal',
-                'feeding_info' => 'Bengals benefit from a high-protein diet that mimics their wild ancestors. Look for grain-free options and high-quality meat-based foods.',
-                'personality_info' => 'Bengals are energetic, playful, and highly intelligent. They are known for their love of climbing and exploring, often requiring a lot of stimulation.',
-                'environment_info' => 'They thrive in active households where they have opportunities to play and explore. Providing vertical spaces and interactive toys is essential.',
-                'tips_info' => 'Invest in durable toys as they tend to be rough players. Spend time engaging with them daily to keep their energy levels in check.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => 4,
-                'display_name' => 'Siamese',
-                'feeding_info' => 'Siamese cats thrive on a balanced diet that includes both wet and dry food. Make sure the food is rich in protein and low in fillers.',
-                'personality_info' => 'Siamese are vocal and social cats that enjoy interacting with their human companions. They are affectionate and can form strong bonds with their owners.',
-                'environment_info' => 'They do well in households where they are not left alone for long periods. Siamese cats appreciate companionship, whether from humans or other pets.',
-                'tips_info' => 'Provide mental stimulation through toys and puzzles. Regular social interaction is important to keep them happy and engaged.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
+        CatBreed::create([
+            "display_name" => "Munchkin",
+            "feeding_info" => "Munchkins should be fed high-quality cat food that provides balanced nutrition. They enjoy both wet and dry food, with a focus on protein-rich ingredients.",
+            "personality_info" => "Munchkins are known for their playful and outgoing nature. They are friendly, sociable, and tend to get along well with children and other pets.",
+            "environment_info" => "They thrive in indoor environments but appreciate having safe outdoor access if possible. They enjoy interactive toys and need space to play and explore.",
+            "tips_info" => "Regular playtime is essential to keep them stimulated. Provide scratching posts and climbing structures to satisfy their natural instincts.",
+        ]);
+        CatBreed::create([
+            "display_name" => "Maine Coon",
+            "feeding_info" => "Maine Coons require a diet rich in protein and fat to support their large size. High-quality dry food and occasional wet food will keep them healthy.",
+            "personality_info" => "They are gentle giants, known for their affectionate and playful demeanor. Maine Coons are intelligent and can be trained to follow commands.",
+            "environment_info" => "These cats adapt well to various living situations but prefer a home where they have space to roam. They enjoy being around people and can be quite social.",
+            "tips_info" => "Regular grooming is necessary to prevent matting in their long fur. Ensure they have plenty of toys to engage their curiosity.",
+        ]);
+        CatBreed::create([
+            "display_name" => "Bengal",
+            "feeding_info" => "Bengals benefit from a high-protein diet that mimics their wild ancestors. Look for grain-free options and high-quality meat-based foods.",
+            "personality_info" => "Bengals are energetic, playful, and highly intelligent. They are known for their love of climbing and exploring, often requiring a lot of stimulation.",
+            "environment_info" => "They thrive in active households where they have opportunities to play and explore. Providing vertical spaces and interactive toys is essential.",
+            "tips_info" => "Invest in durable toys as they tend to be rough players. Spend time engaging with them daily to keep their energy levels in check.",
+        ]);
+        CatBreed::create([
+            "display_name" => "Siamese",
+            "feeding_info" => "Siamese cats thrive on a balanced diet that includes both wet and dry food. Make sure the food is rich in protein and low in fillers.",
+            "personality_info" => "Siamese are vocal and social cats that enjoy interacting with their human companions. They are affectionate and can form strong bonds with their owners.",
+            "environment_info" => "They do well in households where they are not left alone for long periods. Siamese cats appreciate companionship, whether from humans or other pets.",
+            "tips_info" => "Provide mental stimulation through toys and puzzles. Regular social interaction is important to keep them happy and engaged.",
         ]);
 
-        DB::table('cats')->insert([
-            [
-                'id' => 2,
-                'breed_id' => 1,
-                'birthdate' => '2021-09-11',
-                'color' => 'Black and White',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
+        Cat::create([
+            "id" => 2,
+            "breed_id" => 1,
+            "birthdate" => "2021-09-11",
+            "color" => "Black and White"
         ]);
 
         User::create([
@@ -217,52 +208,34 @@ class TestSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        DB::table('reviews')->insert([
-            [
-                'id' => 1,
-                'reviewer_id' => 2,
-                'product_id' => 1,
-                'content' => 'Wow very good bed for me, my cat doesn\'t like it though..',
-                'rating' => 8,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
+        Review::create([
+            "reviewer_id" => 2,
+            "product_id" => 1,
+            "content" => "Wow very good bed for me, my cat doesn\'t like it though..",
+            "rating" => 8,
         ]);
 
-        DB::table('card_information')->insert([
-            [
-                'cardholder_id' => 2,
-                'card_number' => Crypt::encryptString('5550130966726224'),
-                'expiration_date' => Crypt::encryptString('12/24'),
-                'card_name' => 'RYAN GOSLING',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
+        CardInformation::create([
+            "cardholder_id" => 2,
+            "card_number" => Crypt::encryptString('5550130966726224'),
+            "expiration_date" => Crypt::encryptString('12/24'),
+            "cardOwnerName" => "RYAN",
+            "cardOwnerSurname" => "GOSLING",
         ]);
 
-        DB::table('locations')->insert([
-            [
-                'id' => 1,
-                'creator_id' => 2,
-                'city' => 'Washington',
-                'street' => '2608 84th Street Ct S',
-                'apartment_number' => null,
-                'zip_code' => '98499',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
+        Location::create([
+            "creator_id" => 2,
+            "city" => "Washington",
+            "street" => "2608 84th Street Ct S",
+            "apartment_number" => null,
+            "zip_code" => "98499",
         ]);
 
-        DB::table('transactions')->insert([
-            [
-                'id' => 1,
-                'transactor_id' => 2,
-                'location_id' => 1,
-                'total_pricing' => 45.00,
-                'check_content' => '1x CAT HAMMOCK BED\t45.00 EUR\n------------------------------\nTOTAL:\t45.00 EUR\n\nTHANK YOU FOR SHOPPING AT MURRĀTAVA!',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
+        Transaction::create([
+            "transactor_id" => 2,
+            "location_id" => 1,
+            "total_pricing" => 45.00,
+            "check_content" => "1x CAT HAMMOCK BED\t45.00 EUR\n------------------------------\nTOTAL:\t45.00 EUR\n\nTHANK YOU FOR SHOPPING AT MURRĀTAVA!",
         ]);
 
         DB::table('bought_products')->insert([

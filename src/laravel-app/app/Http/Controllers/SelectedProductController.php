@@ -44,8 +44,8 @@ class SelectedProductController extends Controller
 
         // Validate request data
         $validated =  $request->validated();
-
-        // Add product to basket 
+      
+        // Add product to basket
         // Check if the product is already in the basket
         $existingSelectedProduct = SelectedProducts::where('product_id', $request->product_id)->where('user_id', $user->id)->first();
         if ($existingSelectedProduct) {
@@ -62,14 +62,14 @@ class SelectedProductController extends Controller
                return $this->get_basket();
             }
         }
-        
+
         // if the product doesn't exist in the basket add it
         $basketProduct = SelectedProducts::create($request->merge(['amount' => $request->amount ?? 1])->all());
-        
+
         // returns all the users basket products
         return $this->get_basket();
     }
-    
+
     public function clear_basket()
     {
         // Get the authenticated user
@@ -78,11 +78,11 @@ class SelectedProductController extends Controller
         return response()->json("Basket cleared", 202); // Request accepted
     }
 
-    public function removeFromBasket(int $productId)
+    public function removeFromBasket(int $product_id)
     {
         $user = Auth::user();
         // Delete selected product for the user
-        $removedBasketProduct = SelectedProducts::where('user_id', $user->id)->where('product_id', $productId)->delete();
+        $removedBasketProduct = SelectedProducts::where('user_id', $user->id)->where('product_id', $product_id)->delete();
 
         return response()->json($removedBasketProduct, 204);
     }
