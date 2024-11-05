@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ReviewResource;
 use App\Models\Review;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,56 +18,33 @@ class ReviewController extends Controller
 
     /**
      * Show all reviews.
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function index_all(): JsonResponse
+    public function index_all()
     {
         // Fetch all reviews with the associated products and reviewers
-        $reviews = Review::with([
-            'product' => function($query) {
-                $query->select('id', 'display_name', 'pricing', 'discount_pricing');
-            },
-            'reviewer' => function($query) {
-                $query->select('id', 'display_name', 'image_url', 'user_role', 'deactivated');
-            }
-        ])->get();
-
-        foreach ($reviews as $review) { $review->makeHidden(['reviewer_id', 'product_id', 'updated_at']); }
-        return response()->json($reviews, 200); // OK
+        return ReviewResource::collection(Review::all())->each(function ($review) {
+            $review->with_product();
+        });
     }
 
     /**
      * Show reviews for a product.
      *
      * @param int $product_id
-     * @return \Illuminate\Http\JsonResponse
      */
     public function show(int $product_id)
     {
         // Fetch the review that matches the given id and join with the users table
-        $reviews = Review::with(['reviewer' => function($query) {
-            // Select only the fields you want from the users table
-            $query->select('id', 'display_name', 'image_url', 'user_role', 'deactivated'); // Adjust fields to include as needed
-        }])
-            ->where('product_id', $product_id)
-            ->get();
-
-        // Optionally hide the product_id field in each review if still included
-        foreach ($reviews as $review) {
-            $review->makeHidden(['reviewer_id', 'product_id', 'updated_at']);
-        }
-
-        return response()->json($reviews, 200); // OK, return the matching reviews
+        $reviews = Review::where('product_id', $product_id)->get();
+        return ReviewResource::collection($reviews);
     }
 
     /**
      * Create a review.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request, int $product_id): JsonResponse
+    public function store(Request $request, int $product_id)
     {
         // Validator for checking filled information
         $validator = Validator::make($request->all(), $this->validationRules);
@@ -79,25 +57,16 @@ class ReviewController extends Controller
 
         // Append the current user id
         $userId = Auth::user()->id;
-        $info = $validator->validated();
-        $info["reviewer_id"] = $userId;
-        $info["product_id"] = $product_id;
+        $review_info = $validator->validated();
+        $review_info["reviewer_id"] = $userId;
+        $review_info["product_id"] = $product_id;
 
         // Create review if everything is correct
-        $review = Review::create($info);
+        $review = Review::create($review_info);
 
         // Fetch all reviews with the associated products and reviewers
-        $review = Review::with([
-            'product' => function($query) {
-                $query->select('id', 'display_name', 'pricing', 'discount_pricing');
-            },
-            'reviewer' => function($query) {
-                $query->select('id', 'display_name', 'image_url', 'user_role', 'deactivated');
-            }
-        ])->find($review->id);
-
-        $review->makeHidden(['reviewer_id', 'product_id', 'updated_at']);
-        return response()->json($review, 201); // Content created
+        $review = Review::find($review->id);
+        return new ReviewResource($review);
     }
 
     /**

@@ -26,11 +26,11 @@ class TransactionResource extends JsonResource
             if ($this->transactor) {
                 $transactor = $this->transactor;
                 $transactor = [
-                    "id" => $transactor->id,
-                    "name" => $transactor->name,
-                    "surname" => $transactor->surname,
-                    "image_url" => $transactor->image_url,
-                    "deactivated" => $transactor->deactivated
+                    "id"          => $transactor->id,
+                    "name"        => $transactor->name,
+                    "surname"     => $transactor->surname,
+                    "image_url"   => $transactor->image_url,
+                    "deactivated" => $transactor->deactivated,
                 ];
             }
             $transaction['transactor'] = $transactor;
@@ -58,5 +58,4 @@ class TransactionResource extends JsonResource
         $this->show_transactor = true;
         return $this;
     }
-
 }

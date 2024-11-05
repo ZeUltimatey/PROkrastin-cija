@@ -9,7 +9,6 @@ use App\Models\CatBreed;
 use App\Models\Location;
 use App\Models\Review;
 use App\Models\Transaction;
-use Database\Seeders\ProductFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -214,6 +213,12 @@ class TestSeeder extends Seeder
             "content" => "Wow very good bed for me, my cat doesn\'t like it though..",
             "rating" => 8,
         ]);
+        Review::create([
+            "reviewer_id" => 1,
+            "product_id" => 1,
+            "content" => "My cat likes it, I can't sleep at night because she is snoring in it. But good product 👍",
+            "rating" => 10,
+        ]);
 
         CardInformation::create([
             "cardholder_id" => 2,
@@ -224,10 +229,19 @@ class TestSeeder extends Seeder
         ]);
 
         Location::create([
+            "creator_id" => 1,
+            "city" => "Rīga",
+            "street" => "Krišjāņa Valdemāra iela 1C",
+            "apartment_number" => null,
+            "location_name" => "Rīgas Valsts tehnikums",
+            "zip_code" => "LV-1010",
+        ]);
+        Location::create([
             "creator_id" => 2,
             "city" => "Washington",
             "street" => "2608 84th Street Ct S",
             "apartment_number" => null,
+            "location_name" => "My house",
             "zip_code" => "98499",
         ]);
 

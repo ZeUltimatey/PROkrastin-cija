@@ -22,7 +22,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('transactions');
 
-            $table->string('display_name');
+//            $table->string('display_name');
             $table->unsignedInteger('amount');
             $table->float('price_per_product');
             $table->float('total_price');

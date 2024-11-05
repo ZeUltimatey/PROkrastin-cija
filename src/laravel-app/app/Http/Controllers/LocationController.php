@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\LocationResource;
 use App\Models\Location;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,39 +15,32 @@ class LocationController extends Controller
         'city' => 'required|string|max:255',
         'street' => 'required|string|max:255',
         'apartment_number' => 'nullable|string|max:255',
-        'locationName' => 'nullable|string|max:255',
+        'location_name' => 'nullable|string|max:255',
         'zip_code' => 'required|string|max:255'
     ];
 
     /**
      * Show all locations.
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function index_all(): JsonResponse
+    public function index_all()
     {
         // Fetch all locations
-        $locations = Location::all();
-
-        return response()->json($locations);
+        return LocationResource::collection(Location::all())->each(function ($location) {
+            $location->with_creator();
+        });
     }
 
     /**
      * Show all locations for the user.
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function index(): JsonResponse
+    public function index()
     {
         // Get the ID of the authenticated user
         $userId = Auth::user()->id;
 
         // Fetch all locations that belong to the authenticated user
-        $location = Location::where('creator_id', $userId)->get();
-        $location->makeHidden(['creator_id']);
-
-        // Return the filtered records as a JSON response
-        return response()->json($location);
+        $locations = Location::where('creator_id', $userId)->get();
+        return LocationResource::collection($locations);
     }
 
     /**

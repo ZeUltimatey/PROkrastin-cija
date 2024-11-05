@@ -213,23 +213,24 @@ or
 ---
 `localhost/api/reviews/{product_id} GET`
 ```php
-return [
-    {
-        "id": int,
-        "attachments_id": int or null,
-        "content": string(65535),
-        "rating": int,
-        "created_at": timestamp,
-        "reviewer": {
+return {
+    "data": [
+        {
             "id": int,
-            "display_name": string(255),
-            "image_url": string(255) or null,
-            "user_role": enum('User', 'Admin'),
-            "deactivated": boolean
-        }
-    },
-    other reviews..
-]
+            "content": string(65535),
+            "rating": int,
+            "created_at": timestamp,
+            "reviewer": {
+                "id": int,
+                "display_name": string(255),
+                "image_url": string(255) or null,
+                "user_role": enum('User', 'Admin'),
+                "deactivated": boolean
+            }
+        },
+        other reviews..
+    ]
+}
 ```
 ---
 `localhost/api/user GET` *authenticated user*
@@ -312,17 +313,19 @@ return [
 ---
 `localhost/api/locations GET` *authenticated user*
 ```php
-return [
-    {
-        "id": int,
-        "city": string(255),
-        "street": string(255),
-        "apartment_number": string(255) or null,
-        "locationName": string(255) or null,
-        "zip_code": string(255)
-    },
-    other locations..
-]
+return {
+    "data": [
+        {
+            "id": int,
+            "city": string(255),
+            "street": string(255),
+            "apartment_number": string(255) or null,
+            "location_Name": string(255) or null,
+            "zip_code": string(255)
+        },
+        other locations..
+    ]
+}
 ```
 ---
 `localhost/api/cards/{id} GET` *authenticated user*
@@ -449,12 +452,17 @@ return [
 return [
     {
         "id": int,
-        "creator_id": int,
         "city": string(255),
         "street": string(255),
         "apartment_number": string(255) or null,
         "locationName": string(255) or null,
         "zip_code": string(255)
+        "creator": {
+            "id": int,
+            "display_name": string(255),
+            "image_url": string(255) or null,
+            "deactivated": boolean
+        }
     },
     other locations..
 ]
@@ -472,7 +480,8 @@ return [
             "id": int,
             "display_name": string(255),
             "pricing": float,
-            "discount_pricing": float or null
+            "discount_pricing": float or null,
+            "stock": int
         },
         "reviewer": {
             "id": int,
@@ -676,22 +685,18 @@ or
 ```
 ```php
 return {
-    "id": int,
-    "content": string(65535),
-    "rating": int,
-    "created_at": timestamp,
-    "product": {
+    "data": {
         "id": int,
-        "display_name": string(255),
-        "pricing": float,
-        "discount_pricing": float or null
-    },
-    "reviewer": {
-        "id": int,
-        "display_name": string(255),
-        "image_url": string(255) or null,
-        "user_role": enum('User', 'Admin'),
-        "deactivated": boolean
+        "content": string(65535),
+        "rating": int,
+        "created_at": timestamp,
+        "reviewer": {
+            "id": int,
+            "display_name": string(255),
+            "image_url": string(255) or null,
+            "user_role": enum('User', 'Admin'),
+            "deactivated": boolean
+        }
     }
 }
 ```
@@ -721,22 +726,6 @@ return {
 `localhost/api/user/{id} PUT` ***authenticated admin***
 ```php
 --
-```
----
-`localhost/api/users/deactivate/{id} POST` ***authenticated admin***
-```php
-{
-    "deactivate" : "required|boolean"
-}
-```
-```php
-return {
-    "deactivated": boolean
-}
-
-or
-
-{"deactivated": false} - code 403 - cannot activate/deactivate admin users
 ```
 ---
 `localhost/api/products POST` ***authenticated admin*** \
