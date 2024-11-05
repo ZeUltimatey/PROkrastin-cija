@@ -44,9 +44,6 @@ export const Navbar = () => {
     }
     navigate("/auth/login");
   };
-  const handleBookClick = async () => {
-    navigate("/breeds");
-  };
 
   const handleCartHover = async () => {
     fetchCart();
@@ -55,8 +52,8 @@ export const Navbar = () => {
 
   return (
     <nav className="bg-content-white rounded-t-md">
-      <div className="flex items-center justify-between h-20 gap-2 px-6">
-        <div className="p-4 w-52">
+      <div className="h-20 flex items-center px-6 gap-2 justify-between">
+        <div className="w-52 p-4">
           <a href="/">
             <img src={"../cat_logo.png"} alt="Murrātava" />
           </a>
@@ -66,7 +63,7 @@ export const Navbar = () => {
             <input
               placeholder="Meklēt visā Murrātavā..."
               type="text"
-              className="text-xl h-12 px-6 w-[500px] font-semibold grow bg-[#f4f1e9] rounded-s-full focus:outline-none font-poppins"
+              className="text-xl h-12 px-6 w-[600px] font-semibold grow bg-[#f4f1e9] rounded-s-full focus:outline-none font-poppins"
             />
             <button className="bg-[#f4f1e9] text-2xl px-10 rounded-e-full h-12 flex place-items-center hover:bg-opacity-60">
               <i className="fa-solid fa-magnifying-glass "></i>
@@ -77,7 +74,7 @@ export const Navbar = () => {
         <div
           onPointerEnter={() => setShowCategories(true)}
           onPointerLeave={() => setShowCategories(false)}
-          className="flex justify-center text-xl font-semibold group hover:cursor-pointer place-items-center"
+          className="group hover:cursor-pointer font-semibold text-xl justify-center flex place-items-center"
         >
           <button
             onClick={() =>
@@ -87,12 +84,12 @@ export const Navbar = () => {
             }
             className="flex place-items-center gap-2 h-20 px-4 group-hover:border-b-4 border-[#A67144] transition-all"
           >
-            <i className="text-2xl fa-solid fa-layer-group"></i>
+            <i className="fa-solid fa-layer-group text-2xl"></i>
             <span className="font-bold font-poppins">Kategorijas</span>
           </button>
           {showCategories && (
             <div className="h-12 absolute top-20 border-t-4 border-[#A67144] shadow-sm mt-6">
-              <ul className="grid h-full grid-cols-3 text-base">
+              <ul className="text-base h-full grid grid-cols-3">
                 {CategoryList.map((category, idx) => (
                   <Category
                     name={category.name}
@@ -106,38 +103,38 @@ export const Navbar = () => {
         </div>
 
         <div className="flex h-full ">
-          <button
-            onClick={handleCartClick}
-            className={`h-full px-6 hover:border-b-4 border-accent-brown ${
-              showCart ? "border-b-4" : "border-b-0"
-            } transition-all`}
+          <div
+            onPointerEnter={handleCartHover}
+            onPointerLeave={() => setShowCart(false)}
           >
-            <i className="text-xl fa-solid fa-basket-shopping lg:text-2xl"></i>
-          </button>
-          <button
-            onClick={() => handleBookClick()}
-            className="h-full px-6 transition-all hover:border-b-4 border-accent-brown"
-          >
-            <i className="text-xl fa-solid fa-book lg:text-2xl"></i>
-          </button>
+            <button
+              onClick={() => navigate("/cart")}
+              className={`h-full px-6 hover:border-b-4 border-accent-brown ${
+                showCart ? "border-b-4" : "border-b-0"
+              } transition-all`}
+            >
+              <i className="fa-solid fa-basket-shopping text-xl lg:text-2xl"></i>
+            </button>
+            {showCart && <NavbarCart />}
+          </div>
           <button
             onClick={() => handleUserClick()}
-            className="h-full px-6 transition-all hover:border-b-4 border-accent-brown"
+            className=" h-full px-6 hover:border-b-4 border-accent-brown transition-all"
           >
-            <i className="text-xl fa-solid fa-user lg:text-2xl"></i>
+            <i className="fa-solid fa-user text-xl lg:text-2xl"></i>
           </button>
         </div>
 
-        <div className="flex items-center md:hidden">
+        <div className="md:hidden flex items-center">
           <i
-            className="text-2xl fa-solid fa-bars"
+            className="fa-solid fa-bars text-2xl"
             onClick={() => setNavbarToggle(!navbarToggle)}
           ></i>
         </div>
       </div>
 
       {/* {navbarToggle && (
-        <ul className="p-4 text-lg font-semibold md:hidden bg-content-white font-poppins">
+        <ul className="md:hidden bg-content-white font-poppins text-lg font-semibold p-4">
           <li key={} className="py-2 hover:cursor-pointer">Kaķi</li>
           <li className="py-2 hover:cursor-pointer">Barība</li>
           <li className="py-2 hover:cursor-pointer">Rotaļlietas</li>
