@@ -38,7 +38,7 @@ export const NavbarCart = () => {
                           className=""
                           onClick={() => removeFromCart(item)}
                         >
-                          <i className="fa-solid fa-xmark"></i>
+                          <i className="fa-solid fa-trash"></i>
                         </button>
                       </div>
                       <div className="flex gap-2 font-poppins place-self-end">

@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Validator;
 class ReviewController extends Controller
 {
     private array $validationRules = [
-        'attachment_groups' => 'nullable|int|exists:attachment_groups,id',
         'content' => 'required|string|max:65535',
         'rating' => 'required|int|min:0|max:10'
     ];

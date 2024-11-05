@@ -1,9 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Constants } from "../../universal/Constants";
 import { User } from "../../universal/interfaces/User";
 import { FormInput } from "../../universal/FormInput";
 import { useToast } from "../../universal/Toast";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 
 export const Users = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -65,9 +72,57 @@ export const Users = () => {
     });
   };
 
+  const columnHelper = createColumnHelper<User>();
+
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("id", {
+        header: "ID",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("name", {
+        header: "Vārds",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("surname", {
+        header: "Uzvārds",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("email", {
+        header: "E-pasts",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor("created_at", {
+        header: "Reģistrēts",
+        cell: (info) => info.getValue().slice(0, 10),
+      }),
+      columnHelper.accessor("deactivated", {
+        header: "Statuss",
+        cell: (info) => (info.getValue() ? "Bloķēts" : "Aktīvs"),
+      }),
+      columnHelper.display({
+        header: "Darbības",
+        cell: (info) => (
+          <button onClick={() => handleEditClick(info.row.original)}>
+            <i className="fa-edit fa-solid"></i>
+          </button>
+        ),
+      }),
+    ],
+    [handleEditClick]
+  );
+
   useEffect(() => {
     getAllUsers();
   }, []);
+
+  const table = useReactTable({
+    columns,
+    data: users,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    enableSortingRemoval: false,
+  });
 
   return (
     <div className="bg-content-white w-full">
@@ -80,71 +135,78 @@ export const Users = () => {
           </div>
         </header>
 
-        <main className="p-8">
-          <div className="bg-light-gray shadow rounded-lg border-2 border-medium-brown">
-            <div className="p-6 border-b border-medium-brown">
-              <h2 className="text-xl font-bold text-dark-brown font-poppins">
-                Reģistrētie lietotāji
-              </h2>
-            </div>
-
-            <table className="w-full text-left font-poppins">
-              <thead>
-                <tr className="border-b border-medium-brown text-center">
-                  <th className="py-4 px-6 font-poppins text-dark-brown">
-                    Lietotāja ID
-                  </th>
-                  <th className="py-4 px-6 font-poppins text-dark-brown">
-                    Vārds
-                  </th>
-                  <th className="py-4 px-6 font-poppins text-dark-brown">
-                    E-pasts
-                  </th>
-                  <th className="py-4 px-6 font-poppins text-dark-brown">
-                    Reģistrēšanās datums
-                  </th>
-                  <th className="py-4 px-6 font-poppins text-dark-brown">
-                    Statuss
-                  </th>
-                  <th className="py-4 px-6 font-poppins text-dark-brown">
-                    Darbības
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {users &&
-                  users.map((user) => (
-                    <tr
-                      className="border-b border-medium-brown text-center"
-                      key={user.id}
+        {users && (
+          <table className="text-center font-poppins w-full">
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      className="h-12 bg-light-gray border-b border-light-brown text-dark-brown font-semibold"
+                      key={header.id}
+                      colSpan={header.colSpan}
                     >
-                      <td className="py-4 px-6 text-dark-brown">{user.id}</td>
-                      <td className="py-4 px-6 text-dark-brown">{user.name}</td>
-                      <td className="py-4 px-6 text-dark-brown">
-                        {user.email}
-                      </td>
-                      <td className="py-4 px-6 text-dark-brown">
-                        {user.created_at.slice(0, 10)}
-                      </td>
-                      <td className="py-4 px-6 text-dark-brown">
-                        {user.deactivated ? "Bloķēts" : "Aktīvs"}
-                      </td>
-                      <td className="py-4 px-6">
-                        <button
-                          onClick={() => handleEditClick(user)}
-                          className="bg-medium-brown text-white px-4 py-2 rounded-lg font-poppins"
+                      {header.isPlaceholder ? null : (
+                        <div
+                          className={
+                            header.column.getCanSort()
+                              ? "cursor-pointer select-none"
+                              : ""
+                          }
+                          onClick={header.column.getToggleSortingHandler()}
+                          title={
+                            header.column.getCanSort()
+                              ? header.column.getNextSortingOrder() === "asc"
+                                ? "Sort ascending"
+                                : header.column.getNextSortingOrder() === "desc"
+                                ? "Sort descending"
+                                : "Clear sort"
+                              : undefined
+                          }
                         >
-                          Rediģēt
-                        </button>
-                      </td>
-                    </tr>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                          {{
+                            asc: (
+                              <i className="fa-solid fa-chevron-up ml-2"></i>
+                            ),
+                            desc: (
+                              <i className="fa-solid fa-chevron-down ml-2"></i>
+                            ),
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
+                      )}
+                    </th>
                   ))}
-              </tbody>
-            </table>
-          </div>
-        </main>
-      </div>
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => {
+                if (row.original.user_role == "Admin") return;
 
+                return (
+                  <tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <td
+                        className="h-8 border-b border-light-brown bg-light-gray text-dark-brown font-semibold"
+                        key={cell.id}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-8 rounded-lg shadow-lg w-1/3">

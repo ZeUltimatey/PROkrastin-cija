@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('cat_breeds', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('attachments_id')->nullable();
-            $table->foreign('attachments_id')
-                ->references('id')
-                ->on('attachment_groups');
-
             $table->string('display_name');
-            $table->text('breed_information');
+            $table->text('feeding_info');
+            $table->text('personality_info');
+            $table->text('environment_info');
+            $table->text('tips_info');
             $table->timestamps();
         });
     }

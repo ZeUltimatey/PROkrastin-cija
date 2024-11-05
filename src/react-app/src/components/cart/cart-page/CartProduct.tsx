@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Product } from "../../universal/interfaces/Product";
 
 interface CartProductProps {
@@ -10,7 +10,27 @@ interface CartProductProps {
 
 export const CartProduct = (props: CartProductProps) => {
   const { product, quantity, onRemove, onQuantityChange } = props;
-  const totalPrice = product.pricing * quantity;
+  const totalPrice = product.discount_pricing
+    ? product.discount_pricing * quantity
+    : product.pricing * quantity;
+
+  const [cartQuantity, setCartQuantity] = useState(quantity);
+
+  const handleQuantityChange = (delta: number) => {
+    if (!isNaN(delta) && delta > 0) {
+      setCartQuantity(delta);
+    }
+  };
+
+  const incrementQuanity = () => {
+    setCartQuantity(cartQuantity + 1);
+    onQuantityChange(product, cartQuantity);
+  };
+
+  const decrementQuanity = () => {
+    setCartQuantity(cartQuantity - 1);
+    onQuantityChange(product, cartQuantity);
+  };
 
   return (
     <tr className="border-b border-gray-200">
@@ -27,16 +47,21 @@ export const CartProduct = (props: CartProductProps) => {
       <td className="text-center py-4">
         <div className="flex items-center justify-center">
           <button
-            onClick={() => onQuantityChange(product, quantity - 1)}
+            disabled={cartQuantity === 1}
+            onClick={decrementQuanity}
             className="bg-light-brown h-8 w-8 flex items-center justify-center rounded-l-md hover:bg-opacity-80 transition-opacity"
           >
             <i className="fa-solid fa-minus text-white text-sm"></i>
           </button>
-          <span className="font-semibold font-poppins bg-light-brown h-8 w-10 flex items-center justify-center text-white text-base">
-            {quantity}
-          </span>
+          <input
+            type="number"
+            value={cartQuantity}
+            onChange={(e) => handleQuantityChange(Number(e.target.value))}
+            onBlur={() => onQuantityChange(product, cartQuantity)}
+            className="text-center font-semibold font-poppins bg-light-brown  h-8 w-14 focus:outline-none focus:bg-opacity-75 flex items-center justify-center text-white"
+          />
           <button
-            onClick={() => onQuantityChange(product, quantity + 1)}
+            onClick={incrementQuanity}
             className="bg-light-brown h-8 w-8 flex items-center justify-center rounded-r-md hover:bg-opacity-80 transition-opacity"
           >
             <i className="fa-solid fa-plus text-white text-sm"></i>

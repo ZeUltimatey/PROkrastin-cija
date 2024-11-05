@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Constants } from "../../universal/Constants";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../universal/Toast";
+import { User } from "../../universal/interfaces/User";
+import { useConfirmation } from "../../universal/Confirmation";
 
-export const ProfileSettings = () => {
+export const ProfileSettings = ({ user }: { user: User }) => {
   const [isPreferencesModalOpen, setIsPreferencesModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
@@ -24,21 +26,26 @@ export const ProfileSettings = () => {
 
   const showToast = useToast();
 
+  const confirm = useConfirmation();
+
   const handleAccountDelete = async () => {
-    await fetch(`${Constants.API_URL}/user`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem(
-          Constants.LOCAL_STORAGE.TOKEN
-        )}`,
-      },
-    }).then((response) => {
-      if (response.ok) {
-        showToast(true, "Konts veiksmīgi izdzēsts.");
-        localStorage.removeItem(Constants.LOCAL_STORAGE.TOKEN);
-        navigate("/");
-      }
-    });
+    if (await confirm("Dzēst savu kontu?")) {
+      await fetch(`${Constants.API_URL}/user`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            Constants.LOCAL_STORAGE.TOKEN
+          )}`,
+        },
+      }).then((response) => {
+        if (response.ok) {
+          showToast(true, "Konts veiksmīgi izdzēsts.");
+          localStorage.removeItem(Constants.LOCAL_STORAGE.TOKEN);
+          navigate("/");
+        }
+      });
+    }
+    return;
   };
 
   return (

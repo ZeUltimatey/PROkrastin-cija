@@ -28,9 +28,10 @@ export const LoginForm = () => {
           const data = await response.json();
           localStorage.setItem(Constants.LOCAL_STORAGE.TOKEN, data.token);
           showToast(true, "Autentifikācija veiksmīga!");
-          navigate("/");
+          setTimeout(() => navigate("/"), 1000);
         } else {
-          showToast(false, "Kļūda autentifikācijas procesā.");
+          const data = await response.json();
+          showToast(false, data.error);
         }
       })
       .catch((error) => {
