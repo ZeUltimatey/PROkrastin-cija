@@ -219,8 +219,8 @@ class TestSeeder extends Seeder
             "cardholder_id" => 2,
             "card_number" => Crypt::encryptString('5550130966726224'),
             "expiration_date" => Crypt::encryptString('12/24'),
-            "cvc_number" => Crypt::encryptString('271'),
-            "card_name" => "RYAN GOSLING",
+            "cardOwnerName" => "RYAN",
+            "cardOwnerSurname" => "GOSLING",
         ]);
 
         Location::create([

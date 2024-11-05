@@ -140,6 +140,9 @@ class TransactionController extends Controller
         // Clear the user's basket after successful purchase
         $user = Auth::user();
         $user->clear_basket();
+        // TODO Implement clear_basket method
+        //use Illuminate\Support\Facades\Http;
+        //$response = Http::delete('/basket/clear');
 
         return response()->json($transaction, 201); // Content created
     }

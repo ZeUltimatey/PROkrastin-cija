@@ -13,13 +13,14 @@ class CardInformation extends Model
         'cardholder_id',
         'card_number',
         'expiration_date',
-        'cvc_number',
-        'card_name',
+        //'cvc_number',
+        'cardOwnerName',
+        'cardOwnerSurname',
     ];
     protected $hidden = [
-        'card_number',
-        'expiration_date',
-        'cvc_number',
+        //'card_number',
+        //'expiration_date',
+        //'cvc_number',
     ];
     public $incrementing = true;
     public $timestamps = true;
