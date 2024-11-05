@@ -15,8 +15,8 @@ class SelectedProductResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'user_id' => $this->user_id,
-            'product_id' => $this->product_id,
+            // 'user_id' => $this->user_id,
+            // 'product_id' => $this->product_id,
             'amount' => $this->amount,
             'product' => new ProductResource($this->product),
         ];
