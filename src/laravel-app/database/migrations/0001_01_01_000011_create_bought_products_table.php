@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('bought_products', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('transaction_id');
-            $table->primary(['product_id', 'transaction_id']);
             $table->foreign('product_id')
                 ->references('id')
                 ->on('products');
@@ -22,7 +22,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('transactions');
 
-//            $table->string('display_name');
+            $table->string('display_name');
             $table->unsignedInteger('amount');
             $table->float('price_per_product');
             $table->float('total_price');

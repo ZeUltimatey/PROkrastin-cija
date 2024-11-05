@@ -19,7 +19,7 @@ class LocationResource extends JsonResource
             "city"             => $this->city,
             "street"           => $this->street,
             "apartment_number" => $this->apartment_number,
-            "location_name"    => $this->location_name,
+            "location_name"     => $this->locationName,
             "zip_code"         => $this->zip_code,
         ];
 

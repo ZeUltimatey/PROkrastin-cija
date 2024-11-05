@@ -7,6 +7,7 @@ localhost/
     ├── purchase/ POST (purchase and clear basket) ✅
     ├── dashboard/ GET (get project statistics) ✅
     ├── all_users/ GET (getting all users) ✅
+    ├── all_bought_products/ GET (getting all bought products) ✅
     ├── all_cards/ GET (getting all user card information) ✅
     ├── all_locations/ GET (getting all user locations) ✅
     ├── all_transactions/ GET (getting all user transactions) ✅
@@ -21,6 +22,8 @@ localhost/
     │   └── image/
     │       ├── add/ POST (add profile picture) ✅
     │       └── remove/ POST (remove profile picture) ✅
+    ├── bought_products/
+    │   └── {transaction_id} GET (get all the bought products in a transaction) ✅
     ├── basket/
     │   ├── GET (getting the contents of a users basket) ✅
     │   ├── POST (selecting/deselecting a product) ✅
@@ -298,6 +301,11 @@ return {
 }
 ```
 ---
+`localhost/api/bought_products/{transaction_id} GET` *authenticated user*
+```php
+--
+```
+---
 `localhost/api/cards GET` *authenticated user*
 ```php
 return [
@@ -320,7 +328,7 @@ return {
             "city": string(255),
             "street": string(255),
             "apartment_number": string(255) or null,
-            "location_Name": string(255) or null,
+            "location_name": string(255) or null,
             "zip_code": string(255)
         },
         other locations..
@@ -430,6 +438,48 @@ return [
         "remember_token": string(255) or null
     },
     other users..
+]
+```
+---
+`localhost/api/all_bought_products GET` ***authenticated admin***
+```php
+return [
+    {
+        "display_name": string(255),
+        "amount": int,
+        "price_per_product": float,
+        "total_price": float,
+        "transaction_id": int,
+        "transactor": {
+            "id": int,
+            "name": "Vards",
+            "surname": "Uzvards",
+            "image_url": string(255) or null,
+            "deactivated": boolean
+        },
+        "product_in_database": {
+            "id": int,
+            "display_name": string(255),
+            "description": string(65535),
+            "pricing": float,
+            "discount_pricing": float or null,
+            "product_type": enum('UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE'),
+            "stock": int,
+            "images": [
+                {
+                    "id": int,
+                    "url": string
+                },
+                other images..
+            ],
+            "cat": {
+                "birthdate": timestamp,
+                "color": string(255),
+                "breed_name": string(255)
+            } or without "cat"
+        }
+    },
+    other bought products..
 ]
 ```
 ---

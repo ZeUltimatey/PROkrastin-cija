@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 //namespace Database\Factories;
 
+use App\Models\BoughtProducts;
 use App\Models\CardInformation;
 use App\Models\Cat;
 use App\Models\CatBreed;
@@ -233,7 +234,7 @@ class TestSeeder extends Seeder
             "city" => "Rīga",
             "street" => "Krišjāņa Valdemāra iela 1C",
             "apartment_number" => null,
-            "location_name" => "Rīgas Valsts tehnikums",
+            "locationName" => "Rīgas Valsts tehnikums",
             "zip_code" => "LV-1010",
         ]);
         Location::create([
@@ -241,10 +242,16 @@ class TestSeeder extends Seeder
             "city" => "Washington",
             "street" => "2608 84th Street Ct S",
             "apartment_number" => null,
-            "location_name" => "My house",
+            "locationName" => "My house",
             "zip_code" => "98499",
         ]);
 
+        Transaction::create([
+            "transactor_id" => 1,
+            "location_id" => 1,
+            "total_pricing" => 159.99,
+            "check_content" => "2x CAT HAMMOCK BED\t90.00 EUR\n1x ASTEROID DESTROYER\t69.99 EUR\n------------------------------\nTOTAL:\t159.99 EUR\n\nTHANK YOU FOR SHOPPING AT MURRĀTAVA!",
+        ]);
         Transaction::create([
             "transactor_id" => 2,
             "location_id" => 1,
@@ -252,17 +259,21 @@ class TestSeeder extends Seeder
             "check_content" => "1x CAT HAMMOCK BED\t45.00 EUR\n------------------------------\nTOTAL:\t45.00 EUR\n\nTHANK YOU FOR SHOPPING AT MURRĀTAVA!",
         ]);
 
-        DB::table('bought_products')->insert([
-            [
-                'product_id' => 1,
-                'transaction_id' => 1,
-                'display_name' => 'Cat Hammock Bed',
-                'amount' => 2,
-                'price_per_product' => 45.00,
-                'total_price' => 90.00,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
+        BoughtProducts::create([
+            "product_id" => 1,
+            "transaction_id" => 1,
+            "display_name" => 'Cat Hammock Bed',
+            "amount" => 2,
+            "price_per_product" => 45.00,
+            "total_price" => 90.00,
+        ]);
+        BoughtProducts::create([
+            "product_id" => 2,
+            "transaction_id" => 1,
+            "display_name" => 'Asteroid Destroyer',
+            "amount" => 1,
+            "price_per_product" => 69.99,
+            "total_price" => 69.99,
         ]);
 
         // DB::table('selected_products')->insert([

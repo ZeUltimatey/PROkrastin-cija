@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BoughtProductsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\CardsController;
@@ -12,7 +13,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SelectedProductController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 
 // Free for all
 Route::get('/login', function () {
@@ -42,6 +42,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/user', [UserController::class, 'update']);
 //    Route::get('/user/{id}', [UserController::class, 'show']); // jau ir user/{id} GET adminiem
 
+    Route::get('/bought_products/{transaction_id}', [BoughtProductsController::class, 'index']);
+
     Route::get('/cards', [CardsController::class, 'index']);
     Route::post('/cards', [CardsController::class, 'store']);
     Route::put('/cards/{id}', [CardsController::class, 'update']);
@@ -68,6 +70,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 // Admins only - some routes are for testing purposes
 Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::get('/all_users', [UserController::class, 'index']);
+    Route::get('/all_bought_products', [BoughtProductsController::class, 'index_all']);
     Route::get('/all_cards', [CardsController::class, 'index_all']);
     Route::get('/all_locations', [LocationController::class, 'index_all']);
     Route::get('/all_transactions', [TransactionController::class, 'index_all']);
