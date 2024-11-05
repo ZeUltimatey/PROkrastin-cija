@@ -22,6 +22,16 @@ import { BreedDetails } from "./components/about/BreedDetails";
 import { Encyclopedia } from "./components/panel/admin-panel/Encyclopedia";
 import { CartProvider } from "./components/universal/Cart";
 import { Statistics } from "./components/panel/admin-panel/Statistics";
+import { ProfileSettings } from "./components/instruction/ProfileSettings";
+import { BuyInfo } from "./components/instruction/BuyInfo";
+import { ContactUse } from "./components/instruction/ContactUse";
+import { EncyclopediaUse } from "./components/instruction/EncyclopediaUse";
+import { ProfileEdit } from "./components/instruction/ProfileEdit";
+import { OrderHistory } from "./components/instruction/OrderHistory";
+import { SavedAddresses } from "./components/instruction/SavedAddresses";
+import { PayMethods } from "./components/instruction/PayMethods";
+import { BrowseInfo } from "./components/instruction/BrowseInfo";
+import { BasketInfo } from "./components/instruction/BasketInfo";
 
 function App() {
   return (
@@ -41,6 +51,32 @@ function App() {
               <Route path="/receipt" element={<Receipt />} />
               <Route path="/breeds" element={<Breeds />} />
               <Route path="/breed/:breedId" element={<BreedDetails />} />
+              <Route
+                path="/instruction/encyclopediause"
+                element={<EncyclopediaUse />}
+              />
+              <Route
+                path="/instruction/profilesettings"
+                element={<ProfileSettings />}
+              />
+              <Route path="/instruction/basketinfo" element={<BasketInfo />} />
+              <Route path="/instruction/browseinfo" element={<BrowseInfo />} />
+
+              <Route path="/instruction/buyinfo" element={<BuyInfo />} />
+              <Route path="/instruction/contactuse" element={<ContactUse />} />
+              <Route
+                path="/instruction/profileedit"
+                element={<ProfileEdit />}
+              />
+              <Route
+                path="/instruction/orderhistory"
+                element={<OrderHistory />}
+              />
+              <Route
+                path="/instruction/savedaddresses"
+                element={<SavedAddresses />}
+              />
+              <Route path="/instruction/paymethods" element={<PayMethods />} />
             </Route>
             <Route path="/panel" element={<PanelLayout />}>
               <Route path="/panel/statistics" element={<Statistics />} />
