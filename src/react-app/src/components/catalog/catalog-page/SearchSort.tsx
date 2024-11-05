@@ -32,7 +32,7 @@ export const SearchSort = (props: Props) => {
           Atrastas {props.filteredItemAmount ?? 0} preces
         </span>
         <div className="flex gap-6">
-          <div className="flex rounded-md text-black bg-black">
+          <div className="flex gap-[1px] rounded-md text-black bg-black">
             <button
               onClick={() =>
                 props.onSort({
@@ -65,7 +65,7 @@ export const SearchSort = (props: Props) => {
               <i className="fa-solid fa-arrow-up"></i>
             </button>
           </div>
-          <div className="flex rounded-md text-black bg-black">
+          <div className="flex gap-[1px] rounded-md text-black bg-black">
             <button
               onClick={() =>
                 props.onSort({

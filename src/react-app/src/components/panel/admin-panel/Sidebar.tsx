@@ -12,7 +12,7 @@ export const Sidebar = () => {
           Administratora panelis
         </div>
         <nav>
-          <ul className="text-dark-brown font-poppins font-semibold">
+          <ul className="space-y-4 text-dark-brown font-poppins font-semibold">
             <li
               onClick={() => navigate("/panel/statistics")}
               className={`${
@@ -33,35 +33,6 @@ export const Sidebar = () => {
             >
               Produkti
             </li>
-            <li
-              onClick={() => navigate("/panel/cats")}
-              className={`${
-                selectedTab === "cats"
-                  ? " bg-medium-brown bg-opacity-90 "
-                  : selectedTab === "breeds"
-                  ? "bg-medium-brown bg-opacity-50"
-                  : ""
-              }
-                
-              hover:bg-medium-brown hover:text-white p-3 text-center cursor-pointer`}
-            >
-              {(selectedTab === "cats" || selectedTab === "breeds") && (
-                <i className="fa-solid fa-chevron-down pe-2 text-sm"></i>
-              )}
-              Kaķi
-            </li>
-            {(selectedTab === "cats" || selectedTab === "breeds") && (
-              <li
-                onClick={() => navigate("/panel/breeds")}
-                className={`${
-                  selectedTab === "breeds"
-                    ? " bg-medium-brown bg-opacity-90 "
-                    : ""
-                }hover:bg-medium-brown hover:text-white p-2 text-center cursor-pointer`}
-              >
-                Šķirnes
-              </li>
-            )}
             <li
               onClick={() => navigate("/panel/orders")}
               className={`${

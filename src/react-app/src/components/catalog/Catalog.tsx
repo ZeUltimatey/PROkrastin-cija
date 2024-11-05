@@ -12,7 +12,7 @@ export const Catalog = () => {
   const [products, setProducts] = useState<Product[]>(null);
 
   const fetchItems = async () => {
-    await fetch(`${Constants.API_URL}/products${window.location.search}`, {
+    await fetch(`${Constants.API_URL}/products`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

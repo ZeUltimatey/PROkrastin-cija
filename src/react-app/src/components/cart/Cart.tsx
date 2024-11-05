@@ -1,24 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CartProduct from "../cart/cart-page/CartProduct";
 import { useCart } from "../universal/Cart";
-import { PaymentMethods } from "./cart-page/PaymentMethods";
 
 export const Cart = () => {
-  const { cartItems, removeFromCart, addToCart, fetchCart } = useCart();
-
-  const shippingCosts = Math.random() > 0.5 ? 0 : 5;
+  const { cartItems, removeFromCart, addToCart } = useCart();
 
   const getTotalPrice = () => {
     return cartItems.reduce((acc, item) => {
-      return item.product.discount_pricing
-        ? acc + item.product.discount_pricing * item.amount
-        : acc + item.product.pricing * item.amount;
+      return acc + item.product.pricing * item.amount;
     }, 0);
   };
-
-  useEffect(() => {
-    fetchCart();
-  }, []);
 
   return (
     <div className="flex min-h-screen  font-poppins">
@@ -74,7 +65,7 @@ export const Cart = () => {
               </span>
               <span className="font-bold text-lg flex items-center text-dark-brown">
                 <i className="fa-duotone fa-solid fa-truck-fast mr-2 text-dark-brown"></i>
-                {shippingCosts.toFixed(2)}&euro;
+                Bezmaksas
               </span>
             </div>
             <div className="flex justify-between items-center mt-4 border-t pt-4">
@@ -82,7 +73,7 @@ export const Cart = () => {
                 Kopā apmaksai:
               </span>
               <span className="font-bold text-lg text-dark-brown">
-                {(getTotalPrice() + shippingCosts).toFixed(2)}&euro;
+                {getTotalPrice().toFixed(2)}&euro;
               </span>
             </div>
           </div>
@@ -91,7 +82,6 @@ export const Cart = () => {
 
       <div className=" bg-content-white p-6 shadow-lg w-1/4">
         <h3 className="text-xl font-bold text-dark-brown mb-4">Apmaksāt</h3>
-        <PaymentMethods />
         <button className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown font-poppins mt-4">
           <i className="fa-regular fa-credit-card mr-2"></i>
           Apmaksāt

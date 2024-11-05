@@ -6,7 +6,7 @@ interface Breed {
   display_name: string;
   breed_information: string;
 }
-export const BreedCatalog = () => {
+export const Breeds = () => {
   const breeds = [
     { id: 1, name: "Meinkūns", description: "Liels un draudzīgs mīlulis." },
     {

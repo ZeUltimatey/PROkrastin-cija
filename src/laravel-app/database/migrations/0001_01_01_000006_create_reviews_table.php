@@ -16,13 +16,15 @@ return new class extends Migration
             $table->unsignedBigInteger('reviewer_id');
             $table->foreign('reviewer_id')
                 ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
+                ->on('users');
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')
                 ->references('id')
-                ->on('products')
-                ->onDelete('cascade');
+                ->on('products');
+            $table->unsignedBigInteger('attachments_id')->nullable();
+            $table->foreign('attachments_id')
+                ->references('id')
+                ->on('attachment_groups');
 
             $table->text('content');
             $table->unsignedInteger('rating');

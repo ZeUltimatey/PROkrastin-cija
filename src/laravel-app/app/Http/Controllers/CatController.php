@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ProductResource;
 use App\Models\Cat;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
@@ -26,11 +25,27 @@ class CatController extends Controller
     /**
      * Show all cats.
      *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        $catProducts = Product::where('product_type', 'CATS')->get();
-        return ProductResource::collection($catProducts);
+        // Fetch all products where product_type is 'CATS', including related Cat and CatBreed
+        $catProducts = Product::where('product_type', 'CATS')
+            ->with(['cat', 'cat.cat_breed']) // Load the Cat relation and its CatBreed relation
+            ->get();
+
+        // Hide 'updated_at' for Product, and 'id', 'updated_at' for Cat and timestamps for CatBreed
+        $catProducts->each(function ($product) {
+            if ($product->cat) {
+                $product->cat->makeHidden(['id', 'created_at', 'updated_at']); // Hide id and updated_at in Cat
+                if ($product->cat->cat_breed) {
+                    $product->cat->cat_breed->makeHidden(['created_at', 'updated_at']);
+                }
+            }
+        });
+
+        // Return the list of products with their associated Cat and CatBreed
+        return response()->json($catProducts, 200); // OK
     }
 
 //    /**
@@ -52,7 +67,7 @@ class CatController extends Controller
      * Store a new cat.
      *
      * @param \Illuminate\Http\Request $request
-     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -66,27 +81,29 @@ class CatController extends Controller
         }
 
         // Extract product-related fields and add 'CATS' as product_type
-        $validated = $validator->validated();
-;
+        $productData = $request->only(['display_name', 'description', 'pricing', 'discount_pricing', 'stock']);
+        $productData['product_type'] = 'CATS';  // Set product type to CATS
+
         // Create the Product
-        $product = Product::create([
-            'product_type' => 'CATS',
-            'display_name' => $validated['display_name'],
-            'description' => $validated['description'],
-            'pricing' => $validated['pricing'],
-            'discount_pricing' => $validated['discount_pricing'],
-            'stock' => $validated['stock'],
-        ]);
+        $product = Product::create($productData);
+
+        // Extract cat-specific fields
+        $catData = $request->only(['breed_id', 'birthdate', 'color']);
+        $catData['id'] = $product->id;  // Using the same ID as the Product
 
         // Create the Cat model
-        $cat = Cat::create([
-            'id' => $product->id,
-            'breed_id' => $validated['breed_id'],
-            'birthdate' => $validated['birthdate'],
-            'color' => $validated['color'],
-        ]);
+        $cat = Cat::create($catData);
 
-        return new ProductResource($product);
+        // Load the Cat relation and also eager load the CatBreed relation
+        $product->load(['cat', 'cat.cat_breed']);
+
+        // Hide 'id' and 'updated_at' in the Cat relation and 'updated_at' in the Product
+        $product->makeHidden(['updated_at']);
+        $product->cat->makeHidden(['id', 'updated_at']);
+        $product->cat->cat_breed->makeHidden(['created_at', 'updated_at']); // Hide timestamps in CatBreed
+
+        // Return the Product with its associated Cat and CatBreed
+        return response()->json($product, 201); // Content Created
     }
 
     /**
@@ -94,16 +111,15 @@ class CatController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
-        // Find the cat by ID
+        // Find the Product by ID
         $product = Product::find($id);
+
+        // If product is not found, return 404
         if (!$product) { return response()->json(['error' => 'Product not found'], 404); }
-        $product_resource = new ProductResource($product);
-        if (!$product_resource->cat) { return response()->json(['error' => 'Product does not have a cat counterpart'], 404); }
-        $cat = Cat::find($id);
 
         // Validate the request data
         $validator = Validator::make($request->all(), $this->validationRules);
@@ -113,20 +129,28 @@ class CatController extends Controller
             return response()->json(['errors' => $validator->errors()], 422); // Unprocessable Entity
         }
 
-        $validated = $validator->validated();
-        $product->update([
-            'display_name'     => $validated['display_name'],
-            'description'      => $validated['description'],
-            'pricing'          => $validated['pricing'],
-            'discount_pricing' => $validated['discount_pricing'],
-            'stock'            => $validated['stock'],
-        ]);
-        $cat->update([
-            'breed_id'  => $validated['breed_id'],
-            'birthdate' => $validated['birthdate'],
-            'color'     => $validated['color'],
-        ]);
+        // Extract product-related fields
+        $productData = $request->only(['display_name', 'description', 'pricing', 'discount_pricing', 'stock']);
 
-        return new ProductResource(Product::find($id));
+        // Update the Product
+        $product->update($productData);
+
+        // Find the associated Cat by the same ID
+        $cat = Cat::find($id);
+
+        // Extract cat-specific fields
+        $catData = $request->only(['breed_id', 'birthdate', 'color']);
+
+        // Update the Cat model with the new data
+        $cat->update($catData);
+
+        // Load the updated Cat relation with CatBreed
+        $product->load(['cat', 'cat.cat_breed']);
+
+        // Hide 'id' and 'updated_at' for both Product and Cat, and timestamps in CatBreed
+        $product->cat->makeHidden(['id', 'created_at', 'updated_at']);
+
+        // Return the updated Product with associated Cat and CatBreed
+        return response()->json($product, 200); // OK
     }
 }

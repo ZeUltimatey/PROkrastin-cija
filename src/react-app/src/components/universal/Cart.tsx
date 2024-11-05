@@ -49,7 +49,9 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const addToCart = async (item: Product, amount?: number) => {
+    console.log("amount", amount);
     if (localStorage.getItem(Constants.LOCAL_STORAGE.TOKEN)) {
+      console.log(1);
       const response = await fetch(`${Constants.API_URL}/basket`, {
         method: "POST",
         headers: {
@@ -60,10 +62,12 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
         },
         body: JSON.stringify({ product_id: item.id, amount: amount }),
       });
+
       if (response.ok) {
         const data = await response.json();
-        if (!amount) showToast(true, "Produkts pievienots grozam!");
+        showToast(true, "Produkts pievienots grozam!");
         setCartItems(data.data);
+        console.log(2);
         localStorage.setItem(
           Constants.LOCAL_STORAGE.CART,
           JSON.stringify(data.data)

@@ -33,7 +33,7 @@ export const Categories = () => {
         </div>
         <div className="mx-12 mb-6">
           <button
-            onClick={() => navigate("/products")}
+            onClick={() => navigate("/catalog")}
             className="flex place-items-center justify-center h-16 w-full bg-content-white hover:brightness-90 transition-all hover:shadow-lg rounded-md shadow-md"
           >
             <span className="text-2xl font-semibold text-dark-brown font-poppins">

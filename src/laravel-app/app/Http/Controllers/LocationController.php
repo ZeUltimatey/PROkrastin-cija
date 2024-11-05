@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 
 class LocationController extends Controller
 {
+
     private array $validationRules = [
         'city' => 'required|string|max:255',
         'street' => 'required|string|max:255',

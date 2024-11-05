@@ -38,7 +38,7 @@ class UserController extends Controller
             'password'              => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required|same:password',
             'display_name'          => 'required|string|max:255',
-            'name'                  => 'required|string|max:255',
+            'name'                  => 'required|string|max:255', // added name and surname because frontend
             'surname'               => 'required|string|max:255',
             'phone_number'          => 'nullable|string|max:15', // temp nullable because frontend
             'user_role'             => 'nullable|in:User,Admin',
@@ -64,9 +64,13 @@ class UserController extends Controller
             'deactivated'       => false,
         ]);
 
+        // Create an authentication token for the user
+        $token = $user->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken;
+
         // Return response with user data and token
         return response()->json([
             'user' => $user,
+            'token' => $token,
         ], 201); // HTTP status code 201 indicates resource creation
     }
 
@@ -106,7 +110,7 @@ class UserController extends Controller
      */
     // Display a single user
     public function show(int $id){
-
+        
         $user = User::find($id);
 
         if ($user) { return response()->json($user); } // OK
@@ -114,7 +118,7 @@ class UserController extends Controller
     }
 
     /**
-     * Update other user information.
+     * Update user information.
      */
     public function update(Request $request)
     {
@@ -125,6 +129,7 @@ class UserController extends Controller
         if ($request->input('email') === $cUser->email) {
             $request->request->remove('email');
         }
+
         $validator = Validator::make($request->all(), [
             'email'                 => 'sometimes|string|email|unique:users|max:255',
             'password'              => 'nullable|string|min:8|confirmed',
@@ -142,21 +147,14 @@ class UserController extends Controller
                 'errors' => $validator->errors(),
             ], 422);
         }
-
+        
         $user = User::find($request->user()->id);
 
         $user->update($validator->validated());
 
-        return response()->json(['message' => "User successfully updated"], 202);
+        return response()->json(['message' => "User successfully updated"], 200);
     }
 
-    /**
-     * Get own user.
-     */
-    public function get(Request $request)
-    {
-        return $request->user();
-    }
 
     /**
      * Delete a user.
@@ -173,13 +171,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Change own user information.
-     */
-    public function change(Request $request)
-    {
-        //
-    }
 
     /**
      * Ban or unban an user.

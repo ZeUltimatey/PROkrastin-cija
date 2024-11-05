@@ -1,18 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Sidebar } from "../admin-panel/Sidebar";
 import { FormInput } from "../../universal/FormInput";
 import { Constants } from "../../universal/Constants";
 import { useToast } from "../../universal/Toast";
 import { CategoryNames } from "../../universal/CategoryNames";
 import { ProductTable } from "./table/ProductTable";
-import { useConfirmation } from "../../universal/Confirmation";
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
 
 export const Product = {
   id: 0,
@@ -33,8 +25,6 @@ export const Products = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const showToast = useToast();
-
-  const confirm = useConfirmation();
 
   const fetchProducts = async () => {
     await fetch(`${Constants.API_URL}/products`, {
@@ -67,71 +57,22 @@ export const Products = () => {
   };
 
   const onProductDelete = async (id: number) => {
-    if (await confirm("Dzēst produktu?")) {
-      await fetch(`${Constants.API_URL}/products/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(
-            Constants.LOCAL_STORAGE.TOKEN
-          )}`,
-        },
-      }).then((response) => {
-        if (response.ok) {
-          showToast(true, "Produkts veiksmīgi dzēsts!");
-          setTimeout(() => window.location.reload(), 1000);
-        } else {
-          showToast(false, "Kļūda dzēšot produktu.");
-        }
-      });
-    }
-    return;
+    await fetch(`${Constants.API_URL}/products/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+    }).then((response) => {
+      if (response.ok) {
+        showToast(true, "Produkts veiksmīgi dzēsts!");
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        showToast(false, "Kļūda dzēšot produktu.");
+      }
+    });
   };
-
-  const columnHelper = createColumnHelper<typeof Product>();
-
-  const columns = useMemo(
-    () => [
-      columnHelper.accessor("id", {
-        header: "ID",
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.accessor("display_name", {
-        header: "Nosaukums",
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.accessor("product_type", {
-        header: "Produkta tips",
-        cell: (info) =>
-          CategoryNames[info.getValue() as keyof typeof CategoryNames],
-      }),
-      columnHelper.accessor("pricing", {
-        header: "Cena",
-        cell: (info) => <div>{info.getValue().toFixed(2)}&euro;</div>,
-      }),
-      columnHelper.accessor("discount_pricing", {
-        header: "Atlaide",
-        cell: (info) => <div>{info.getValue()?.toFixed(2) ?? "- "}&euro;</div>,
-      }),
-      columnHelper.accessor("stock", {
-        header: "Daudzums",
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.display({
-        header: "Darbības",
-        cell: (info) => (
-          <div className="flex gap-2 place-items-center justify-center">
-            <button onClick={() => onProductEdit(info.row.original.id)}>
-              <i className="fa-edit fa-solid"></i>
-            </button>
-            <button onClick={() => onProductDelete(info.row.original.id)}>
-              <i className="fa-trash fa-solid"></i>
-            </button>
-          </div>
-        ),
-      }),
-    ],
-    [onProductEdit, onProductDelete]
-  );
 
   const onFormSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -188,14 +129,6 @@ export const Products = () => {
     setFormData(Product);
   };
 
-  const table = useReactTable({
-    columns,
-    data: products,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    enableSortingRemoval: false,
-  });
-
   return (
     <div className="flex min-h-screen w-full">
       <div className="flex-1 bg-content-white">
@@ -212,76 +145,15 @@ export const Products = () => {
             </button>
           </div>
         </header>
-        {products && (
-          <table className="text-center font-poppins w-full">
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      className="h-12 bg-light-gray border-b border-light-brown text-dark-brown font-semibold"
-                      key={header.id}
-                      colSpan={header.colSpan}
-                    >
-                      {header.isPlaceholder ? null : (
-                        <div
-                          className={
-                            header.column.getCanSort()
-                              ? "cursor-pointer select-none"
-                              : ""
-                          }
-                          onClick={header.column.getToggleSortingHandler()}
-                          title={
-                            header.column.getCanSort()
-                              ? header.column.getNextSortingOrder() === "asc"
-                                ? "Sort ascending"
-                                : header.column.getNextSortingOrder() === "desc"
-                                ? "Sort descending"
-                                : "Clear sort"
-                              : undefined
-                          }
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          {{
-                            asc: (
-                              <i className="fa-solid fa-chevron-up ml-2"></i>
-                            ),
-                            desc: (
-                              <i className="fa-solid fa-chevron-down ml-2"></i>
-                            ),
-                          }[header.column.getIsSorted() as string] ?? null}
-                        </div>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => {
-                if (row.original.product_type == "CATS") return;
-                return (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        className="h-8 border-b border-light-brown bg-light-gray text-dark-brown font-semibold"
-                        key={cell.id}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
+
+        <div className="">
+          <ProductTable
+            products={products}
+            onProductEdit={onProductEdit}
+            onProductDelete={onProductDelete}
+          />
+        </div>
+
         {isModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-poppins">
             <div className="bg-white p-8 rounded-lg shadow-lg w-1/3 relative overflow-auto ">
