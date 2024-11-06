@@ -25,6 +25,16 @@ import { Statistics } from "./components/panel/admin-panel/Statistics";
 import { ConfirmationProvider } from "./components/universal/Confirmation";
 import { Cats } from "./components/panel/admin-panel/Cats";
 import { Breeds } from "./components/panel/admin-panel/Breeds";
+import { ProfileSettings } from "./components/instruction/ProfileSettings";
+import { BuyInfo } from "./components/instruction/BuyInfo";
+import { ContactUse } from "./components/instruction/ContactUse";
+import { EncyclopediaUse } from "./components/instruction/EncyclopediaUse";
+import { ProfileEdit } from "./components/instruction/ProfileEdit";
+import { OrderHistory } from "./components/instruction/OrderHistory";
+import { SavedAddresses } from "./components/instruction/SavedAddresses";
+import { PayMethods } from "./components/instruction/PayMethods";
+import { BrowseInfo } from "./components/instruction/BrowseInfo";
+import { BasketInfo } from "./components/instruction/BasketInfo";
 
 function App() {
   return (
@@ -45,7 +55,46 @@ function App() {
                 <Route path="/receipt" element={<Receipt />} />
                 <Route path="/breeds" element={<BreedCatalog />} />
                 <Route path="/breed/:breedId" element={<BreedDetails />} />
+                <Route
+                  path="/instruction/encyclopediause"
+                  element={<EncyclopediaUse />}
+                />
+                <Route
+                  path="/instruction/profilesettings"
+                  element={<ProfileSettings />}
+                />
+                <Route
+                  path="/instruction/basketinfo"
+                  element={<BasketInfo />}
+                />
+                <Route
+                  path="/instruction/browseinfo"
+                  element={<BrowseInfo />}
+                />
+
+                <Route path="/instruction/buyinfo" element={<BuyInfo />} />
+                <Route
+                  path="/instruction/contactuse"
+                  element={<ContactUse />}
+                />
+                <Route
+                  path="/instruction/profileedit"
+                  element={<ProfileEdit />}
+                />
+                <Route
+                  path="/instruction/orderhistory"
+                  element={<OrderHistory />}
+                />
+                <Route
+                  path="/instruction/savedaddresses"
+                  element={<SavedAddresses />}
+                />
+                <Route
+                  path="/instruction/paymethods"
+                  element={<PayMethods />}
+                />
               </Route>
+
               <Route path="/panel" element={<PanelLayout />}>
                 <Route path="/panel/statistics" element={<Statistics />} />
                 <Route path="/panel/users" element={<Users />} />
@@ -55,6 +104,7 @@ function App() {
                 <Route path="/panel/breeds" element={<Breeds />} />
                 <Route path="/panel/encyclopedia" element={<Encyclopedia />} />
               </Route>
+
               <Route path="/auth" element={<AuthLayout />}>
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />

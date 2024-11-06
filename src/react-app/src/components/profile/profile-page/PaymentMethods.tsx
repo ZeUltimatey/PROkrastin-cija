@@ -6,8 +6,8 @@ import { Spinner } from "../../universal/Spinner";
 
 export const paymentMethod = {
   id: 0,
-  name: "",
-  surname: "",
+  cardOwnerName: "",
+  cardOwnerSurname: "",
   card_number: "",
   expiration_date: "",
   cvc_number: "",
@@ -115,8 +115,8 @@ export const PaymentMethods = () => {
       return false;
     }
     if (
-      !valid.cardholderName(formData.name).isValid ||
-      !valid.cardholderName(formData.surname).isValid
+      !valid.cardholderName(formData.cardOwnerName).isValid ||
+      !valid.cardholderName(formData.cardOwnerSurname).isValid
     ) {
       showToast(false, "Lūdzu, ievadiet pareizu vārdu!");
       return false;
@@ -193,11 +193,11 @@ export const PaymentMethods = () => {
                     Kartes īpāšnieka vārds
                   </label>
                   <FormInput
-                    value={formData.name}
+                    value={formData.cardOwnerName}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        name: e.target.value,
+                        cardOwnerName: e.target.value,
                       })
                     }
                     placeholder="Vārds"
@@ -208,11 +208,11 @@ export const PaymentMethods = () => {
                     Kartes īpāšnieka uzvārds
                   </label>
                   <FormInput
-                    value={formData.surname}
+                    value={formData.cardOwnerSurname}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        surname: e.target.value,
+                        cardOwnerSurname: e.target.value,
                       })
                     }
                     placeholder="Uzvārds"
