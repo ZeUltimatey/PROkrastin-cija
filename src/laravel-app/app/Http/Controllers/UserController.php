@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginUserRequest;
+use App\Http\Requests\RegisterUserRequest;
+use App\Http\Resources\UserResource;
 use App\Models\SelectedProducts;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -27,90 +30,71 @@ class UserController extends Controller
      * Register and store a new user.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function register(Request $request): JsonResponse
+    public function register(RegisterUserRequest $request)
     {
-        // Validator for checking filled information
-        $validator = Validator::make($request->all(), [
-            'profilepicture_id'     => 'nullable|exists:images,id',
-            'email'                 => 'required|string|email|max:255|unique:users',
-            'password'              => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required|same:password',
-            'display_name'          => 'required|string|max:255',
-            'name'                  => 'required|string|max:255',
-            'surname'               => 'required|string|max:255',
-            'phone_number'          => 'nullable|string|max:15', // temp nullable because frontend
-            'user_role'             => 'nullable|in:User,Admin',
-        ]);
+        // Sense
+        $user_data = $request->all();
 
-        // Check if the data is valid fr
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors(),
-            ], 422); // Unprocessable Entity
-        }
-
-        // Proceed with user creation if information is valid fr
-        $user = User::create([
-            'profilepicture_id' => $request->profilepicture_id,
-            'email'             => $request->email,
-            'password'          => Hash::make($request->password),
-            'display_name'      => $request->display_name,
-            'name'              => $request->name,
-            'surname'           => $request->surname,
-            'phone_number'      => $request->phone_number,
-            'user_role'         => $request->user_role ?? 'User',
+        // Create the new user
+        $new_user_model = User::create([
+            'email'             => $user_data['email'],
+            'password'          => Hash::make($user_data['password']),
+            'display_name'      => $user_data['display_name'],
+            'name'              => $user_data['name'],
+            'surname'           => $user_data['surname'],
+            'phone_number'      => $user_data['phone_number'],
+            'user_role'         => $user_data['user_role'] ?? 'User',
             'deactivated'       => false,
         ]);
 
         // Return response with user data and token
-        return response()->json([
-            'user' => $user,
-        ], 201); // HTTP status code 201 indicates resource creation
+        $new_user = new UserResource($new_user_model);
+        $new_user->with_extra_information();
+
+        // Return new user
+        return $new_user;
     }
 
     /**
      * Login an existing user.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Request $request)
+    public function login(LoginUserRequest $request)
     {
-        // Check if entered information is valid
-        $validatedData = $request->validate([
-            'email' => 'required|string|email|max:255',
-            'password' => 'required|string',
-        ]);
-        if (!Auth::attempt($validatedData)) {
-            return response()->json(['error' => 'Invalid credentials'], 401);
-        } else {
-            // gonna change this
-            $user = Auth::user();
-            $token = $user->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken;
-            return response()->json([
-                'user' => $user,
-                'token' => $token,
-            ], 200);
-        }
+        // Sense
+        $login_credentials = $request->all();
+
+        // Attempt to login
+        $success = Auth::attempt($login_credentials);
+        if (!$success) { return response()->json(['error' => 'Invalid credentials'], 401); } // Unauthorized
+
+        // Create a token for the user
+        $user_model = Auth::user();
+        $token = $user_model->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken;
+
+        // Return user and token
+        $user = new UserResource($user_model);
+        $user->with_extra_information();
+        return response()->json(['user' => $user, 'token' => $token], 200); // OK
     }
 
     public function logout(Request $request) {
         $request->user()->currentAccessToken()->delete();
-        return response()->json(200);
+        return response()->json(null, 200); // OK
     }
 
     /**
-     * Show a singular user.
+     * Show a single user.
      */
-    // Display a single user
-    public function show(int $id){
+    public function show(int $id) {
+        // Find the user by id
+        $user = UserResource::find($id, true);
+        if ($user->resource == null) { return response()->json(null, 404); } // Not found
 
-        $user = User::find($id);
-
-        if ($user) { return response()->json($user); } // OK
-        else { return response()->json(null, 404); } // Not found
+        // Return the user
+        return $user;
     }
 
     /**
@@ -153,25 +137,31 @@ class UserController extends Controller
     /**
      * Get own user.
      */
-    public function get(Request $request)
+    public function get()
     {
-        return $request->user();
+        // Get logged in user
+        $user = new UserResource(Auth::user());
+        $user->with_extra_information();
+
+        // Return the user
+        return $user;
     }
 
     /**
      * Delete a user.
      */
-    public function destroy(Request $request)
+    public function destroy()
     {
-        $user = Auth::user();
-        Auth::user()->tokens()->delete();
-        if ($user) {
+        // Check if we're logged in
+        $user_model = Auth::user();
+        if ($user_model == null) { return response()->json(null, 401); } // Unauthorized
 
-            $user->delete();
-            return response()->json(['message' => "User successfully deleted"], 200);
-        } else {
-            return response()->json(null, 404);
-        }
+        // Delete the token on the way out
+        Auth::user()->tokens()->delete();
+
+        // Delete the user
+        $user_model->delete();
+        return response()->json(null, 204); // No content
     }
 
     /**

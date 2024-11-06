@@ -616,7 +616,6 @@ or
 `localhost/api/register POST`
 ```php
 {
-    "profilepicture_id"     : "nullable|exists:images,id",
     "email"                 : "required|string|email|max:255|unique:users",
     "password"              : "required|string|min:8|confirmed",
     "password_confirmation" : "required|same:password",
