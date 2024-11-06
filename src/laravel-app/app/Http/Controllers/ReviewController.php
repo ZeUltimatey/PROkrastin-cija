@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReviewRequest;
 use App\Http\Resources\ReviewResource;
+use App\Models\Product;
 use App\Models\Review;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -11,11 +13,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ReviewController extends Controller
 {
-    private array $validationRules = [
-        'content' => 'required|string|max:65535',
-        'rating' => 'required|int|min:0|max:10'
-    ];
-
     /**
      * Show all reviews.
      */
@@ -44,42 +41,36 @@ class ReviewController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      */
-    public function store(Request $request, int $product_id)
+    public function store(ReviewRequest $request, int $product_id)
     {
-        // Validator for checking filled information
-        $validator = Validator::make($request->all(), $this->validationRules);
+        // Sense
+        $review_data = $request->all();
 
-        // Return an error if the information is not valid fr
-        if ($validator->fails()) {
-            $errors = ['errors' => $validator->errors()];
-            return response()->json($errors, 422); // Unprocessable entity
-        }
+        // Check if the product exists
+        $product_model = Product::find($product_id);
+        if ($product_model == null) { return response()->json(['error' => 'Product not found.'], 404); } // Not found
 
-        // Append the current user id
+        // Append the current user id and product id
         $userId = Auth::user()->id;
-        $review_info = $validator->validated();
-        $review_info["reviewer_id"] = $userId;
-        $review_info["product_id"] = $product_id;
+        $review_data["reviewer_id"] = $userId;
+        $review_data["product_id"] = $product_id;
 
         // Create review if everything is correct
-        $review = Review::create($review_info);
-
-        // Fetch all reviews with the associated products and reviewers
-        $review = Review::find($review->id);
-        return new ReviewResource($review);
+        Review::create($review_data);
+        return response()->json(null, 201); // Content created
     }
 
     /**
      * Remove review.
-     *
-     * @param string $id
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(int $id)
     {
         // Find and delete review by id
-        $review = Review::findOrFail($id);
-        $review->delete();
-        return response()->json(true, 202); // Request accepted
+        $review_model = Review::find($id);
+        if ($review_model == null) { return response()->json(null, 404); } // Not found
+
+        // Delete the review
+        $review_model->delete();
+        return response()->json(null, 204); // No content
     }
 }
