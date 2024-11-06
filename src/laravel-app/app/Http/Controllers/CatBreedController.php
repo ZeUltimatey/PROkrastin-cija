@@ -43,18 +43,9 @@ class CatBreedController extends Controller
      */
     public function store(CatBreedRequest $request)
     {
-        // Validator for checking filled information
-        $validator = Validator::make($request->all(), $this->validationRules);
-
-        // Return an error if the information is not valid fr
-        if ($validator->fails()) {
-            $errors = ['errors' => $validator->errors()];
-            return response()->json($errors, 422);
-        }
-
-        // Create cat breed if everything is correct
-        $cat_breed = CatBreed::create($validator->validated());
-        return response()->json($cat_breed, 201);
+        // Create the cat breed
+        CatBreed::create($request->all());
+        return response()->json(null, 201); // Content created
     }
 
     /**
