@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CatRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Cat;
 use App\Models\Product;
@@ -12,20 +13,8 @@ use Psy\Util\Json;
 
 class CatController extends Controller
 {
-    private array $validationRules = [
-        'display_name'     => 'required|string|max:255',
-        'description'      => 'required|string',
-        'pricing'          => 'required|numeric|min:0',
-        'discount_pricing' => 'nullable|numeric|min:0|lt:pricing',
-        'stock'            => 'required|integer|min:0',
-        'breed_id'         => 'required|exists:cat_breeds,id',
-        'birthdate'        => 'required|date|before:today',
-        'color'            => 'required|string|max:255',
-    ];
-
     /**
      * Show all cats.
-     *
      */
     public function index()
     {
@@ -33,60 +22,33 @@ class CatController extends Controller
         return ProductResource::collection($catProducts);
     }
 
-//    /**
-//     * Show a singular cat.
-//     *
-//     * @param int $id
-//     * @return \Illuminate\Http\JsonResponse
-//     */
-//    public function show(int $id): JsonResponse
-//    {
-//        // Find the cat by id
-//        $cat = Cat::find($id);
-//
-//        if ($cat) { return response()->json($cat, 200); }
-//        else { return response()->json(null, 404); }
-//    }
-
     /**
      * Store a new cat.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
      */
-    public function store(Request $request)
+    public function store(CatRequest $request)
     {
-        // Validator for checking filled information
-        $validator = Validator::make($request->all(), $this->validationRules);
+        // Sense
+        $cat_data = $request->all();
 
-        // Return an error if the information is not valid
-        if ($validator->fails()) {
-            $errors = ['errors' => $validator->errors()];
-            return response()->json($errors, 422); // Unprocessable Entity
-        }
-
-        // Extract product-related fields and add 'CATS' as product_type
-        $validated = $validator->validated();
-;
         // Create the Product
-        $product = Product::create([
-            'product_type' => 'CATS',
-            'display_name' => $validated['display_name'],
-            'description' => $validated['description'],
-            'pricing' => $validated['pricing'],
-            'discount_pricing' => $validated['discount_pricing'],
-            'stock' => $validated['stock'],
+        $product_model = Product::create([
+            'product_type'     => 'CATS',
+            'display_name'     => $cat_data['display_name'],
+            'description'      => $cat_data['description'],
+            'pricing'          => $cat_data['pricing'],
+            'discount_pricing' => $cat_data['discount_pricing'],
+            'stock'            => $cat_data['stock'],
         ]);
 
         // Create the Cat model
-        $cat = Cat::create([
-            'id' => $product->id,
-            'breed_id' => $validated['breed_id'],
-            'birthdate' => $validated['birthdate'],
-            'color' => $validated['color'],
+        Cat::create([
+            'id'        => $product_model->id,
+            'breed_id'  => $cat_data['breed_id'],
+            'birthdate' => $cat_data['birthdate'],
+            'color'     => $cat_data['color'],
         ]);
 
-        return new ProductResource($product);
+        return response()->json(null, 201); // Content created
     }
 
     /**
@@ -96,37 +58,35 @@ class CatController extends Controller
      * @param int $id
      *
      */
-    public function update(Request $request, $id)
+    public function update(CatRequest $request, int $id)
     {
+        // Sense
+        $cat_data = $request->all();
+
         // Find the cat by ID
-        $product = Product::find($id);
-        if (!$product) { return response()->json(['error' => 'Product not found'], 404); }
-        $product_resource = new ProductResource($product);
-        if (!$product_resource->cat) { return response()->json(['error' => 'Product does not have a cat counterpart'], 404); }
-        $cat = Cat::find($id);
+        $product = ProductResource::find($id);
+        if ($product->resource == null) { return response()->json(null, 404); } // Not found
+        if ($product->cat == null) { return response()->json(['error' => 'Product does not have a cat counterpart'], 404); } // Not found
 
-        // Validate the request data
-        $validator = Validator::make($request->all(), $this->validationRules);
+        // Get current cat model
+        $cat_model = Cat::find($id);
 
-        // Return an error if validation fails
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422); // Unprocessable Entity
-        }
-
-        $validated = $validator->validated();
+        // Update the product part
         $product->update([
-            'display_name'     => $validated['display_name'],
-            'description'      => $validated['description'],
-            'pricing'          => $validated['pricing'],
-            'discount_pricing' => $validated['discount_pricing'],
-            'stock'            => $validated['stock'],
-        ]);
-        $cat->update([
-            'breed_id'  => $validated['breed_id'],
-            'birthdate' => $validated['birthdate'],
-            'color'     => $validated['color'],
+            'display_name'     => $cat_data['display_name'],
+            'description'      => $cat_data['description'],
+            'pricing'          => $cat_data['pricing'],
+            'discount_pricing' => $cat_data['discount_pricing'],
+            'stock'            => $cat_data['stock'],
         ]);
 
-        return new ProductResource(Product::find($id));
+        // Update the cat part
+        $cat_model->update([
+            'breed_id'  => $cat_data['breed_id'],
+            'birthdate' => $cat_data['birthdate'],
+            'color'     => $cat_data['color'],
+        ]);
+
+        return response()->json(null, 200); // OK
     }
 }
