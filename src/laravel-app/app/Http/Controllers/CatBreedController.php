@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CatBreedRequest;
 use App\Http\Resources\CatBreedResource;
 use App\Models\Cat;
 use App\Models\CatBreed;
@@ -12,18 +13,8 @@ use Psy\Util\Json;
 
 class CatBreedController extends Controller
 {
-    private array $validationRules = [
-        'display_name'      => 'required|string|max:255',
-        'feeding_info'      => 'required|string|max:65535',
-        'personality_info'  => 'required|string|max:65535',
-        'environment_info'  => 'required|string|max:65535',
-        'tips_info'         => 'required|string|max:65535',
-    ];
-
     /**
      * Show all cat breeds.
-     *
-     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
@@ -31,27 +22,26 @@ class CatBreedController extends Controller
     }
 
     /**
-     * Show a singular cat breed.
+     * Show a single cat breed.
      *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
      */
     public function show(int $id)
     {
         // Find the cat breed by id
-        $cat_breed = CatBreed::find($id);
+        $cat_breed = CatBreedResource::find($id);
+        if ($cat_breed->resource == null) { return response()->json(null, 404); } // Not found
 
-        if ($cat_breed) { return new CatBreedResource($cat_breed); }
-        else { return response()->json(null, 404); }
+        // Return the cat breed
+        return $cat_breed;
     }
 
     /**
      * Store a new cat breed.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(CatBreedRequest $request)
     {
         // Validator for checking filled information
         $validator = Validator::make($request->all(), $this->validationRules);
@@ -72,36 +62,34 @@ class CatBreedController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(CatBreedRequest $request, int $id)
     {
-        // Validator for checking filled information
-        $validator = Validator::make($request->all(), $this->validationRules);
-
-        // Return an error if the information is not valid fr
-        if ($validator->fails()) {
-            $errors = ['errors' => $validator->errors()];
-            return response()->json($errors, 422);
-        }
+        // Sense
+        $cat_breed_data = $request->all();
 
         // Update and return cat breed if everything is correct
-        $cat_breed = CatBreed::findOrFail($id);
-        $cat_breed->update($validator->validated());
-        return response()->json($cat_breed, 201);
+        $cat_breed_model = CatBreed::find($id);
+        if ($cat_breed_model == null) { return response()->json(null, 404); } // Not found
+
+        // Update the cat breed
+        $cat_breed_model->update($cat_breed_data);
+        return response()->json(null, 200); // OK
     }
 
     /**
      * Remove a cat breed.
      *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(string $id)
     {
         // Find and delete cat breed by id
-        $cat_breed = CatBreed::findOrFail($id);
-        $cat_breed->delete();
-        return response()->json(true, 200);
+        $cat_breed_model = CatBreed::find($id);
+        if ($cat_breed_model == null) { return response()->json(null, 404); } // Not found
+
+        // Delete the cat breed
+        $cat_breed_model->delete();
+        return response()->json(true, 204); // No content
     }
 }
