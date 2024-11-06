@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
-import { FormInput } from "../../universal/FormInput";
 import { useToast } from "../../universal/Toast";
 import { Constants } from "../../universal/Constants";
+<<<<<<< Updated upstream
+=======
+import { useConfirmation } from "../../universal/Confirmation";
+import { Spinner } from "../../universal/Spinner";
+import { AddressModal } from "./AddressModal";
+>>>>>>> Stashed changes
 
 export const SavedAddress = {
   id: 0,
@@ -32,7 +37,6 @@ export const SavedAddresses = () => {
     }).then(async (response) => {
       if (response.ok) {
         const data = await response.json();
-
         setAddresses(data);
       } else {
         showToast(false, "Kļūda iegūstot adrešu informāciju.");
@@ -63,6 +67,7 @@ export const SavedAddresses = () => {
   };
 
   const onAddressDelete = async (id: number) => {
+<<<<<<< Updated upstream
     await fetch(`${Constants.API_URL}/locations/remove/${id}`, {
       method: "POST",
       headers: {
@@ -79,6 +84,27 @@ export const SavedAddresses = () => {
         showToast(false, "Kļūda dzēšot adresi.");
       }
     });
+=======
+    if (await confirm("Dzēst adresi?")) {
+      await fetch(`${Constants.API_URL}/locations/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            Constants.LOCAL_STORAGE.TOKEN
+          )}`,
+        },
+      }).then((response) => {
+        if (response.ok) {
+          showToast(true, "Adrese veiksmīgi dzēsta!");
+          const newAddresses = addresses.filter((address) => address.id !== id);
+          setAddresses(newAddresses);
+        } else {
+          showToast(false, "Kļūda dzēšot adresi.");
+        }
+      });
+    }
+    return;
+>>>>>>> Stashed changes
   };
 
   const onFormSubmit = async (e: { preventDefault: () => void }) => {
@@ -181,6 +207,7 @@ export const SavedAddresses = () => {
         <i className="mr-2 fa-solid fa-plus"></i> Pievienot jaunu
       </button>
 
+<<<<<<< Updated upstream
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="relative w-1/3 p-6 bg-white rounded-lg shadow-lg">
@@ -294,6 +321,17 @@ export const SavedAddresses = () => {
           </div>
         </div>
       )}
+=======
+      <AddressModal
+        isOpen={isModalOpen}
+        formData={formData}
+        setFormData={setFormData}
+        isEditing={isEditing}
+        isLoading={isLoading}
+        onClose={closeModal}
+        onSubmit={isEditing ? onEditSubmit : onFormSubmit}
+      />
+>>>>>>> Stashed changes
     </div>
   );
 };

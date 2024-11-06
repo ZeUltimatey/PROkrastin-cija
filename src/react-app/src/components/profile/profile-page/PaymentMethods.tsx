@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import { FormInput } from "../../universal/FormInput";
 import { useToast } from "../../universal/Toast";
 import { Constants } from "../../universal/Constants";
+<<<<<<< Updated upstream
+=======
+import { Spinner } from "../../universal/Spinner";
+import { PaymentModal } from "./PaymentModal";
+>>>>>>> Stashed changes
 
 export const paymentMethod = {
   id: 0,
@@ -19,6 +23,10 @@ export const PaymentMethods = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const showToast = useToast();
+<<<<<<< Updated upstream
+=======
+  const valid = require("card-validator");
+>>>>>>> Stashed changes
 
   const fetchPaymentMethods = async () => {
     await fetch(`${Constants.API_URL}/cards`, {
@@ -31,7 +39,6 @@ export const PaymentMethods = () => {
     }).then(async (response) => {
       if (response.ok) {
         const data = await response.json();
-
         setMethods(data);
       } else {
         showToast(false, "Kļūda iegūstot karšu informāciju.");
@@ -80,8 +87,13 @@ export const PaymentMethods = () => {
     });
   };
 
+<<<<<<< Updated upstream
   const onFormSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+=======
+  const onFormSubmit = async (formData: typeof paymentMethod) => {
+    if (!validateCard()) return;
+>>>>>>> Stashed changes
     setIsLoading(true);
     await fetch(`${Constants.API_URL}/cards`, {
       method: "POST",
@@ -117,6 +129,10 @@ export const PaymentMethods = () => {
       <h3 className="mb-4 text-2xl font-bold text-dark-brown font-poppins">
         Saglabātās maksājumu metodes
       </h3>
+<<<<<<< Updated upstream
+=======
+      {methods == null && <Spinner />}
+>>>>>>> Stashed changes
       <ul className="space-y-4">
         {methods.map((payment, index) => (
           <li
@@ -148,6 +164,7 @@ export const PaymentMethods = () => {
       >
         <i className="mr-2 fa-solid fa-plus"></i> Pievienot jaunu
       </button>
+<<<<<<< Updated upstream
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -227,6 +244,17 @@ export const PaymentMethods = () => {
           </div>
         </div>
       )}
+=======
+      <PaymentModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSubmit={onFormSubmit}
+        formData={formData}
+        setFormData={setFormData}
+        isLoading={isLoading}
+        isEditing={isEditing}
+      />
+>>>>>>> Stashed changes
     </div>
   );
 };
