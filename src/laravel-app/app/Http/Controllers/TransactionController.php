@@ -13,7 +13,6 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Component\VarDumper\Caster\TraceStub;
 
 class TransactionController extends Controller
 {

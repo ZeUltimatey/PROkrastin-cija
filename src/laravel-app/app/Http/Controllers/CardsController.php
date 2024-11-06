@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\CardInformationResource;
 
 class CardsController extends Controller
 {
@@ -16,6 +17,8 @@ class CardsController extends Controller
         'expiration_date' => 'required|date_format:m/y|after:today',
         'cvc_number'      => 'nullable|string|digits:3',
         'card_name'       => 'required|string|max:255',
+        'cardOwnerName'   => 'required|string|max:255',
+        'cardOwnerSurname'    => 'required|string|max:255',
     ];
 
     /**
@@ -36,14 +39,13 @@ class CardsController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(): JsonResponse
+    public function index()
     {
         // Get the ID of the authenticated user
         $userId = Auth::user()->id;
 
         // Fetch all card information that belong to the authenticated user
-        $cardInformation = CardInformation::where('cardholder_id', $userId)->get();
-        $cardInformation->makeHidden(['cardholder_id']);
+        $cardInformation = CardInformationResource::collection(CardInformation::all()->where('cardholder_id', $userId));
 
         // Return the filtered records as a JSON response
         return response()->json($cardInformation);
