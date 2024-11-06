@@ -16,6 +16,7 @@ class CardsController extends Controller
         'card_number'     => 'required|string|digits:16',
         'expiration_date' => 'required|date_format:m/y|after:today',
         'cvc_number'      => 'nullable|string|digits:3',
+        'card_name'       => 'required|string|max:255',
         'cardOwnerName'   => 'required|string|max:255',
         'cardOwnerSurname'    => 'required|string|max:255',
     ];

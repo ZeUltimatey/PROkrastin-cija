@@ -21,6 +21,7 @@ return new class extends Migration
 
             $table->string('card_number');
             $table->string('expiration_date');
+            $table->string('card_name');
             $table->string('cardOwnerName');
             $table->string('cardOwnerSurname');
             $table->timestamps();
