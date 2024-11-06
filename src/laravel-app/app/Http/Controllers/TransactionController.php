@@ -18,9 +18,6 @@ use Symfony\Component\VarDumper\Caster\TraceStub;
 class TransactionController extends Controller
 {
     protected $basket_controller;
-    private array $validationRules = [
-        'location_id' => 'nullable|int|exists:locations,id',
-    ];
 
     /**
      * Inject dependencies.
