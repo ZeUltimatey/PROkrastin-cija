@@ -14,6 +14,7 @@ class CardInformation extends Model
         'card_number',
         'expiration_date',
         //'cvc_number',
+        'card_name',
         'cardOwnerName',
         'cardOwnerSurname',
     ];
