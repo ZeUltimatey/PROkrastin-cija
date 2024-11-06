@@ -72,17 +72,17 @@ class ProductController extends Controller
     public function show(int $id)
     {
         // Find the product by id
-        $product = Product::find($id);
+        $product = ProductResource::find($id);
+        if ($product->resource == null) { return response()->json(null, 404); } // Not found
 
-        if ($product) { return new ProductResource($product); } // OK
-        else { return response()->json(null, 404); } // Not found
+        // Return the product
+        return $product;
     }
 
     /**
      * Store a new product.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function store(ProductRequest $request)
     {
