@@ -13,14 +13,6 @@ use Illuminate\Support\Facades\Validator;
 
 class LocationController extends Controller
 {
-    private array $validation_rules = [
-        'city'             => 'required|string|max:255',
-        'street'           => 'required|string|max:255',
-        'apartment_number' => 'nullable|string|max:255',
-        'location_name'    => 'nullable|string|max:255',
-        'zip_code'         => 'required|string|max:255'
-    ];
-
     /**
      * Show all locations.
      */
