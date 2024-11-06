@@ -8,15 +8,6 @@ use Illuminate\Http\Request;
 
 class BoughtProductsController extends Controller
 {
-    private array $validationRules = [
-        'product_id'        => 'required|int|exists:products,id',
-        'transaction_id'    => 'required|int|exists:transactions,id',
-        'display_name'      => 'required|string|max:255',
-        'amount'            => 'required|int|min:1',
-        'price_per_product' => 'required|numeric|min:0',
-        'total_price'       => 'required|numeric|min:0',
-    ];
-
     /**
      * Show all bought products.
      */
