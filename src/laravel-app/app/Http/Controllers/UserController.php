@@ -70,8 +70,12 @@ class UserController extends Controller
         $success = Auth::attempt($login_credentials);
         if (!$success) { return response()->json(['error' => 'Invalid credentials'], 401); } // Unauthorized
 
-        // Create a token for the user
+        // Check if the user is banned
         $user_model = Auth::user();
+        $user = new UserResource($user_model);
+        if ($user['deactivated']) { return response()->json(['error' => 'Jūsu profils ir bloķēts, ja uzskatāt, ka tā ir kļūda, sazinieties ar administratoru!'], 403); } // Forbidden
+
+        // Create token on successful login
         $token = $user_model->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken;
 
         // Return user and token
