@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,15 +14,6 @@ use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
 {
-    private array $validationRules = [
-        'product_type'     => 'required|in:UNLISTED,FOOD,CARE,TOYS,FURNITURE,ACCESSORIES',
-        'display_name'     => 'required|string|max:255',
-        'description'      => 'required|string',
-        'pricing'          => 'required|numeric|min:0',
-        'discount_pricing' => 'nullable|numeric|min:0|lt:pricing',
-        'stock'            => 'required|integer|min:0',
-    ];
-
     /**
      * Show all products.
      */
@@ -76,7 +68,6 @@ class ProductController extends Controller
      * Show a singular product.
      *
      * @param int $id
-     *
      */
     public function show(int $id)
     {
@@ -93,20 +84,11 @@ class ProductController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        // Validator for checking filled information
-        $validator = Validator::make($request->all(), $this->validationRules);
-
-        // Return an error if the information is not valid fr
-        if ($validator->fails()) {
-            $errors = ['errors' => $validator->errors()];
-            return response()->json($errors, 422); // Unprocessable entity
-        }
-
         // Create product if everything is correct
-        $product = Product::create($validator->validated());
-        return response()->json($product, 201); // Content created
+        Product::create($request->all());
+        return response()->json(null, 201); // Content created
     }
 
     /**
@@ -114,38 +96,32 @@ class ProductController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, int $id): JsonResponse
+    public function update(ProductRequest $request, int $id)
     {
-        // Validator for checking filled information
-        $validator = Validator::make($request->all(), $this->validationRules);
-
-        // Return an error if the information is not valid fr
-        if ($validator->fails()) {
-            $errors = ['errors' => $validator->errors()];
-            return response()->json($errors, 422); // Unprocessable entity
-        }
-
         // Update and return product if everything is correct
-        $product = Product::findOrFail($id);
-        $product['updated_at'] = now();
-        $product->update($validator->validated());
-        return response()->json($product, 202); // Request accepted
+        $product_model = Product::find($id);
+        if ($product_model == null) { return response()->json(null, 404); } // Not found
+
+        // Update the product
+        $product_model->update($request->all());
+        return response()->json(null, 202); // Request accepted
     }
 
     /**
      * Remove a product.
      *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(int $id)
     {
         // Find and delete product by id
-        $product = Product::findOrFail($id);
-        $product->delete();
-        return response()->json(true, 202); // Request accepted
+        $product_model = Product::find($id);
+        if ($product_model == null) { return response()->json(null, 404); } // Not found
+
+        // Delete the product
+        $product_model->delete();
+        return response()->json(null, 204); // No content
     }
 
 
