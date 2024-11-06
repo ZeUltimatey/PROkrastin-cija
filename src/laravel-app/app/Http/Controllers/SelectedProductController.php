@@ -7,7 +7,6 @@ use App\Models\SelectedProducts;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\SelectedProductController;
 use App\Http\Requests\SelectedProductRequest;
 use App\Http\Resources\SelectedProductResource;
 use Laravel\Sanctum\Http\Controllers\AuthenticatedSessionController;
@@ -44,7 +43,7 @@ class SelectedProductController extends Controller
 
         // Validate request data
         $validated =  $request->validated();
-      
+
         // Add product to basket
         // Check if the product is already in the basket
         $existingSelectedProduct = SelectedProducts::where('product_id', $request->product_id)->where('user_id', $user->id)->first();

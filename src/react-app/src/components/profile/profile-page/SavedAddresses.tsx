@@ -36,7 +36,7 @@ export const SavedAddresses = () => {
     }).then(async (response) => {
       if (response.ok) {
         const data = await response.json();
-        setAddresses(data);
+        setAddresses(data.data);
       } else {
         showToast(false, "Kļūda iegūstot adrešu informāciju.");
       }

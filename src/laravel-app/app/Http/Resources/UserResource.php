@@ -40,6 +40,7 @@ class UserResource extends JsonResource
             $user['name'] = $this->name;
             $user['surname'] = $this->surname;
             $user['phone_number'] = $this->phone_number;
+            $user['created_at'] = $this->created_at;
         }
 
         // Return user

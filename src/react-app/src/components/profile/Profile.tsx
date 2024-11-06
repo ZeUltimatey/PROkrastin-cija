@@ -24,7 +24,7 @@ export const Profile = () => {
     }).then(async (response) => {
       if (response.ok) {
         const data = await response.json();
-        setUser(data);
+        setUser(data.data);
         return;
       }
       navigate("/auth/login"); //TODO: handle this shit
