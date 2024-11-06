@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LocationRequest extends FormRequest
+class TransactionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +22,7 @@ class LocationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'city'             => 'required|string|max:255',
-            'street'           => 'required|string|max:255',
-            'apartment_number' => 'nullable|string|max:255',
-            'location_name'    => 'nullable|string|max:255',
-            'zip_code'         => 'required|string|max:255',
+            'location_id' => 'nullable|int|exists:locations,id',
         ];
     }
 }

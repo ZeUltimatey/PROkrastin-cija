@@ -2,11 +2,17 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ProductResource extends JsonResource
 {
+    public static function find(int $product_id): ProductResource
+    {
+        return new ProductResource(Product::find($product_id));
+    }
+
     /**
      * Transform the resource into an array.
      *
