@@ -23,6 +23,8 @@ export const SavedAddresses = () => {
 
   const showToast = useToast();
 
+  const confirm = useConfirmation();
+
   const fetchSavedAddresses = async () => {
     await fetch(`${Constants.API_URL}/locations`, {
       method: "GET",
