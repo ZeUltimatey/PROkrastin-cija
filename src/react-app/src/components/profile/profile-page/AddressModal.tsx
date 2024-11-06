@@ -3,7 +3,7 @@ import cities from "../../../data/cities.json";
 
 export const SavedAddress = {
   id: 0,
-  locationName: "",
+  location_name: "",
   city: "Ainaži",
   street: "",
   apartment_number: "",
@@ -51,9 +51,9 @@ export const AddressModal = ({
               Adreses Nosaukums
             </label>
             <FormInput
-              value={formData.locationName}
+              value={formData.location_name}
               onChange={(e) =>
-                setFormData({ ...formData, locationName: e.target.value })
+                setFormData({ ...formData, location_name: e.target.value })
               }
               placeholder="Piem., Mājas adrese"
             />

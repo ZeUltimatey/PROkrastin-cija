@@ -358,7 +358,7 @@ or
     "city": string(255),
     "street": string(255),
     "apartment_number": string(255) or null,
-    "locationName": string(255) or null,
+    "location_name": string(255) or null,
     "zip_code": string(255)
 }
 
@@ -505,7 +505,7 @@ return [
         "city": string(255),
         "street": string(255),
         "apartment_number": string(255) or null,
-        "locationName": string(255) or null,
+        "location_name": string(255) or null,
         "zip_code": string(255)
         "creator": {
             "id": int,

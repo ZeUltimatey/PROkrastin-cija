@@ -234,7 +234,7 @@ class TestSeeder extends Seeder
             "city" => "Rīga",
             "street" => "Krišjāņa Valdemāra iela 1C",
             "apartment_number" => null,
-            "locationName" => "Rīgas Valsts tehnikums",
+            "location_name" => "Rīgas Valsts tehnikums",
             "zip_code" => "LV-1010",
         ]);
         Location::create([
@@ -242,7 +242,7 @@ class TestSeeder extends Seeder
             "city" => "Washington",
             "street" => "2608 84th Street Ct S",
             "apartment_number" => null,
-            "locationName" => "My house",
+            "location_name" => "My house",
             "zip_code" => "98499",
         ]);
 

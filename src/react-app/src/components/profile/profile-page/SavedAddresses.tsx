@@ -7,7 +7,7 @@ import { AddressModal } from "./AddressModal";
 
 export const SavedAddress = {
   id: 0,
-  locationName: "",
+  location_name: "",
   city: "",
   street: "",
   apartment_number: "",
@@ -156,7 +156,7 @@ export const SavedAddresses = () => {
             >
               <div>
                 <p className="text-dark-brown font-poppins">
-                  {address.locationName}
+                  {address.location_name}
                 </p>
                 <p className="text-sm text-dark-brown font-poppins">
                   {address.city}, {address.street} {address.apartment_number},{" "}

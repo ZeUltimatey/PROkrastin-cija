@@ -5,7 +5,7 @@ import { Spinner } from "../../universal/Spinner";
 
 type SavedAddress = {
   id: number;
-  locationName: string;
+  location_name: string;
   city: string;
   street: string;
   apartment_number: number;
@@ -57,7 +57,7 @@ export const PaymentMethods = () => {
       if (response.ok) {
         const data = await response.json();
 
-        setAddresses(data);
+        setAddresses(data.data);
       } else {
         showToast(false, "Kļūda iegūstot adrešu informāciju.");
       }
@@ -162,7 +162,7 @@ export const PaymentMethods = () => {
                     selectedAdress == address.id ? "font-semibold" : ""
                   }`}
                 >
-                  {address.locationName}
+                  {address.location_name}
                 </p>
                 <p className="text-sm">
                   {address.city}, {address.street} {address.apartment_number},{" "}
