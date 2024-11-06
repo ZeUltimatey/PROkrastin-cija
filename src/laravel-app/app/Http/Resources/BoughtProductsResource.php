@@ -21,23 +21,6 @@ class BoughtProductsResource extends JsonResource
             'total_price' => $this->total_price,
         ];
 
-//        if (isset($this->show_transaction)) {
-//            // Check if transaction is associated
-//            $transaction = null;
-//            if ($this->transaction) {
-//                $transaction = $this->transaction;
-//                $transaction = TransactionResource::make($transaction);
-////                $transaction = [
-////                    "id"          => $transaction->id,
-////                    "name"        => $transaction->name,
-////                    "surname"     => $transaction->surname,
-////                    "image_url"   => $transaction->image_url,
-////                    "deactivated" => $transaction->deactivated,
-////                ];
-//            }
-//            $bought_product['transaction'] = $transaction;
-//        }
-
         if (isset($this->show_info)) {
             // Check if transactor is associated
             $transactor = null;

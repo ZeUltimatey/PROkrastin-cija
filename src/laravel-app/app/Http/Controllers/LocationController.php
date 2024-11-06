@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LocationRequest;
 use App\Http\Resources\LocationResource;
 use App\Models\Location;
+use App\Services\ValidationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,12 +13,12 @@ use Illuminate\Support\Facades\Validator;
 
 class LocationController extends Controller
 {
-    private array $validationRules = [
-        'city' => 'required|string|max:255',
-        'street' => 'required|string|max:255',
+    private array $validation_rules = [
+        'city'             => 'required|string|max:255',
+        'street'           => 'required|string|max:255',
         'apartment_number' => 'nullable|string|max:255',
-        'location_name' => 'nullable|string|max:255',
-        'zip_code' => 'required|string|max:255'
+        'location_name'    => 'nullable|string|max:255',
+        'zip_code'         => 'required|string|max:255'
     ];
 
     /**
@@ -25,7 +27,8 @@ class LocationController extends Controller
     public function index_all()
     {
         // Fetch all locations
-        return LocationResource::collection(Location::all())->each(function ($location) {
+        $location_models = Location::all();
+        return LocationResource::collection($location_models)->each(function ($location) {
             $location->with_creator();
         });
     }
@@ -47,89 +50,59 @@ class LocationController extends Controller
      * Show one location.
      *
      * @param string $id
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(string $id)
+    public function show(int $id)
     {
         // Find location information by id
-        $location = Location::find($id);
-
-        if (!$location) {
-            return response()->json(null, 404);
-        } // Not found
-        $location->makeHidden(['creator_id']);
+        $location = LocationResource::find($id);
+        if ($location->resource == null) { return response()->json(null, 404); } // Not found
 
         // Check if the user owns the location
-        $userId = Auth::user()->id;
-        if ($location->creator_id != $userId) {
-            return response()->json(null, 403);
-        } // Forbidden
+        $user_id = Auth::user()->id;
+        if ($location->creator_id != $user_id) { return response()->json(null, 403); } // Forbidden
 
-        if ($location) {
-            return response()->json($location, 200);
-        } // OK
-        else {
-            return response()->json(null, 404);
-        } // Not found
+        // Return the location
+        return $location;
     }
 
     /**
-     * Store a new location.
+     * Store a new location for yourself.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(LocationRequest $request)
     {
-        // Validator for checking filled information
-        $validator = Validator::make($request->all(), $this->validationRules);
+        // Get the location data
+        $location_data = $request->all();
 
-        // Return an error if the information is not valid fr
-        if ($validator->fails()) {
-            $errors = ['errors' => $validator->errors()];
-            return response()->json($errors, 422); // Unprocessable entity
-        }
-
-        // Append the current user id
-        $userId = Auth::user()->id;
-        $info = $validator->validated();
-        $info["creator_id"] = $userId;
+        // Append the creator id
+        $user_id = Auth::user()->id;
+        $location_data["creator_id"] = $user_id;
 
         // Create location record if everything is correct
-        $location = Location::create($info);
-        return response()->json($location, 201); // Content created
+        Location::create($location_data);
+        return response()->json(null, 201); // Created
     }
 
     /**
      * Update the information of a location.
      *
      * @param \Illuminate\Http\Request $request
-     * @param string $id
-     * @return \Illuminate\Http\JsonResponse
+     * @param int $id
      */
-    public function update(Request $request, string $id)
+    public function update(LocationRequest $request, int $id)
     {
-        // Validator for checking filled information
-        $validator = Validator::make($request->all(), $this->validationRules);
-
-        // Return an error if the information is not valid fr
-        if ($validator->fails()) {
-            $errors = ['errors' => $validator->errors()];
-            return response()->json($errors, 422); // Unprocessable entity
-        }
-
         // Update and return location if everything is correct
-        $location = Location::findOrFail($id);
+        $location_model = Location::find($id);
+        if ($location_model == null) { return response()->json(null, 404); } // Not found
 
         // Check if the user owns the location
-        $userId = Auth::user()->id;
-        if ($location->creator_id != $userId) {
-            return response()->json(null, 403);
-        } // Forbidden
+        $user_id = Auth::user()->id;
+        if ($location_model->creator_id != $user_id) { return response()->json(null, 403); } // Forbidden
 
-        $location->update($validator->validated());
-        $location->makeHidden(['creator_id']);
-        return response()->json($location, 202); // Request accepted
+        // Update the location
+        $location_model->update($request->all());
+        return response()->json(null); // OK
     }
 
     /**
@@ -141,8 +114,11 @@ class LocationController extends Controller
     public function destroy(string $id): JsonResponse
     {
         // Find and delete location by id
-        $location = Location::findOrFail($id);
-        $location->delete();
-        return response()->json(true, 202); // Request accepted
+        $location_model = Location::find($id);
+        if ($location_model == null) { return response()->json(null, 404); } // Not found
+
+        // Delete the location
+        $location_model->delete();
+        return response()->json(null, 204); // No content
     }
 }

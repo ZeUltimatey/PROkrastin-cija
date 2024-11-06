@@ -2,17 +2,24 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LocationResource extends JsonResource
 {
+    public static function find(int $location_id): LocationResource
+    {
+        return new LocationResource(Location::find($location_id));
+    }
+
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array {
+    public function toArray(Request $request): array
+    {
         // Base parameters
         $location = [
             "id"               => $this->id,

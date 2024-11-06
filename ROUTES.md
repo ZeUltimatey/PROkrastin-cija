@@ -364,7 +364,7 @@ or
 
 or
 
-{} - code 422 - invalid location id
+{} - code 404 - invalid location id
 {} - code 403 - forbidden
 ```
 ---
@@ -375,7 +375,7 @@ return true
 
 or 
 
-{} - code 422 - invalid id
+{} - code 404 - invalid location id
 ```
 ---
 `localhost/api/dashboard GET` ***authenticated admin***
@@ -708,18 +708,18 @@ or
 
 ---
 `localhost/api/locations POST` *authenticated user* \
-`localhost/api/locations/{id} POST` *authenticated user*
+`localhost/api/locations/{id} PUT` *authenticated user*
 ```php
 {
     "city"             : "required|string|max:255",
     "street"           : "required|string|max:255",
     "apartment_number" : "nullable|string|max:255",
-    "locationName"     : "nullable|string|max:255",
+    "location_name"    : "nullable|string|max:255",
     "zip_code"         : "required|string|max:255"
 }
 ```
 ```php
-return { "city": string(255), ... }
+return {} - codes 200/201 - OK/content created
 
 or 
 
