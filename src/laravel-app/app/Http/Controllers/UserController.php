@@ -43,7 +43,7 @@ class UserController extends Controller
             'display_name'      => $user_data['display_name'],
             'name'              => $user_data['name'],
             'surname'           => $user_data['surname'],
-            'phone_number'      => $user_data['phone_number'],
+            'phone_number'      => $user_data['phone_number'] ?? null,
             'user_role'         => $user_data['user_role'] ?? 'User',
             'deactivated'       => false,
         ]);
