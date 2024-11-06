@@ -84,6 +84,14 @@ export const PaymentMethods = () => {
   };
 
   const onFormSubmit = async (formData: typeof paymentMethod) => {
+    const updatedFormData = {
+      ...formData,
+      card_name: `${valid
+        .number(formData.card_number)
+        .card.type.toUpperCase()} **** **** **** ${formData.card_number.slice(
+        -4
+      )}`,
+    };
     if (!validateCard()) return;
     setIsLoading(true);
     await fetch(`${Constants.API_URL}/cards`, {
