@@ -56,6 +56,14 @@ return [
             'throw' => false,
         ],
 
+        'minio' => [
+            'driver' => 's3',
+            'key' => env('MINIO_ACCESS_KEY', 'minioadmin'),
+            'secret' => env('MINIO_SECRET_KEY', 'minioadmin'),
+            'endpoint' => env('MINIO_ENDPOINT', 'http://localhost:9000'),
+            'bucket' => env('MINIO_BUCKET', 'prokractinacija-bucket'),
+            'use_path_style_endpoint' => true,
+        ],
     ],
 
     /*
