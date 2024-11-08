@@ -8,7 +8,7 @@ import { AddressModal } from "./AddressModal";
 export const SavedAddress = {
   id: 0,
   location_name: "",
-  city: "",
+  city: "Ainaži",
   street: "",
   apartment_number: "",
   zip_code: "",
@@ -16,9 +16,8 @@ export const SavedAddress = {
 
 export const SavedAddresses = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState(SavedAddress);
   const [addresses, setAddresses] = useState<(typeof SavedAddress)[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState(SavedAddress);
   const [isEditing, setIsEditing] = useState(false);
 
   const showToast = useToast();
@@ -87,55 +86,6 @@ export const SavedAddresses = () => {
     return;
   };
 
-  const onFormSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    setIsLoading(true);
-    await fetch(`${Constants.API_URL}/locations`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem(
-          Constants.LOCAL_STORAGE.TOKEN
-        )}`,
-      },
-      body: JSON.stringify(formData),
-    }).then((response) => {
-      if (response.ok) {
-        showToast(true, "Adrese veiksmīgi pievienota!");
-        setIsModalOpen(false);
-        setTimeout(() => window.location.reload(), 1000);
-      } else {
-        showToast(false, "Kļūda adreses izveidē.");
-      }
-    });
-    setIsLoading(false);
-  };
-
-  const onEditSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    setIsEditing(false);
-    setIsLoading(true);
-    await fetch(`${Constants.API_URL}/locations/${formData.id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem(
-          Constants.LOCAL_STORAGE.TOKEN
-        )}`,
-      },
-      body: JSON.stringify(formData),
-    }).then((response) => {
-      if (response.ok) {
-        showToast(true, "Adrese veiksmīgi atjaunināta!");
-        setIsModalOpen(false);
-        setTimeout(() => window.location.reload(), 1000);
-      } else {
-        showToast(false, "Kļūda adreses atjaunināšanā.");
-      }
-    });
-    setIsLoading(false);
-  };
-
   const closeModal = () => {
     setIsModalOpen(false);
     setIsEditing(false);
@@ -187,15 +137,13 @@ export const SavedAddresses = () => {
         <i className="mr-2 fa-solid fa-plus"></i> Pievienot jaunu
       </button>
 
-      <AddressModal
-        isOpen={isModalOpen}
-        formData={formData}
-        setFormData={setFormData}
-        isEditing={isEditing}
-        isLoading={isLoading}
-        onClose={closeModal}
-        onSubmit={isEditing ? onEditSubmit : onFormSubmit}
-      />
+      {isModalOpen && (
+        <AddressModal
+          data={formData}
+          isEditing={isEditing}
+          onClose={closeModal}
+        />
+      )}
     </div>
   );
 };

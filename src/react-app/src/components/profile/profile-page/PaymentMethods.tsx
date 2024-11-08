@@ -16,13 +16,9 @@ export const paymentMethod = {
 
 export const PaymentMethods = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState(paymentMethod);
   const [methods, setMethods] = useState<(typeof paymentMethod)[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
 
   const showToast = useToast();
-  const valid = require("card-validator");
 
   const fetchPaymentMethods = async () => {
     await fetch(`${Constants.API_URL}/cards`, {
@@ -46,24 +42,6 @@ export const PaymentMethods = () => {
     fetchPaymentMethods();
   }, []);
 
-  const onMethodEdit = async (id: number) => {
-    setIsEditing(true);
-    await fetch(`${Constants.API_URL}/cards/${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem(
-          Constants.LOCAL_STORAGE.TOKEN
-        )}`,
-      },
-    }).then(async (response) => {
-      if (response.ok) {
-        const data = await response.json();
-        setFormData(data);
-        setIsModalOpen(true);
-      }
-    });
-  };
-
   const onMethodDelete = async (id: number) => {
     await fetch(`${Constants.API_URL}/cards/remove/${id}`, {
       method: "POST",
@@ -83,65 +61,8 @@ export const PaymentMethods = () => {
     });
   };
 
-  const onFormSubmit = async (formData: typeof paymentMethod) => {
-    const updatedFormData = {
-      ...formData,
-      card_name: `${valid
-        .number(formData.card_number)
-        .card.type.toUpperCase()} **** **** **** ${formData.card_number.slice(
-        -4
-      )}`,
-    };
-    if (!validateCard()) return;
-    setIsLoading(true);
-    await fetch(`${Constants.API_URL}/cards`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem(
-          Constants.LOCAL_STORAGE.TOKEN
-        )}`,
-      },
-      body: JSON.stringify(formData),
-    }).then((response) => {
-      if (response.ok) {
-        showToast(true, "Maksājuma karte veiksmīgi pievienota!");
-        setIsModalOpen(false);
-        setTimeout(() => window.location.reload(), 1000);
-      } else {
-        showToast(false, "Kļūda maksājuma kartes pievienošanā.");
-      }
-    });
-    setIsLoading(false);
-  };
-
-  const validateCard = () => {
-    if (!valid.number(formData.card_number).isValid) {
-      showToast(false, "Nepareizs kartes numurs!");
-      return false;
-    }
-    if (
-      !valid.cardholderName(formData.cardOwnerName).isValid ||
-      !valid.cardholderName(formData.cardOwnerSurname).isValid
-    ) {
-      showToast(false, "Lūdzu, ievadiet pareizu vārdu!");
-      return false;
-    }
-    if (!valid.expirationDate(formData.expiration_date).isValid) {
-      showToast(false, "Nepareizs derīguma termiņš!");
-      return false;
-    }
-    if (!valid.cvv(formData.cvc_number).isValid) {
-      showToast(false, "Nepareizs CVC numurs!");
-      return false;
-    }
-    return true;
-  };
-
   const closeModal = () => {
     setIsModalOpen(false);
-    setIsEditing(false);
-    setFormData(paymentMethod);
   };
 
   return (
@@ -181,15 +102,7 @@ export const PaymentMethods = () => {
       >
         <i className="mr-2 fa-solid fa-plus"></i> Pievienot jaunu
       </button>
-      <PaymentModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onSubmit={onFormSubmit}
-        formData={formData}
-        setFormData={setFormData}
-        isLoading={isLoading}
-        isEditing={isEditing}
-      />
+      {isModalOpen && <PaymentModal onClose={closeModal} />}
     </div>
   );
 };

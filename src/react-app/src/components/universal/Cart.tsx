@@ -69,9 +69,8 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
           JSON.stringify(data.data)
         );
       } else {
-        showToast(false, "Kļūda pievienojot produktu grozam.");
+        localStorage.removeItem(Constants.LOCAL_STORAGE.TOKEN);
       }
-      return;
     }
     showToast(true, "Produkts pievienots grozam!");
     const cart = JSON.parse(localStorage.getItem(Constants.LOCAL_STORAGE.CART));
