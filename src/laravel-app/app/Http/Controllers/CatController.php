@@ -50,6 +50,14 @@ class CatController extends Controller
             });
         }
 
+        // Sort by price if 'price_sort' parameter is provided
+        if ($request->has('price_sort') && in_array(strtolower($request->price_sort), ['asc', 'desc'])) {
+            $sortOrder = strtolower($request->price_sort) === 'asc' ? 'asc' : 'desc';
+
+            // Sorting by discounted price first if it exists, else regular price using CASE WHEN
+            $query->orderByRaw("(CASE WHEN discount_pricing IS NOT NULL THEN discount_pricing ELSE pricing END) " . $sortOrder);
+        }
+
         // Set the default number of records per page to 10 if not provided
         $perPage = $request->get('per_page', 10);  // Default to 10 records per page
 
