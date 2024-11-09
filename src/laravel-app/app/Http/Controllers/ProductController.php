@@ -46,9 +46,22 @@ class ProductController extends Controller
             });
         }
 
-        // Filter by keyword in display_name (if provided)
+        // Filter by keyword in display_name or description (if provided)
         if ($request->has('keyword')) {
-            $query->where('display_name', 'LIKE', '%' . $request->keyword . '%');
+            $keyword = strtolower(str_replace(' ', '', $request->keyword)); // Convert keyword to lowercase and remove spaces
+
+            $query->where(function($q) use ($keyword) {
+                $q->whereRaw("LOWER(REPLACE(REPLACE(display_name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(description, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"]);
+            });
+        }
+
+        // Sort by price if 'price_sort' parameter is provided
+        if ($request->has('price_sort') && in_array(strtolower($request->price_sort), ['asc', 'desc'])) {
+            $sortOrder = strtolower($request->price_sort) === 'asc' ? 'asc' : 'desc';
+
+            // Sorting by discounted price first if it exists, else regular price using CASE WHEN
+            $query->orderByRaw("(CASE WHEN discount_pricing IS NOT NULL THEN discount_pricing ELSE pricing END) " . $sortOrder);
         }
 
         // Set the default number of records per page to 12 if not provided
