@@ -46,10 +46,16 @@ class ProductController extends Controller
             });
         }
 
-        // Filter by keyword in display_name (if provided)
+        // Filter by keyword in display_name or description (if provided)
         if ($request->has('keyword')) {
-            $query->where('display_name', 'LIKE', '%' . $request->keyword . '%');
+            $keyword = strtolower(str_replace(' ', '', $request->keyword)); // Convert keyword to lowercase and remove spaces
+
+            $query->where(function($q) use ($keyword) {
+                $q->whereRaw("LOWER(REPLACE(REPLACE(display_name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(description, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"]);
+            });
         }
+
 
         // Set the default number of records per page to 10 if not provided
         $perPage = $request->get('per_page', 10);  // Default to 10 records per page

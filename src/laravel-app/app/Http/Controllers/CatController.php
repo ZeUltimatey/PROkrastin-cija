@@ -16,10 +16,51 @@ class CatController extends Controller
     /**
      * Show all cats.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $catProducts = Product::where('product_type', 'CATS')->get();
-        return ProductResource::collection($catProducts);
+        // Initialize a query builder for the Product model
+        $query = Product::query();
+        $query->whereIn('product_type', ['CATS']);
+
+        // Filter by price range (if provided)
+        if ($request->has('min_price') || $request->has('max_price')) {
+            $query->where(function ($q) use ($request) {
+                if ($request->has('min_price')) {
+                    $q->where(function ($subQuery) use ($request) {
+                        $subQuery->where('discount_pricing', '>=', $request->min_price)
+                            ->orWhere('pricing', '>=', $request->min_price);
+                    });
+                }
+                if ($request->has('max_price')) {
+                    $q->where(function ($subQuery) use ($request) {
+                        $subQuery->where('discount_pricing', '<=', $request->max_price)
+                            ->orWhere('pricing', '<=', $request->max_price);
+                    });
+                }
+            });
+        }
+
+        // Filter by keyword in display_name or description (if provided)
+        if ($request->has('keyword')) {
+            $keyword = strtolower(str_replace(' ', '', $request->keyword)); // Convert keyword to lowercase and remove spaces
+
+            $query->where(function($q) use ($keyword) {
+                $q->whereRaw("LOWER(REPLACE(REPLACE(display_name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(description, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"]);
+            });
+        }
+
+        // Set the default number of records per page to 10 if not provided
+        $perPage = $request->get('per_page', 10);  // Default to 10 records per page
+
+        // Get paginated results
+        $products = $query->paginate($perPage);
+
+        // Append current request parameters to pagination links
+        $products->appends($request->except('page'));
+
+        // Return paginated products as a resource collection
+        return ProductResource::collection($products);
     }
 
     /**
