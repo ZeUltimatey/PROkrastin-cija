@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import CartProduct from "../cart/cart-page/CartProduct";
 import { useCart } from "../universal/Cart";
 import { PaymentMethods } from "./cart-page/PaymentMethods";
@@ -50,7 +50,7 @@ export const Cart = () => {
                 {cartItems.map((product) => {
                   return (
                     <CartProduct
-                      key={product.product_id}
+                      key={product.product.id}
                       product={product.product}
                       quantity={product.amount}
                       onRemove={() => removeFromCart(product)}
@@ -92,7 +92,10 @@ export const Cart = () => {
       <div className=" bg-content-white p-6 shadow-lg w-1/4">
         <h3 className="text-xl font-bold text-dark-brown mb-4">Apmaksāt</h3>
         <PaymentMethods />
-        <button className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown font-poppins mt-4">
+        <button
+          disabled={cartItems.length == 0}
+          className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown font-poppins mt-4 disabled:bg-opacity-10 disabled:text-dark-brown disabled:cursor-not-allowed"
+        >
           <i className="fa-regular fa-credit-card mr-2"></i>
           Apmaksāt
         </button>

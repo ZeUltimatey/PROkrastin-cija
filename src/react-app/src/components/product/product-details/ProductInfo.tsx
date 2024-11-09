@@ -1,9 +1,9 @@
 import { StarRating } from "./StarRating";
 import { BuyButton } from "./BuyButton";
-import { Product } from "../../universal/interfaces/Product";
 import { CategoryNames } from "../../universal/CategoryNames";
+import { IProduct } from "../../universal/interfaces/IProduct";
 
-export const ProductInfo = ({ product }: { product: Product }) => {
+export const ProductInfo = ({ product }: { product: IProduct }) => {
   return (
     <div className="w-full flex flex-col justify-between">
       <div className="flex flex-col gap-2">

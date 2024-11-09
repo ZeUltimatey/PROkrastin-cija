@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 
-interface Order {
+export interface IOrder {
   id: string;
   customerName: string;
   email: string;
@@ -12,9 +12,9 @@ interface Order {
 
 export const Orders = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
 
-  const handleEditClick = (order: Order) => {
+  const handleEditClick = (order: IOrder) => {
     setSelectedOrder(order);
     setIsModalOpen(true);
   };
@@ -31,7 +31,7 @@ export const Orders = () => {
     }
   };
 
-  const orders: Order[] = [
+  const orders: IOrder[] = [
     {
       id: "#5001",
       customerName: "Anna Vītola",

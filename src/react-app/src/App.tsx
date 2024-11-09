@@ -109,7 +109,6 @@ function App() {
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
               </Route>
-              <Route path="/catalog/cats" element={<Homepage />} />
             </Routes>
           </CartProvider>
         </ConfirmationProvider>

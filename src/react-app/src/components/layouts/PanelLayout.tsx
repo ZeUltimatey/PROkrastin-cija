@@ -2,11 +2,11 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { Navbar } from "../universal/Navbar";
 import { Constants } from "../universal/Constants";
 import { useEffect, useState } from "react";
-import { User } from "../universal/interfaces/User";
 import { Sidebar } from "../panel/admin-panel/Sidebar";
 import { Spinner } from "../universal/Spinner";
+import { IUser } from "../universal/interfaces/IUser";
 export const PanelLayout = () => {
-  const [user, setUser] = useState<User>(null);
+  const [user, setUser] = useState<IUser>(null);
 
   const navigate = useNavigate();
 
@@ -23,7 +23,7 @@ export const PanelLayout = () => {
     }).then(async (response) => {
       if (response.ok) {
         const data = await response.json();
-        setUser(data);
+        setUser(data.data);
         if (data.user_role !== "Admin") {
           navigate("/");
         }

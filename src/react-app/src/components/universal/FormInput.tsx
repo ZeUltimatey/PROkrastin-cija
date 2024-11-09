@@ -1,4 +1,4 @@
-interface Props {
+interface IProps {
   placeholder?: string;
   customClass?: string;
   type?: string;
@@ -8,7 +8,7 @@ interface Props {
   disabled?: boolean;
 }
 
-export const FormInput = (props: Props) => {
+export const FormInput = (props: IProps) => {
   return (
     <input
       id={props.id}

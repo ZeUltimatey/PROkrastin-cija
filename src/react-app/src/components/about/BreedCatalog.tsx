@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FormInput } from "../universal/FormInput";
 
-interface Breed {
+interface IBreed {
   id: number;
   display_name: string;
   breed_information: string;
@@ -23,7 +23,7 @@ export const BreedCatalog = () => {
     },
   ];
 
-  const [formData, setFormData] = useState<Breed>({} as Breed);
+  const [formData, setFormData] = useState<IBreed>({} as IBreed);
 
   return (
     <div className="bg-content-white">

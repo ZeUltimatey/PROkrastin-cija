@@ -51,8 +51,8 @@ class ProductController extends Controller
             $query->where('display_name', 'LIKE', '%' . $request->keyword . '%');
         }
 
-        // Set the default number of records per page to 10 if not provided
-        $perPage = $request->get('per_page', 10);  // Default to 10 records per page
+        // Set the default number of records per page to 12 if not provided
+        $perPage = $request->get('per_page', 12);  // Default to 12 records per page
 
         // Get paginated results
         $products = $query->paginate($perPage);

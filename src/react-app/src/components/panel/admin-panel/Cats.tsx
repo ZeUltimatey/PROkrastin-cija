@@ -12,6 +12,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Breed } from "./Breeds";
+import { Pagination } from "../../universal/Pagination";
 
 const Cat = {
   breed_name: "",
@@ -38,18 +39,20 @@ export const Cats = () => {
   const [breeds, setBreeds] = useState<(typeof Breed)[]>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [pagination, setPagination] = useState(null);
 
   const showToast = useToast();
 
   const confirm = useConfirmation();
 
-  const fetchCats = async () => {
-    await fetch(`${Constants.API_URL}/cats`, {
+  const fetchCats = async (link?: string) => {
+    await fetch(link ?? `${Constants.API_URL}/cats`, {
       method: "GET",
     }).then(async (response) => {
       if (response.ok) {
         const data = await response.json();
         setCats(data.data);
+        setPagination(data.meta);
       } else {
         showToast(false, "Kļūda iegūstot kaķus.");
       }
@@ -62,7 +65,8 @@ export const Cats = () => {
     }).then(async (response) => {
       if (response.ok) {
         const data = await response.json();
-        setFormData({ ...formData, breed_id: data.data[0].id });
+        if (data.data.length > 0)
+          setFormData({ ...formData, breed_id: data.data[0].id });
         setBreeds(data.data);
       } else {
         showToast(false, "Kļūda iegūstot produktus.");
@@ -246,73 +250,79 @@ export const Cats = () => {
             </div>
           </div>
         </header>
-        {cats && (
-          <table className="w-full text-center font-poppins">
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      className="h-12 bg-light-gray border-b border-light-brown text-dark-brown font-semibold"
-                      key={header.id}
-                      colSpan={header.colSpan}
-                    >
-                      {header.isPlaceholder ? null : (
-                        <div
-                          className={
-                            header.column.getCanSort()
-                              ? "cursor-pointer select-none"
-                              : ""
-                          }
-                          onClick={header.column.getToggleSortingHandler()}
-                          title={
-                            header.column.getCanSort()
-                              ? header.column.getNextSortingOrder() === "asc"
-                                ? "Sort ascending"
-                                : header.column.getNextSortingOrder() === "desc"
-                                ? "Sort descending"
-                                : "Clear sort"
-                              : undefined
-                          }
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          {{
-                            asc: (
-                              <i className="fa-solid fa-chevron-up ml-2"></i>
-                            ),
-                            desc: (
-                              <i className="fa-solid fa-chevron-down ml-2"></i>
-                            ),
-                          }[header.column.getIsSorted() as string] ?? null}
-                        </div>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td
-                      className="h-8 border-b border-light-brown bg-light-gray text-dark-brown font-semibold"
-                      key={cell.id}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        <div className="flex place-items-center justify-center flex-col gap-4">
+          {cats && (
+            <table className="w-full text-center font-poppins">
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        className="h-12 bg-light-gray border-b border-light-brown text-dark-brown font-semibold"
+                        key={header.id}
+                        colSpan={header.colSpan}
+                      >
+                        {header.isPlaceholder ? null : (
+                          <div
+                            className={
+                              header.column.getCanSort()
+                                ? "cursor-pointer select-none"
+                                : ""
+                            }
+                            onClick={header.column.getToggleSortingHandler()}
+                            title={
+                              header.column.getCanSort()
+                                ? header.column.getNextSortingOrder() === "asc"
+                                  ? "Sort ascending"
+                                  : header.column.getNextSortingOrder() ===
+                                    "desc"
+                                  ? "Sort descending"
+                                  : "Clear sort"
+                                : undefined
+                            }
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              asc: (
+                                <i className="fa-solid fa-chevron-up ml-2"></i>
+                              ),
+                              desc: (
+                                <i className="fa-solid fa-chevron-down ml-2"></i>
+                              ),
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <td
+                        className="h-8 border-b border-light-brown bg-light-gray text-dark-brown font-semibold"
+                        key={cell.id}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {pagination && (
+            <Pagination pagination={pagination} onNavigate={fetchCats} />
+          )}
+        </div>
         {isModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-poppins">
             <div className="bg-white p-8 rounded-lg shadow-lg w-1/3 relative overflow-auto ">

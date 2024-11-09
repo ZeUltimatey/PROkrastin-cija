@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { Product } from "../../universal/interfaces/Product";
+import { useState } from "react";
+import { IProduct } from "../../universal/interfaces/IProduct";
 
-interface CartProductProps {
-  product: Product;
+interface ICartProductProps {
+  product: IProduct;
   quantity: number;
   onRemove: (id: number) => void;
-  onQuantityChange: (product: Product, delta: number) => void;
+  onQuantityChange: (product: IProduct, delta: number) => void;
 }
 
-export const CartProduct = (props: CartProductProps) => {
+export const CartProduct = (props: ICartProductProps) => {
   const { product, quantity, onRemove, onQuantityChange } = props;
   const totalPrice = product.discount_pricing
     ? product.discount_pricing * quantity

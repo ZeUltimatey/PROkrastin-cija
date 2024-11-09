@@ -3,5 +3,6 @@ export const Constants = {
   LOCAL_STORAGE: {
     TOKEN: "AUTH_TOKEN",
     CART: "CART",
+    QUERY: "QUERY",
   },
 };

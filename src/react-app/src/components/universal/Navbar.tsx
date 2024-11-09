@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavbarCart } from "./NavbarCart";
 import { CategoryList } from "../homepage/categories/CategoryList";
 import { Constants } from "./Constants";
 import { useNavigate } from "react-router-dom";
-import { Product } from "./interfaces/Product";
 import { useCart } from "./Cart";
 
 export const Navbar = () => {
