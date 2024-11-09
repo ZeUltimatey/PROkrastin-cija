@@ -9,6 +9,8 @@ use App\Models\SelectedProducts;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
+use App\Jobs\SendEmailVerification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -36,7 +38,7 @@ class UserController extends Controller
         // Sense
         $user_data = $request->all();
 
-        // Create the new user
+        // Create the new user  //TODO user request
         $new_user_model = User::create([
             'email'             => $user_data['email'],
             'password'          => Hash::make($user_data['password']),
@@ -52,6 +54,10 @@ class UserController extends Controller
         $new_user = new UserResource($new_user_model);
         $new_user->with_extra_information();
 
+        // Email verification
+        dispatch(new SendEmailVerification($new_user_model));
+
+        //$user->sendEmailVerificationNotification();
         // Return new user
         return $new_user;
     }
@@ -106,11 +112,11 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $cUser = Auth::user();
-        if ($request->input('display_name') === $cUser->display_name) {
+        $user = Auth::user();
+        if ($request->input('display_name') === $user->display_name) {
             $request->request->remove('display_name');
         }
-        if ($request->input('email') === $cUser->email) {
+        if ($request->input('email') === $user->email) {
             $request->request->remove('email');
         }
         $validator = Validator::make($request->all(), [
@@ -130,8 +136,6 @@ class UserController extends Controller
                 'errors' => $validator->errors(),
             ], 422);
         }
-
-        $user = User::find($request->user()->id);
 
         $user->update($validator->validated());
 
