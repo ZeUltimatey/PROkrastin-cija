@@ -57,7 +57,6 @@ class UserController extends Controller
         // Email verification
         dispatch(new SendEmailVerification($new_user_model));
 
-        //$user->sendEmailVerificationNotification();
         // Return new user
         return $new_user;
     }
