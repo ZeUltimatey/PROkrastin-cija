@@ -225,6 +225,7 @@ class TestSeeder extends Seeder
             "cardholder_id" => 2,
             "card_number" => Crypt::encryptString('5550130966726224'),
             "expiration_date" => Crypt::encryptString('12/24'),
+            "card_name" => "Visa",
             "cardOwnerName" => "RYAN",
             "cardOwnerSurname" => "GOSLING",
         ]);
