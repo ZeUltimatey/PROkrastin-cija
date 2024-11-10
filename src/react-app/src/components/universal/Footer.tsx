@@ -1,9 +1,9 @@
 export const Footer = () => {
   return (
-    <footer className="bg-content-white py-6 rounded-b-md">
-      <div className="container mx-auto px-6">
-        <div className="border-t border-dark-brown py-4 flex flex-col items-center">
-          <nav className="mb-4 flex gap-6">
+    <footer className="py-6 bg-content-white rounded-b-md">
+      <div className="container px-6 mx-auto">
+        <div className="flex flex-col items-center py-4 border-t border-dark-brown">
+          <nav className="flex gap-6 mb-4">
             <a
               href="contact"
               className="text-dark-brown hover:text-medium-brown"
@@ -18,6 +18,12 @@ export const Footer = () => {
               className="text-dark-brown hover:text-medium-brown"
             >
               Privātuma politika
+            </a>
+            <a
+              href="instruction/encyclopediause"
+              className="text-dark-brown hover:text-medium-brown"
+            >
+              Lietotāja instrukcija
             </a>
           </nav>
           <p className="text-sm text-dark-brown">&copy; 2024 Murrātava</p>
