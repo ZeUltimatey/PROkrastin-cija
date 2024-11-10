@@ -4,6 +4,7 @@ import { CategoryList } from "../homepage/categories/CategoryList";
 import { Constants } from "./Constants";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "./Cart";
+import { IQuery } from "./IQuery";
 
 export const Navbar = () => {
   const [navbarToggle, setNavbarToggle] = useState(false);
@@ -23,10 +24,23 @@ export const Navbar = () => {
     link: string;
     idx: number;
   }) => {
+    const goToFilteredProducts = () => {
+      const newQuery: IQuery = {
+        keyword: "",
+        product_type: name,
+        min_price: 0,
+        max_price: 9999999,
+      };
+      localStorage.setItem(
+        Constants.LOCAL_STORAGE.QUERY,
+        JSON.stringify(newQuery)
+      );
+      navigate("/products");
+    };
     return (
       <li
         key={idx}
-        onClick={() => navigate(link)}
+        onClick={goToFilteredProducts}
         className={`${idx + 1 === CategoryList.length ? "rounded-br-md" : ""} ${
           idx === CategoryList.length - 3 ? "rounded-bl-md" : ""
         } bg-content-white border-[#d8d6ce] hover:brightness-90 px-4 min-w-24 text-center py-2 h-full`}

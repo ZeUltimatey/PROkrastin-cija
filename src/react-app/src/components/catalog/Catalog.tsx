@@ -89,7 +89,7 @@ export const Catalog = () => {
         .join(",");
       return (
         url ??
-        `keyword=${query.keyword}&min_price=${
+        `keyword=${query.keyword ?? ""}&min_price=${
           query.min_price
         }&product_type=${categories}&max_price=${
           query.max_price == 0 ? 9999999 : query.max_price

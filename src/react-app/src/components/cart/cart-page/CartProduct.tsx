@@ -1,35 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IProduct } from "../../universal/interfaces/IProduct";
 
 interface ICartProductProps {
   product: IProduct;
   quantity: number;
   onRemove: (id: number) => void;
-  onQuantityChange: (product: IProduct, delta: number) => void;
+  onQuantityChange: (product: IProduct, newQuantity: number) => void;
 }
 
 export const CartProduct = (props: ICartProductProps) => {
   const { product, quantity, onRemove, onQuantityChange } = props;
-  const totalPrice = product.discount_pricing
-    ? product.discount_pricing * quantity
-    : product.pricing * quantity;
-
   const [cartQuantity, setCartQuantity] = useState(quantity);
+  const [totalPrice, setTotalPrice] = useState(
+    product.discount_pricing
+      ? product.discount_pricing * quantity
+      : product.pricing * quantity
+  );
 
-  const handleQuantityChange = (delta: number) => {
-    if (!isNaN(delta) && delta > 0) {
-      setCartQuantity(delta);
+  const updateTotalPrice = (newQuantity: number) => {
+    const newTotalPrice = product.discount_pricing
+      ? product.discount_pricing * newQuantity
+      : product.pricing * newQuantity;
+    setTotalPrice(newTotalPrice);
+  };
+
+  useEffect(() => {
+    updateTotalPrice(cartQuantity);
+  }, [cartQuantity, product]);
+
+  const handleQuantityChange = (newQuantity: number) => {
+    if (newQuantity > 0) {
+      setCartQuantity(newQuantity);
+      onQuantityChange(product, newQuantity);
     }
   };
 
-  const incrementQuanity = () => {
-    setCartQuantity(cartQuantity + 1);
-    onQuantityChange(product, cartQuantity);
+  const incrementQuantity = () => {
+    const newQuantity = cartQuantity + 1;
+    handleQuantityChange(newQuantity);
   };
 
-  const decrementQuanity = () => {
-    setCartQuantity(cartQuantity - 1);
-    onQuantityChange(product, cartQuantity);
+  const decrementQuantity = () => {
+    if (cartQuantity > 1) {
+      const newQuantity = cartQuantity - 1;
+      handleQuantityChange(newQuantity);
+    }
   };
 
   return (
@@ -48,7 +63,7 @@ export const CartProduct = (props: ICartProductProps) => {
         <div className="flex items-center justify-center">
           <button
             disabled={cartQuantity === 1}
-            onClick={decrementQuanity}
+            onClick={decrementQuantity}
             className="bg-light-brown h-8 w-8 flex items-center justify-center rounded-l-md hover:bg-opacity-80 transition-opacity"
           >
             <i className="fa-solid fa-minus text-white text-sm"></i>
@@ -57,11 +72,11 @@ export const CartProduct = (props: ICartProductProps) => {
             type="number"
             value={cartQuantity}
             onChange={(e) => handleQuantityChange(Number(e.target.value))}
-            onBlur={() => onQuantityChange(product, cartQuantity)}
-            className="text-center font-semibold font-poppins bg-light-brown  h-8 w-14 focus:outline-none focus:bg-opacity-75 flex items-center justify-center text-white"
+            onBlur={() => handleQuantityChange(cartQuantity)}
+            className="text-center font-semibold font-poppins bg-light-brown h-8 w-14 focus:outline-none focus:bg-opacity-75 text-white"
           />
           <button
-            onClick={incrementQuanity}
+            onClick={incrementQuantity}
             className="bg-light-brown h-8 w-8 flex items-center justify-center rounded-r-md hover:bg-opacity-80 transition-opacity"
           >
             <i className="fa-solid fa-plus text-white text-sm"></i>
@@ -69,7 +84,7 @@ export const CartProduct = (props: ICartProductProps) => {
         </div>
       </td>
       <td className="text-right pr-6 text-dark-brown font-semibold py-4">
-        {totalPrice.toFixed(2)} EUR
+        {totalPrice.toFixed(2)}&euro;
       </td>
       <td className="text-right py-4">
         <button

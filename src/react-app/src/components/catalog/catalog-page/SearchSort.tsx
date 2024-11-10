@@ -64,7 +64,7 @@ export const SearchSort = (props: IProps) => {
     setSearch(value);
     const newQuery: IQuery = { ...query, keyword: value };
     updateQueryAndStorage(newQuery);
-    props.onSearch(value); // Trigger search on every change
+    props.onSearch(value);
   };
 
   const getQuery = () => {
@@ -134,6 +134,39 @@ export const SearchSort = (props: IProps) => {
         <span className="font-poppins text-gray-600 font-semibold">
           Atrastas {props.filteredItemAmount ?? 0} preces
         </span>
+        <div className="flex gap-6">
+          <div className="flex rounded-md text-black bg-black">
+            <button
+              onClick={() =>
+                props.onSort({
+                  ...props.sortValues,
+                  price: props.sortValues.price === "desc" ? "" : "desc",
+                })
+              }
+              className={`bg-light-brown py-2 px-4 rounded-s-md hover:opacity-80 transition-opacity ${
+                props.sortValues.price === "desc" ? "opacity-80" : ""
+              }`}
+            >
+              <i className="fa-solid fa-arrow-down"></i>
+            </button>
+            <span className="font-semibold font-poppins bg-light-brown py-2 px-3">
+              Cena
+            </span>
+            <button
+              onClick={() =>
+                props.onSort({
+                  ...props.sortValues,
+                  price: props.sortValues.price === "asc" ? "" : "asc",
+                })
+              }
+              className={`bg-light-brown py-2 px-4 rounded-e-md hover:opacity-80 transition-opacity ${
+                props.sortValues.price === "asc" ? "opacity-80" : ""
+              }`}
+            >
+              <i className="fa-solid fa-arrow-up"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

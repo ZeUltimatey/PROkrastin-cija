@@ -6,8 +6,6 @@ import { PaymentMethods } from "./cart-page/PaymentMethods";
 export const Cart = () => {
   const { cartItems, removeFromCart, addToCart, fetchCart } = useCart();
 
-  const shippingCosts = Math.random() > 0.5 ? 0 : 5;
-
   const getTotalPrice = () => {
     return cartItems.reduce((acc, item) => {
       return item.product.discount_pricing
@@ -74,7 +72,7 @@ export const Cart = () => {
               </span>
               <span className="font-bold text-lg flex items-center text-dark-brown">
                 <i className="fa-duotone fa-solid fa-truck-fast mr-2 text-dark-brown"></i>
-                {shippingCosts.toFixed(2)}&euro;
+                {"0.00"}&euro;
               </span>
             </div>
             <div className="flex justify-between items-center mt-4 border-t pt-4">
@@ -82,14 +80,14 @@ export const Cart = () => {
                 Kopā apmaksai:
               </span>
               <span className="font-bold text-lg text-dark-brown">
-                {(getTotalPrice() + shippingCosts).toFixed(2)}&euro;
+                {getTotalPrice().toFixed(2)}&euro;
               </span>
             </div>
           </div>
         )}
       </div>
 
-      <div className=" bg-content-white p-6 shadow-lg w-1/4">
+      <div className=" bg-content-white p-6 border-l border-medium-brown w-1/4">
         <h3 className="text-xl font-bold text-dark-brown mb-4">Apmaksāt</h3>
         <PaymentMethods />
         <button
