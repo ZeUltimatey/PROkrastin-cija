@@ -102,7 +102,6 @@ function App() {
                 <Route path="/panel/products" element={<Products />} />
                 <Route path="/panel/cats" element={<Cats />} />
                 <Route path="/panel/breeds" element={<Breeds />} />
-                <Route path="/panel/encyclopedia" element={<Encyclopedia />} />
               </Route>
 
               <Route path="/auth" element={<AuthLayout />}>

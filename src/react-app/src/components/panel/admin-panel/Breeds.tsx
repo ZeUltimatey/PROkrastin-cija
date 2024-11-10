@@ -272,7 +272,7 @@ export const Breeds = () => {
         </div>
         {isModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-poppins">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-1/3 relative overflow-auto ">
+            <div className="bg-white p-8 rounded-lg h-5/6 shadow-lg w-1/3 relative overflow-auto ">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-dark-brown font-poppins">
                   Jaunas šķirnes pievienošana

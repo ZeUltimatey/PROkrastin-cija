@@ -29,6 +29,7 @@ export const Product = {
   breed_id: 0,
   image_url: "",
   stock: 1,
+  product_type: CategoryNames.CATS,
   cat: Cat,
 };
 

@@ -49,7 +49,7 @@ export const Users = () => {
   const onUserUpdate = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsLoading(true);
-    await fetch(`${Constants.API_URL}/user`, {
+    await fetch(`${Constants.API_URL}/users/update/${selectedUser.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
