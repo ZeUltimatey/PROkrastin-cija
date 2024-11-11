@@ -9,7 +9,7 @@ class CatBreedResource extends JsonResource
 {
     public static function find(int $breed_Id): CatBreedResource
     {
-        return new CatBreedResource(CatBreed::find($breed_Id));
+        return new CatBreedResource(CatBreeds::find($breed_Id));
     }
 
     /**
