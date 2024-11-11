@@ -19,8 +19,13 @@ class CatController extends Controller
     public function index(Request $request)
     {
         // Initialize a query builder for the Product model
-        $query = Product::query();
-        $query->whereIn('product_type', ['CATS']);
+//        $query = Product::query();
+        $query = Product::query()
+            ->select('products.*')
+            ->leftJoin('cats', 'products.id', '=', 'cats.id')
+            ->leftJoin('cat_breeds', 'cats.breed_id', '=', 'cat_breeds.id')
+            ->where('products.product_type', 'CATS'); // Filter for CATS product type
+//        $query->whereIn('product_type', ['CATS']);
 
         // Filter by price range (if provided)
         if ($request->has('min_price') || $request->has('max_price')) {
@@ -40,13 +45,14 @@ class CatController extends Controller
             });
         }
 
-        // Filter by keyword in display_name or description (if provided)
+// Filter by keyword in display_name, description, or cats_breeds.display_name (if provided)
         if ($request->has('keyword')) {
             $keyword = strtolower(str_replace(' ', '', $request->keyword)); // Convert keyword to lowercase and remove spaces
 
-            $query->where(function($q) use ($keyword) {
-                $q->whereRaw("LOWER(REPLACE(REPLACE(display_name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
-                    ->orWhereRaw("LOWER(REPLACE(REPLACE(description, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"]);
+            $query->where(function ($q) use ($keyword) {
+                $q->whereRaw("LOWER(REPLACE(REPLACE(products.display_name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(products.description, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(cat_breeds.display_name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"]);
             });
         }
 
