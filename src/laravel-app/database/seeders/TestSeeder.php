@@ -225,6 +225,7 @@ class TestSeeder extends Seeder
             "cardholder_id" => 2,
             "card_number" => Crypt::encryptString('5550130966726224'),
             "expiration_date" => Crypt::encryptString('12/24'),
+            "card_name" => "Visa",
             "cardOwnerName" => "RYAN",
             "cardOwnerSurname" => "GOSLING",
         ]);
@@ -274,6 +275,16 @@ class TestSeeder extends Seeder
             "amount" => 1,
             "price_per_product" => 69.99,
             "total_price" => 69.99,
+        ]);
+
+
+        DB::table('product_images')->insert([
+             [
+                 'product_id' => 1,
+                 'url' => '/storage/images/profile/6R7ftJWczFUuQHDax5L8x3p63YJe5HyyXge7YRpA.jpg',
+                 'created_at' => now(),
+                 'updated_at' => now(),
+             ]
         ]);
 
         // DB::table('selected_products')->insert([
