@@ -17,7 +17,9 @@ export const Catalog = () => {
 
   const fetchItems = async (url?: string) => {
     await fetch(
-      `${Constants.API_URL}/products?${formatQueryParams(url) ?? ""}`,
+      `${Constants.API_URL}/products?price_sort=${sort.price}&${
+        formatQueryParams(url) ?? ""
+      }`,
       {
         method: "GET",
         headers: {
@@ -45,16 +47,16 @@ export const Catalog = () => {
 
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [sort]); // TODO: change this so it's less retarded
 
   const onSearch = (keyword: string) => {
     const query: IQuery = JSON.parse(
-      localStorage.getItem(Constants.LOCAL_STORAGE.QUERY)
+      localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_CATALOG)
     );
     if (query) {
       query.keyword = keyword;
       localStorage.setItem(
-        Constants.LOCAL_STORAGE.QUERY,
+        Constants.LOCAL_STORAGE.QUERY_CATALOG,
         JSON.stringify(query)
       );
       fetchItems();
@@ -67,16 +69,15 @@ export const Catalog = () => {
       max_price: 9999999,
     };
     localStorage.setItem(
-      Constants.LOCAL_STORAGE.QUERY,
+      Constants.LOCAL_STORAGE.QUERY_CATALOG,
       JSON.stringify(newQuery)
     );
   };
 
   const formatQueryParams = (url?: string) => {
     const query: IQuery = JSON.parse(
-      localStorage.getItem(Constants.LOCAL_STORAGE.QUERY)
+      localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_CATALOG)
     );
-    console.log("url", url?.split("=")[1]);
     if (query) {
       const categories = query.product_type
         .split(",")
@@ -126,6 +127,7 @@ export const Catalog = () => {
             onSort={setSort}
             onFilterUpdate={onFilterUpdate}
             filterUpdateTrigger={filterUpdateTrigger}
+            queryConstant={Constants.LOCAL_STORAGE.QUERY_CATALOG}
           />
           <div className="mx-8 h-auto mb-6 flex flex-col place-items-center justify-center">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 place-items-center gap-12">

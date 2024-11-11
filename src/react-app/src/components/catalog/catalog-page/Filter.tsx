@@ -30,7 +30,7 @@ export const Filter = ({
 
   useEffect(() => {
     const savedFilter: IQuery = JSON.parse(
-      localStorage.getItem(Constants.LOCAL_STORAGE.QUERY)
+      localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_CATALOG)
     );
 
     setFilter({
@@ -65,15 +65,17 @@ export const Filter = ({
     const selectedCategories = Object.keys(newFilter.category)
       .filter((key) => newFilter.category[key])
       .join(",");
+    const keyword = JSON.parse(
+      localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_CATALOG)
+    )?.keyword;
     const updatedFilter = {
-      keyword: JSON.parse(localStorage.getItem(Constants.LOCAL_STORAGE.QUERY))
-        .keyword,
+      keyword: keyword ?? "",
       product_type: selectedCategories,
       min_price: newFilter.price.from || 0,
       max_price: newFilter.price.to || 0,
     };
     localStorage.setItem(
-      Constants.LOCAL_STORAGE.QUERY,
+      Constants.LOCAL_STORAGE.QUERY_CATALOG,
       JSON.stringify(updatedFilter)
     );
     onFilterUpdate();

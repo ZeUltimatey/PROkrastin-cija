@@ -8,21 +8,32 @@ type Sort = {
 };
 interface IProps {
   onSearch: (value: string) => void;
-  onSort: (value: Sort) => void;
+  onSort?: (value: Sort) => void;
   onFilterUpdate: () => void;
-  sortValues: Sort;
+  sortValues?: Sort;
   filteredItemAmount?: number;
   filterUpdateTrigger?: number;
+  queryConstant: string;
 }
 
 export const SearchSort = (props: IProps) => {
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState<IQuery>(
-    JSON.parse(localStorage.getItem(Constants.LOCAL_STORAGE.QUERY)) ?? null
+    JSON.parse(
+      localStorage.getItem(
+        Constants.LOCAL_STORAGE[
+          props.queryConstant as keyof typeof Constants.LOCAL_STORAGE
+        ]
+      )
+    ) ?? null
   );
 
   useEffect(() => {
-    const savedQuery = localStorage.getItem(Constants.LOCAL_STORAGE.QUERY);
+    const savedQuery = localStorage.getItem(
+      Constants.LOCAL_STORAGE[
+        props.queryConstant as keyof typeof Constants.LOCAL_STORAGE
+      ]
+    );
     if (savedQuery) {
       setQuery(JSON.parse(savedQuery));
     }
@@ -31,7 +42,9 @@ export const SearchSort = (props: IProps) => {
   const updateQueryAndStorage = (newQuery: IQuery) => {
     setQuery(newQuery);
     localStorage.setItem(
-      Constants.LOCAL_STORAGE.QUERY,
+      Constants.LOCAL_STORAGE[
+        props.queryConstant as keyof typeof Constants.LOCAL_STORAGE
+      ],
       JSON.stringify(newQuery)
     );
     props.onFilterUpdate();
@@ -132,41 +145,43 @@ export const SearchSort = (props: IProps) => {
       </div>
       <div className="justify-between mx-8 flex place-items-center">
         <span className="font-poppins text-gray-600 font-semibold">
-          Atrastas {props.filteredItemAmount ?? 0} preces
+          Atrastas {props.filteredItemAmount ?? 0} lietas
         </span>
-        <div className="flex gap-6">
-          <div className="flex rounded-md text-black bg-black">
-            <button
-              onClick={() =>
-                props.onSort({
-                  ...props.sortValues,
-                  price: props.sortValues.price === "desc" ? "" : "desc",
-                })
-              }
-              className={`bg-light-brown py-2 px-4 rounded-s-md hover:opacity-80 transition-opacity ${
-                props.sortValues.price === "desc" ? "opacity-80" : ""
-              }`}
-            >
-              <i className="fa-solid fa-arrow-down"></i>
-            </button>
-            <span className="font-semibold font-poppins bg-light-brown py-2 px-3">
-              Cena
-            </span>
-            <button
-              onClick={() =>
-                props.onSort({
-                  ...props.sortValues,
-                  price: props.sortValues.price === "asc" ? "" : "asc",
-                })
-              }
-              className={`bg-light-brown py-2 px-4 rounded-e-md hover:opacity-80 transition-opacity ${
-                props.sortValues.price === "asc" ? "opacity-80" : ""
-              }`}
-            >
-              <i className="fa-solid fa-arrow-up"></i>
-            </button>
+        {props?.sortValues && (
+          <div className="flex gap-6">
+            <div className="flex rounded-md text-black bg-black">
+              <button
+                onClick={() =>
+                  props.onSort({
+                    ...props.sortValues,
+                    price: props.sortValues.price === "desc" ? "" : "desc",
+                  })
+                }
+                className={`bg-light-brown py-2 px-4 rounded-s-md hover:opacity-80 transition-opacity ${
+                  props.sortValues.price === "desc" ? "opacity-80" : ""
+                }`}
+              >
+                <i className="fa-solid fa-arrow-down"></i>
+              </button>
+              <span className="font-semibold font-poppins bg-light-brown py-2 px-3">
+                Cena
+              </span>
+              <button
+                onClick={() =>
+                  props.onSort({
+                    ...props.sortValues,
+                    price: props.sortValues.price === "asc" ? "" : "asc",
+                  })
+                }
+                className={`bg-light-brown py-2 px-4 rounded-e-md hover:opacity-80 transition-opacity ${
+                  props.sortValues.price === "asc" ? "opacity-80" : ""
+                }`}
+              >
+                <i className="fa-solid fa-arrow-up"></i>
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
