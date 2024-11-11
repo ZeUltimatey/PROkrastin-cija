@@ -22,9 +22,40 @@ class UserController extends Controller
     /**
      * Show all users.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(User::all());
+        // Initialize a query builder for the Product model
+        $query = User::query();
+        $query->where('user_role', 'LIKE', 'User');
+
+        if ($request->has('deactivated')) {
+            $search_deactivated = $request->deactivated === 'true';
+            $query->where('deactivated', $search_deactivated);
+        }
+
+        // Filter by keyword in display_name or description (if provided)
+        if ($request->has('keyword')) {
+            $keyword = strtolower(str_replace(' ', '', $request->keyword)); // Convert keyword to lowercase and remove spaces
+
+            $query->where(function($q) use ($keyword) {
+                $q->whereRaw("LOWER(REPLACE(REPLACE(display_name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(surname, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(email, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"]);
+            });
+        }
+
+        // Set the default number of records per page to 12 if not provided
+        $perPage = $request->get('per_page', 12);  // Default to 12 records per page
+
+        // Get paginated results
+        $products = $query->paginate($perPage);
+
+        // Append current request parameters to pagination links
+        $products->appends($request->except('page'));
+
+        // Return paginated products as a resource collection
+        return UserResource::collection($products);
     }
 
     /**
