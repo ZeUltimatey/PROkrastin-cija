@@ -8,7 +8,7 @@ export const NavbarCart = () => {
   const navigate = useNavigate();
 
   return (
-    <ul className="flex flex-col mt-6 border-t-4 border-accent-brown absolute w-[280px] top-20 right-[118px] justify-between shadow-sm">
+    <ul className="flex flex-col mt-6 border-t-4 border-accent-brown absolute w-[280px] top-20 right-[260px] justify-between shadow-sm">
       {!cartItems?.length && (
         <li
           key={1}

@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { Product } from "../universal/interfaces/Product";
 import { useCart } from "../universal/Cart";
+import { IProduct } from "../universal/interfaces/IProduct";
 
-export const ItemCard = (props: Product) => {
+export const ItemCard = (props: IProduct) => {
   const navigate = useNavigate();
 
   const { addToCart } = useCart();

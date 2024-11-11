@@ -64,8 +64,8 @@ class ProductController extends Controller
             $query->orderByRaw("(CASE WHEN discount_pricing IS NOT NULL THEN discount_pricing ELSE pricing END) " . $sortOrder);
         }
 
-        // Set the default number of records per page to 10 if not provided
-        $perPage = $request->get('per_page', 10);  // Default to 10 records per page
+        // Set the default number of records per page to 12 if not provided
+        $perPage = $request->get('per_page', 12);  // Default to 12 records per page
 
         // Get paginated results
         $products = $query->paginate($perPage);

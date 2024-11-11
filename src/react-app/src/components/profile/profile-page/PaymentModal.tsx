@@ -4,11 +4,11 @@ import { paymentMethod } from "./PaymentMethods";
 import { useToast } from "../../universal/Toast";
 import { Constants } from "../../universal/Constants";
 
-interface PaymentModalProps {
+interface IPaymentModalProps {
   onClose: () => void;
 }
 
-export const PaymentModal = ({ onClose }: PaymentModalProps) => {
+export const PaymentModal = ({ onClose }: IPaymentModalProps) => {
   const [formData, setFormData] = useState(paymentMethod);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -75,7 +75,9 @@ export const PaymentModal = ({ onClose }: PaymentModalProps) => {
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-1/3 p-8 bg-white rounded-lg shadow-lg">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-dark-brown font-poppins"></h2>
+          <h2 className="text-2xl font-bold text-dark-brown font-poppins">
+            Pievienot jaunu maksājuma karti
+          </h2>
           <button
             onClick={onClose}
             className="flex items-center justify-center rounded-full text-dark-brown w-7 h-7"

@@ -1,10 +1,10 @@
-interface Props {
+interface IProps {
   filter: any;
   item: string;
   onSelect: (filter: any) => void;
 }
 
-export const CategoryItem = (props: Props) => {
+export const CategoryItem = (props: IProps) => {
   const { filter, item, onSelect } = props;
   return (
     <div className="flex gap-2">

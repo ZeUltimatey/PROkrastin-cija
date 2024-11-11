@@ -80,17 +80,6 @@ export const Sidebar = () => {
             >
               Lietotāji
             </li>
-
-            <li
-              onClick={() => navigate("/panel/encyclopedia")}
-              className={`${
-                selectedTab === "encyclopedia"
-                  ? " bg-medium-brown bg-opacity-90 "
-                  : ""
-              }hover:bg-medium-brown hover:text-white p-3 text-center cursor-pointer`}
-            >
-              Enciklopēdija
-            </li>
           </ul>
         </nav>
       </aside>

@@ -190,7 +190,10 @@ export const PaymentMethods = () => {
             </div>
           ))}
       </div>
-      <div className="w-full flex flex-col gap-2 bg-light-gray border-2 hover:bg-hover-brown transition-all rounded-md border-hover-brown place-items-center justify-center h-12">
+      <div
+        onClick={() => setAddressOpen(true)}
+        className="w-full flex flex-col gap-2 bg-light-gray border-2 hover:bg-hover-brown transition-all rounded-md border-hover-brown place-items-center justify-center h-12"
+      >
         <i className="fa-solid fa-plus text-accent-brown text-xl"></i>
       </div>
     </div>

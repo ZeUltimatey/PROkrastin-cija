@@ -58,7 +58,7 @@ export const SavedAddresses = () => {
     }).then(async (response) => {
       if (response.ok) {
         const data = await response.json();
-        setFormData(data);
+        setFormData(data.data);
         setIsModalOpen(true);
       }
     });

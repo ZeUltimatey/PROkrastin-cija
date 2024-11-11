@@ -7,6 +7,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class CatBreedResource extends JsonResource
 {
+    public static function find(int $breed_Id): CatBreedResource
+    {
+        return new CatBreedResource(CatBreed::find($breed_Id));
+    }
+
     /**
      * Transform the resource into an array.
      *

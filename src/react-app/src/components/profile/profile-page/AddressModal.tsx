@@ -13,7 +13,7 @@ export const SavedAddress = {
   zip_code: "",
 };
 
-interface AddressModalProps {
+interface IAddressModalProps {
   onClose: () => void;
   data?: typeof SavedAddress;
   isEditing: boolean;
@@ -23,8 +23,8 @@ export const AddressModal = ({
   onClose,
   data,
   isEditing,
-}: AddressModalProps) => {
-  const [formData, setFormData] = useState(data);
+}: IAddressModalProps) => {
+  const [formData, setFormData] = useState(data ?? ({} as typeof SavedAddress));
   const [isLoading, setIsLoading] = useState(false);
 
   const showToast = useToast();

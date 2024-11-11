@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { Constants } from "../../universal/Constants";
+import { IQuery } from "../../universal/IQuery";
 
 export const Category = ({
   name,
@@ -12,9 +14,24 @@ export const Category = ({
   image: string;
 }) => {
   const navigate = useNavigate();
+
+  const goToFilteredProducts = () => {
+    const newQuery: IQuery = {
+      keyword: "",
+      product_type: name,
+      min_price: 0,
+      max_price: 9999999,
+    };
+    localStorage.setItem(
+      Constants.LOCAL_STORAGE.QUERY,
+      JSON.stringify(newQuery)
+    );
+    navigate("/products");
+  };
+
   return (
     <div
-      onClick={() => navigate(link)}
+      onClick={goToFilteredProducts}
       className="group w-80 h-80 hover:cursor-pointer"
     >
       <div

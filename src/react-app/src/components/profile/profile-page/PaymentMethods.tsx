@@ -79,7 +79,7 @@ export const PaymentMethods = () => {
           >
             <div>
               <p className="text-dark-brown font-poppins">
-                {payment.card_name} - {payment.card_number}
+                {payment.card_name}
               </p>
               <p className="text-sm text-dark-brown font-poppins">
                 Beidzas: {payment.expiration_date}

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Constants } from "../../universal/Constants";
-import { User } from "../../universal/interfaces/User";
 import { FormInput } from "../../universal/FormInput";
 import { useToast } from "../../universal/Toast";
 import {
@@ -11,16 +10,17 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { IUser } from "../../universal/interfaces/IUser";
 
 export const Users = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [users, setUsers] = useState<User[]>(null);
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
+  const [users, setUsers] = useState<IUser[]>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const showToast = useToast();
 
-  const handleEditClick = (user: User) => {
+  const handleEditClick = (user: IUser) => {
     setSelectedUser(user);
     setIsModalOpen(true);
   };
@@ -49,7 +49,7 @@ export const Users = () => {
   const onUserUpdate = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsLoading(true);
-    await fetch(`${Constants.API_URL}/user`, {
+    await fetch(`${Constants.API_URL}/users/update/${selectedUser.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -72,7 +72,7 @@ export const Users = () => {
     });
   };
 
-  const columnHelper = createColumnHelper<User>();
+  const columnHelper = createColumnHelper<IUser>();
 
   const columns = useMemo(
     () => [
