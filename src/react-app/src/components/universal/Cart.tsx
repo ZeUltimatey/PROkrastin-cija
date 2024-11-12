@@ -1,27 +1,25 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Product } from "./interfaces/Product";
 import { Constants } from "./Constants";
 import { useToast } from "./Toast";
+import { IProduct } from "./interfaces/IProduct";
 
-interface CartItem {
-  user_id: number;
-  product_id: number;
+interface ICartItem {
   amount: number;
-  product: Product;
+  product: IProduct;
 }
 
-interface CartContextType {
-  cartItems: CartItem[];
-  addToCart: (item: Product, amount?: number) => void;
-  removeFromCart: (item: CartItem) => void;
+interface ICartContextType {
+  cartItems: ICartItem[];
+  addToCart: (item: IProduct, amount?: number) => void;
+  removeFromCart: (item: ICartItem) => void;
   fetchCart: () => void;
   payForBasket: () => void;
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+const CartContext = createContext<ICartContextType | undefined>(undefined);
 
 const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<ICartItem[]>([]);
   const showToast = useToast();
 
   const fetchCart = async () => {
@@ -49,7 +47,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     setCartItems(cart);
   };
 
-  const addToCart = async (item: Product, amount?: number) => {
+  const addToCart = async (item: IProduct, amount?: number) => {
     if (localStorage.getItem(Constants.LOCAL_STORAGE.TOKEN)) {
       const response = await fetch(`${Constants.API_URL}/basket`, {
         method: "POST",
@@ -70,25 +68,22 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
           JSON.stringify(data.data)
         );
       } else {
-        showToast(false, "Kļūda pievienojot produktu grozam.");
+        localStorage.removeItem(Constants.LOCAL_STORAGE.TOKEN);
       }
-      return;
     }
     showToast(true, "Produkts pievienots grozam!");
     const cart = JSON.parse(localStorage.getItem(Constants.LOCAL_STORAGE.CART));
-    const itemToAdd: CartItem = {
-      user_id: 0,
-      product_id: item.id,
+    const itemToAdd: ICartItem = {
       amount: amount ?? 1,
       product: item,
     };
     if (cart) {
       const existingProduct = cart.find(
-        (cartItem: CartItem) => cartItem.product_id === item.id
+        (cartItem: ICartItem) => cartItem.product.id === item.id
       );
       if (existingProduct) {
         cart.find(
-          (cartItem: CartItem) => cartItem.product_id === item.id
+          (cartItem: ICartItem) => cartItem.product.id === item.id
         ).amount = amount ?? existingProduct.amount + 1;
         setCartItems(cart);
         localStorage.setItem(
@@ -114,10 +109,10 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     return;
   };
 
-  const removeFromCart = async (item: CartItem) => {
+  const removeFromCart = async (item: ICartItem) => {
     if (localStorage.getItem(Constants.LOCAL_STORAGE.TOKEN)) {
       const response = await fetch(
-        `${Constants.API_URL}/basket/remove/${item.product_id}`,
+        `${Constants.API_URL}/basket/remove/${item.product.id}`,
         {
           method: "DELETE",
           headers: {
@@ -136,7 +131,7 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
     }
     const cart = JSON.parse(localStorage.getItem(Constants.LOCAL_STORAGE.CART));
     const updatedCart = cart.filter(
-      (cartItem: CartItem) => cartItem.product_id !== item.product_id
+      (cartItem: ICartItem) => cartItem.product.id !== item.product.id
     );
     setCartItems(updatedCart);
     localStorage.setItem(

@@ -13,6 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { Pagination } from "../../universal/Pagination";
 
 export const Product = {
   id: 0,
@@ -20,7 +21,7 @@ export const Product = {
   description: "",
   pricing: 0,
   discount_pricing: null as number,
-  product_type: "CATS",
+  product_type: "FOOD",
   stock: 0,
   image_url: "",
 };
@@ -31,18 +32,20 @@ export const Products = () => {
   const [products, setProducts] = useState<(typeof Product)[]>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [pagination, setPagination] = useState(null);
 
   const showToast = useToast();
 
   const confirm = useConfirmation();
 
-  const fetchProducts = async () => {
-    await fetch(`${Constants.API_URL}/products`, {
+  const fetchProducts = async (link?: string) => {
+    await fetch(link ?? `${Constants.API_URL}/products`, {
       method: "GET",
     }).then(async (response) => {
       if (response.ok) {
         const data = await response.json();
         setProducts(data.data);
+        setPagination(data.meta);
       } else {
         showToast(false, "Kļūda iegūstot produktus.");
       }
@@ -212,76 +215,82 @@ export const Products = () => {
             </button>
           </div>
         </header>
-        {products && (
-          <table className="text-center font-poppins w-full">
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th
-                      className="h-12 bg-light-gray border-b border-light-brown text-dark-brown font-semibold"
-                      key={header.id}
-                      colSpan={header.colSpan}
-                    >
-                      {header.isPlaceholder ? null : (
-                        <div
-                          className={
-                            header.column.getCanSort()
-                              ? "cursor-pointer select-none"
-                              : ""
-                          }
-                          onClick={header.column.getToggleSortingHandler()}
-                          title={
-                            header.column.getCanSort()
-                              ? header.column.getNextSortingOrder() === "asc"
-                                ? "Sort ascending"
-                                : header.column.getNextSortingOrder() === "desc"
-                                ? "Sort descending"
-                                : "Clear sort"
-                              : undefined
-                          }
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          {{
-                            asc: (
-                              <i className="fa-solid fa-chevron-up ml-2"></i>
-                            ),
-                            desc: (
-                              <i className="fa-solid fa-chevron-down ml-2"></i>
-                            ),
-                          }[header.column.getIsSorted() as string] ?? null}
-                        </div>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => {
-                if (row.original.product_type == "CATS") return;
-                return (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <td
-                        className="h-8 border-b border-light-brown bg-light-gray text-dark-brown font-semibold"
-                        key={cell.id}
+        <div className="flex place-items-center justify-center flex-col gap-4">
+          {products && (
+            <table className="text-center font-poppins w-full">
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        className="h-12 bg-light-gray border-b border-light-brown text-dark-brown font-semibold"
+                        key={header.id}
+                        colSpan={header.colSpan}
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
+                        {header.isPlaceholder ? null : (
+                          <div
+                            className={
+                              header.column.getCanSort()
+                                ? "cursor-pointer select-none"
+                                : ""
+                            }
+                            onClick={header.column.getToggleSortingHandler()}
+                            title={
+                              header.column.getCanSort()
+                                ? header.column.getNextSortingOrder() === "asc"
+                                  ? "Sort ascending"
+                                  : header.column.getNextSortingOrder() ===
+                                    "desc"
+                                  ? "Sort descending"
+                                  : "Clear sort"
+                                : undefined
+                            }
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              asc: (
+                                <i className="fa-solid fa-chevron-up ml-2"></i>
+                              ),
+                              desc: (
+                                <i className="fa-solid fa-chevron-down ml-2"></i>
+                              ),
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
                         )}
-                      </td>
+                      </th>
                     ))}
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
+                ))}
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map((row) => {
+                  if (row.original.product_type == "CATS") return;
+                  return (
+                    <tr key={row.id}>
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          className="h-8 border-b border-light-brown bg-light-gray text-dark-brown font-semibold"
+                          key={cell.id}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+          {pagination && (
+            <Pagination pagination={pagination} onNavigate={fetchProducts} />
+          )}
+        </div>
         {isModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-poppins">
             <div className="bg-white p-8 rounded-lg shadow-lg w-1/3 relative overflow-auto ">
@@ -391,6 +400,7 @@ export const Products = () => {
                     >
                       {Object.keys(CategoryNames).map((key) => {
                         const categoryKey = key as keyof typeof CategoryNames;
+                        if (categoryKey === "CATS") return;
                         return (
                           <option
                             className="font-poppins"

@@ -1,5 +1,8 @@
 import { FormInput } from "../../universal/FormInput";
 import cities from "../../../data/cities.json";
+import { useState } from "react";
+import { Constants } from "../../universal/Constants";
+import { useToast } from "../../universal/Toast";
 
 export const SavedAddress = {
   id: 0,
@@ -10,26 +13,69 @@ export const SavedAddress = {
   zip_code: "",
 };
 
-interface AddressModalProps {
-  isOpen: boolean;
-  formData: typeof SavedAddress;
-  setFormData: (data: typeof SavedAddress) => void;
-  isEditing: boolean;
-  isLoading: boolean;
+interface IAddressModalProps {
   onClose: () => void;
-  onSubmit: (e: React.FormEvent) => void;
+  data?: typeof SavedAddress;
+  isEditing: boolean;
 }
 
 export const AddressModal = ({
-  isOpen,
-  formData,
-  setFormData,
-  isEditing,
-  isLoading,
   onClose,
-  onSubmit,
-}: AddressModalProps) => {
-  if (!isOpen) return null;
+  data,
+  isEditing,
+}: IAddressModalProps) => {
+  const [formData, setFormData] = useState(data ?? ({} as typeof SavedAddress));
+  const [isLoading, setIsLoading] = useState(false);
+
+  const showToast = useToast();
+
+  const onFormSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setIsLoading(true);
+    await fetch(`${Constants.API_URL}/locations`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+      body: JSON.stringify(formData),
+    }).then((response) => {
+      if (response.ok) {
+        showToast(true, "Adrese veiksmīgi pievienota!");
+        onClose();
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        showToast(false, "Kļūda adreses izveidē.");
+      }
+    });
+    setIsLoading(false);
+  };
+
+  const onEditSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setIsLoading(true);
+    await fetch(`${Constants.API_URL}/locations/${formData.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+      body: JSON.stringify(formData),
+    }).then((response) => {
+      if (response.ok) {
+        showToast(true, "Adrese veiksmīgi atjaunināta!");
+        onClose();
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        showToast(false, "Kļūda adreses atjaunināšanā.");
+      }
+    });
+    setIsLoading(false);
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -45,7 +91,10 @@ export const AddressModal = ({
             <i className="fa-solid fa-x"></i>
           </button>
         </div>
-        <form className="space-y-4" onSubmit={onSubmit}>
+        <form
+          className="space-y-4"
+          onSubmit={isEditing ? onEditSubmit : onFormSubmit}
+        >
           <div>
             <label className="block mb-1 text-sm text-dark-brown font-poppins">
               Adreses Nosaukums

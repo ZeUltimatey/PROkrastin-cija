@@ -1,12 +1,27 @@
 import { useNavigate } from "react-router-dom";
+import { IQuery } from "../../universal/IQuery";
+import { Constants } from "../../universal/Constants";
+import { CategoryNames } from "../../universal/CategoryNames";
 
 export const Button = ({ isInfoButton }: { isInfoButton: boolean }) => {
   const navigate = useNavigate();
 
+  const productsCatFilter = () => {
+    const query = {
+      product_type: CategoryNames.CATS,
+    };
+
+    localStorage.setItem(
+      Constants.LOCAL_STORAGE.QUERY_CATALOG,
+      JSON.stringify(query)
+    );
+    navigate("/products");
+  };
+
   if (!isInfoButton) {
     return (
       <button
-        onClick={() => navigate("/products?product_type=cats")}
+        onClick={productsCatFilter}
         className="bg-accent-brown text-dark-brown min-w-64 justify-center hover:gap-4 hover:brightness-90 text-lg transition-all hover:shadow-xl rounded-full px-8 py-3.5 flex gap-2 place-items-center shadow-md"
       >
         <span className="font-semibold font-poppins">Skatīt kaķus</span>

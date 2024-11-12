@@ -13,6 +13,7 @@ class CardInformationResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+  
     public function toArray(Request $request): array
     {
         $cardNumber = Str::mask($this->card_number, '*', 0, -4);

@@ -4,12 +4,12 @@ import { SavedAddresses } from "./profile-page/SavedAddresses";
 import { PaymentMethods } from "./profile-page/PaymentMethods";
 import { ProfileSettings } from "./profile-page/ProfileSettings";
 import { useEffect, useState } from "react";
-import { User } from "../universal/interfaces/User";
 import { Constants } from "../universal/Constants";
 import { useNavigate } from "react-router-dom";
+import { IUser } from "../universal/interfaces/IUser";
 
 export const Profile = () => {
-  const [user, setUser] = useState<User>(null);
+  const [user, setUser] = useState<IUser>(null);
 
   const navigate = useNavigate();
 

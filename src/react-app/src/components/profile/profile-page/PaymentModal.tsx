@@ -1,30 +1,74 @@
+import { useState } from "react";
 import { FormInput } from "../../universal/FormInput";
 import { paymentMethod } from "./PaymentMethods";
+import { useToast } from "../../universal/Toast";
+import { Constants } from "../../universal/Constants";
 
-interface PaymentModalProps {
-  isOpen: boolean;
+interface IPaymentModalProps {
   onClose: () => void;
-  onSubmit: (formData: typeof paymentMethod) => void;
-  formData: typeof paymentMethod;
-  setFormData: (data: typeof paymentMethod) => void;
-  isLoading: boolean;
-  isEditing: boolean;
 }
 
-export const PaymentModal = ({
-  isOpen,
-  onClose,
-  onSubmit,
-  formData,
-  setFormData,
-  isLoading,
-  isEditing,
-}: PaymentModalProps) => {
-  if (!isOpen) return null;
+export const PaymentModal = ({ onClose }: IPaymentModalProps) => {
+  const [formData, setFormData] = useState(paymentMethod);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const showToast = useToast();
+  const valid = require("card-validator");
+
+  const onFormSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    onSubmit(formData);
+    const updatedFormData = {
+      ...formData,
+      card_name: `${valid
+        .number(formData.card_number)
+        .card.type.toUpperCase()} **** **** **** ${formData.card_number.slice(
+        -4
+      )}`,
+    };
+    if (!validateCard()) return;
+    setIsLoading(true);
+    await fetch(`${Constants.API_URL}/cards`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+      body: JSON.stringify(updatedFormData),
+    }).then((response) => {
+      if (response.ok) {
+        showToast(true, "Maksājuma karte veiksmīgi pievienota!");
+        onClose();
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        showToast(false, "Kļūda maksājuma kartes pievienošanā.");
+      }
+    });
+    setIsLoading(false);
+  };
+
+  const validateCard = () => {
+    if (!valid.number(formData.card_number).isValid) {
+      showToast(false, "Nepareizs kartes numurs!");
+      return false;
+    }
+    if (
+      !valid.cardholderName(formData.cardOwnerName).isValid ||
+      !valid.cardholderName(formData.cardOwnerSurname).isValid
+    ) {
+      showToast(false, "Lūdzu, ievadiet pareizu vārdu!");
+      return false;
+    }
+    if (!valid.expirationDate(formData.expiration_date).isValid) {
+      showToast(false, "Nepareizs derīguma termiņš!");
+      return false;
+    }
+    if (!valid.cvv(formData.cvc_number).isValid) {
+      showToast(false, "Nepareizs CVC numurs!");
+      return false;
+    }
+    return true;
   };
 
   return (
@@ -32,9 +76,7 @@ export const PaymentModal = ({
       <div className="w-1/3 p-8 bg-white rounded-lg shadow-lg">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold text-dark-brown font-poppins">
-            {isEditing
-              ? "Rediģēt maksājumu karti"
-              : "Pievienot jaunu maksājumu karti"}
+            Pievienot jaunu maksājuma karti
           </h2>
           <button
             onClick={onClose}
@@ -43,7 +85,7 @@ export const PaymentModal = ({
             <i className="fa-solid fa-x"></i>
           </button>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={onFormSubmit} className="space-y-4">
           <div className="flex gap-2">
             <div>
               <label className="block mb-1 text-sm text-dark-brown font-poppins">
@@ -136,7 +178,7 @@ export const PaymentModal = ({
                   : "bg-light-brown hover:bg-medium-brown"
               } text-white px-4 py-2 text-sm rounded-md font-poppins`}
             >
-              {isLoading ? "Ielādē..." : isEditing ? "Saglabāt" : "Izveidot"}
+              {isLoading ? "Ielādē..." : "Izveidot"}
             </button>
           </div>
         </form>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-interface Order {
+interface IOrder {
   id: number;
   status: string;
   date: string;
@@ -10,9 +10,9 @@ interface Order {
 export const OrderHistory = () => {
   const [isOrderDetailsModalOpen, setIsOrderDetailsModalOpen] = useState(false);
   const [isAllOrdersModalOpen, setIsAllOrdersModalOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
 
-  const orders: Order[] = [
+  const orders: IOrder[] = [
     {
       id: 12345,
       status: "Sūtīšans procesā",
@@ -37,7 +37,7 @@ export const OrderHistory = () => {
     },
   ];
 
-  const handleOpenOrderDetails = (order: Order) => {
+  const handleOpenOrderDetails = (order: IOrder) => {
     setSelectedOrder(order);
     setIsOrderDetailsModalOpen(true);
   };

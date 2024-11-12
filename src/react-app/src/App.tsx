@@ -102,14 +102,12 @@ function App() {
                 <Route path="/panel/products" element={<Products />} />
                 <Route path="/panel/cats" element={<Cats />} />
                 <Route path="/panel/breeds" element={<Breeds />} />
-                <Route path="/panel/encyclopedia" element={<Encyclopedia />} />
               </Route>
 
               <Route path="/auth" element={<AuthLayout />}>
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
               </Route>
-              <Route path="/catalog/cats" element={<Homepage />} />
             </Routes>
           </CartProvider>
         </ConfirmationProvider>

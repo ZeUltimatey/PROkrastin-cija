@@ -1,4 +1,4 @@
-interface Product {
+interface IProduct {
   id: number;
   title: string;
   quantity: number;
@@ -6,9 +6,9 @@ interface Product {
 }
 
 export const Receipt = () => {
-  const purchasedProducts: Product[] = [
+  const purchasedProducts: IProduct[] = [
     { id: 1, title: "Kaķu barība 1kg", quantity: 2, price: 12.99 },
-    { id: 2, title: "Kaķu rotaļlieta", quantity: 1, price: 5.99 },  
+    { id: 2, title: "Kaķu rotaļlieta", quantity: 1, price: 5.99 },
   ];
 
   return (

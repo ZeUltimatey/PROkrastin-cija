@@ -16,9 +16,27 @@ class CatBreedController extends Controller
     /**
      * Show all cat breeds.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return CatBreedResource::collection(CatBreed::all());
+        // Initialize a query builder for the CatBreed model
+        $query = CatBreed::query();
+
+        // Filter by keyword in display_name (if provided)
+        if ($request->has('keyword')) {
+            $query->where('display_name', 'LIKE', '%' . $request->keyword . '%');
+        }
+
+        // Set the default number of records per page to 10 if not provided
+        $perPage = $request->get('per_page', 10);  // Default to 10 records per page
+
+        // Get paginated results
+        $cat_breeds = $query->paginate($perPage);
+
+        // Append current request parameters to pagination links
+        $cat_breeds->appends($request->except('page'));
+
+        // Return paginated cat breeds as a resource collection
+        return CatBreedResource::collection($cat_breeds);
     }
 
     /**

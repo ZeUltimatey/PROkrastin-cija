@@ -3,10 +3,10 @@ import { ProductInfo } from "./product-details/ProductInfo";
 import { ProductSpecification } from "./product-details/ProductSpecification";
 import { useParams } from "react-router-dom";
 import { Constants } from "../universal/Constants";
-import { Product } from "../universal/interfaces/Product";
+import { IProduct } from "../universal/interfaces/IProduct";
 
 export const ProductView = () => {
-  const [product, setProduct] = useState<Product>(null);
+  const [product, setProduct] = useState<IProduct>(null);
 
   const { productId } = useParams();
 

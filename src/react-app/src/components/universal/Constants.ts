@@ -3,5 +3,7 @@ export const Constants = {
   LOCAL_STORAGE: {
     TOKEN: "AUTH_TOKEN",
     CART: "CART",
+    QUERY_CATALOG: "QUERY_CATALOG",
+    QUERY_BREED: "QUERY_BREED",
   },
 };

@@ -1,29 +1,145 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormInput } from "../universal/FormInput";
+import { Constants } from "../universal/Constants";
+import { useToast } from "../universal/Toast";
+import { Spinner } from "../universal/Spinner";
+import { SearchSort } from "../catalog/catalog-page/SearchSort";
+import { IQuery } from "../universal/IQuery";
+import { CategoryItem } from "../catalog/catalog-page/CategoryItem";
+import { useNavigate } from "react-router-dom";
+import { Pagination } from "../universal/Pagination";
 
-interface Breed {
+export interface IBreed {
   id: number;
   display_name: string;
-  breed_information: string;
+  feeding_info: string;
+  environment_info: string;
+  personality_info: string;
+  tips_info: string;
 }
-export const BreedCatalog = () => {
-  const breeds = [
-    { id: 1, name: "Meinkūns", description: "Liels un draudzīgs mīlulis." },
-    {
-      id: 2,
-      name: "Persijas",
-      description: "Garspalvains un mīļš ķepainais draugs.",
-    },
-    { id: 3, name: "Bengālijas", description: "Riabs un rotaļīgs pēc dabas." },
-    { id: 4, name: "Siamiešu", description: "Vokāla un sociāla šķirne." },
-    {
-      id: 5,
-      name: "Sfinkss",
-      description: "Bez apmatojuma un enerģisks kaķis.",
-    },
-  ];
 
-  const [formData, setFormData] = useState<Breed>({} as Breed);
+export const BreedCatalog = () => {
+  const [breeds, setBreeds] = useState<IBreed[]>(null);
+  const [pagination, setPagination] = useState(null);
+  const [filterUpdateTrigger, setFilterUpdateTrigger] = useState(0);
+
+  const navigate = useNavigate();
+
+  const [filter, setFilter] = useState<{
+    category: { [key: string]: boolean };
+    keyword: string;
+  }>({ category: {}, keyword: "" });
+  const showToast = useToast();
+
+  const getBreeds = async (url?: string) => {
+    await fetch(`${Constants.API_URL}/breeds?${formatQueryParams(url) ?? ""}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+    })
+      .then(async (response) => {
+        if (response.ok) {
+          const data = await response.json();
+          setPagination(data.meta);
+          setBreeds(data.data);
+        } else {
+          showToast(false, "Kļūda iegūstot šķirnes.");
+        }
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
+
+  useEffect(() => {
+    getBreeds();
+  }, []);
+
+  const onSearch = (keyword: string) => {
+    const query: IQuery = JSON.parse(
+      localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_BREED)
+    );
+    if (query) {
+      query.keyword = keyword;
+      localStorage.setItem(
+        Constants.LOCAL_STORAGE.QUERY_BREED,
+        JSON.stringify(query)
+      );
+      getBreeds();
+      return;
+    }
+    const newQuery = {
+      keyword: keyword,
+      product_type: "",
+    };
+    localStorage.setItem(
+      Constants.LOCAL_STORAGE.QUERY_BREED,
+      JSON.stringify(newQuery)
+    );
+  };
+
+  const onFilterUpdate = () => {
+    setFilterUpdateTrigger((prev) => prev + 1);
+    getBreeds();
+  };
+
+  const handleCategoryChange = (category: string) => {
+    const updatedFilter = {
+      ...filter,
+      category: {
+        ...filter.category,
+        [category]: !filter.category[category],
+      },
+    };
+    setFilter(updatedFilter);
+    setupFilter(updatedFilter);
+  };
+
+  const setupFilter = (newFilter: any) => {
+    const selectedCategories = Object.keys(newFilter.category)
+      .filter((key) => newFilter.category[key])
+      .join(",");
+    const updatedFilter = {
+      keyword: JSON.parse(
+        localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_BREED)
+      ).keyword,
+      breed: selectedCategories,
+    };
+    localStorage.setItem(
+      Constants.LOCAL_STORAGE.QUERY_BREED,
+      JSON.stringify(updatedFilter)
+    );
+    onFilterUpdate();
+  };
+
+  // useEffect(() => {
+  //   if (breeds) {
+  //     const savedFilter: IQuery = JSON.parse(
+  //       localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_BREED)
+  //     );
+
+  //     setFilter({
+  //       category: breeds.reduce((acc: { [key: string]: boolean }, breed) => {
+  //         acc[breed.display_name] =
+  //           savedFilter?.product_type?.includes(breed.display_name) || false;
+  //         return acc;
+  //       }, {}),
+  //       keyword: savedFilter?.keyword || "",
+  //     });
+  //   }
+  // }, [filterUpdateTrigger]);
+
+  const formatQueryParams = (url?: string) => {
+    const query: IQuery = JSON.parse(
+      localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_BREED)
+    );
+    if (query) {
+      return url ?? `keyword=${query.keyword ?? ""}`;
+    }
+  };
 
   return (
     <div className="bg-content-white">
@@ -38,60 +154,64 @@ export const BreedCatalog = () => {
 
       <div className="flex flex-col lg:flex-row-reverse gap-6 p-8">
         <div className="w-full lg:w-1/4 p-4 rounded-md bg-content-white shadow-lg">
-          <h3 className="text-lg font-semibold mb-4">Izvēlēties šķirnes:</h3>
-          {breeds.map(({ id, name }) => (
-            <div key={id} className="flex gap-2 mb-2">
-              <label className="w-6 shadow-sm bg-white border-gray-300 border-2"></label>
-              <label className="text-dark-brown font-poppins font-semibold">
-                {name}
-              </label>
-            </div>
-          ))}
+          <label
+            htmlFor="category"
+            className="text-dark-brown font-bold font-poppins text-lg"
+          >
+            Šķirne:
+          </label>
+          <div className="flex flex-col gap-2 mt-2">
+            {Object.keys(filter.category).map((categoryKey) => (
+              <CategoryItem
+                key={categoryKey}
+                onSelect={() => handleCategoryChange(categoryKey)}
+                filter={filter}
+                item={categoryKey}
+              />
+            ))}
+          </div>
         </div>
 
-        <div className="flex flex-col grow gap-1">
-          <div className="hidden mx-8 md:flex text-lg lg:text-xl font-semibold place-items-center border-2 rounded-full border-light-gray">
-            <div className="flex grow">
-              <FormInput
-                placeholder="Meklēt šķirni..."
-                type="text"
-                value={formData.display_name}
-                onChange={(e) =>
-                  setFormData({ ...formData, display_name: e.target.value })
-                }
-                disabled
-              />
-              <button
-                className="bg-white text-2xl px-10 rounded-e-full h-12 flex place-items-center"
-                disabled
-              >
-                <i className="fa-solid fa-magnifying-glass"></i>
-              </button>
-            </div>
-          </div>
+        <div className="flex flex-col grow gap-4">
+          <SearchSort
+            filteredItemAmount={breeds?.length}
+            onSearch={onSearch}
+            onFilterUpdate={onFilterUpdate}
+            filterUpdateTrigger={filterUpdateTrigger}
+            queryConstant={Constants.LOCAL_STORAGE.QUERY_BREED}
+          />
 
-          <div className="justify-between mx-8 flex place-items-center">
-            <span className="font-poppins text-dark-brown font-semibold">
-              Atrastas {breeds.length} šķirnes
-            </span>
-          </div>
-
-          <div className="mx-8 h-auto mb-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 place-items-stretch gap-12">
-              {breeds.map(({ id, name, description }) => (
-                <div
-                  key={id}
-                  className="rounded-t-md shadow-lg flex flex-col justify-between bg-light-gray"
-                >
-                  <div className="h-40 bg-red-200 rounded-t-md"></div>{" "}
-                  <div className="p-4">
-                    <h3 className="text-xl font-semibold text-dark-brown">
-                      {name}
-                    </h3>
-                    <p className="text-accent-brown mb-2">{description}</p>
-                  </div>
+          <div className="mx-8 h-auto mb-6 font-poppins">
+            <div className="flex flex-col gap-6 place-items-center justify-center">
+              {!breeds && <Spinner />}
+              {breeds && breeds.length === 0 && (
+                <div className="font-poppins">
+                  Diemžēl nav informāciju par šķirnēm.
                 </div>
-              ))}
+              )}
+              {breeds &&
+                breeds.map((breed) => (
+                  <button
+                    onClick={() => navigate(`/breed/${breed.id}`)}
+                    key={breed.id}
+                    className="rounded-md hover:shadow-md transition-all flex border h-24 border-slate-300 w-full"
+                  >
+                    <div className="bg-gradient-to-r from-purple-400 to-pink-400 rounded-s-md w-48"></div>
+                    <div className="px-4 grow flex text-left justify-center flex-col">
+                      <h3 className="text-xl font-semibold text-dark-brown">
+                        {breed.display_name}
+                      </h3>
+                      <p className="">
+                        {breed.personality_info.length > 100
+                          ? `${breed.personality_info.slice(1, 100)}...`
+                          : breed.personality_info}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              {pagination && (
+                <Pagination pagination={pagination} onNavigate={getBreeds} />
+              )}
             </div>
           </div>
         </div>

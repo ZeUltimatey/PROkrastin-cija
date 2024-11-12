@@ -2,13 +2,13 @@ import { useState } from "react";
 import { Sidebar } from "../admin-panel/Sidebar";
 import { FormInput } from "../../universal/FormInput";
 
-interface Encyclopedia {
+interface IEncyclopedia {
   id: number;
   display_name: string;
   breed_information: string;
 }
 
-const data: Encyclopedia = {
+const data: IEncyclopedia = {
   id: 0,
   display_name: "",
   breed_information: "",
@@ -17,7 +17,7 @@ const data: Encyclopedia = {
 export const Encyclopedia = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [formData, setFormData] = useState<Encyclopedia>(data);
+  const [formData, setFormData] = useState<IEncyclopedia>(data);
 
   return (
     <div className="flex w-full">

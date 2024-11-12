@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../../universal/Toast";
 import { FormInput } from "../../universal/FormInput";
 import { Spinner } from "../../universal/Spinner";
-import { User } from "../../universal/interfaces/User";
+import { IUser } from "../../universal/interfaces/IUser";
 
-export const ProfileInfo = ({ user }: { user: User }) => {
+export const ProfileInfo = ({ user }: { user: IUser }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState<User>(user);
+  const [formData, setFormData] = useState<IUser>(user);
   const [isLoading, setIsLoading] = useState(false);
   const showToast = useToast();
 

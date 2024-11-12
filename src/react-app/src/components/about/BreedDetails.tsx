@@ -1,7 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Constants } from "../universal/Constants";
+import { IBreed } from "./BreedCatalog";
 
 export const BreedDetails = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [breed, setBreed] = useState<IBreed>(null);
+
+  const navigate = useNavigate();
+
+  const { breedId } = useParams();
+
+  const getBreed = async () => {
+    await fetch(`${Constants.API_URL}/breeds/${breedId}`, {}).then(
+      async (response) => {
+        if (response.ok) {
+          const data = await response.json();
+          setBreed(data.data);
+        }
+      }
+    );
+  };
+
+  useEffect(() => {
+    getBreed();
+  }, []);
 
   return (
     <div className="bg-content-white min-h-screen p-8">
@@ -9,9 +32,11 @@ export const BreedDetails = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-60"></div>
 
         <div className="absolute top-4 left-4 z-10">
-          <button className="flex items-center gap-2 text-dark-brown font-semibold hover:text-accent-brown">
+          <button
+            onClick={() => navigate("/breeds")}
+            className="flex items-center gap-2 text-dark-brown font-semibold"
+          >
             <i className="fa-solid fa-arrow-left text-2xl"></i>
-            Atpakaļ uz šķirņu enciklopēdiju
           </button>
         </div>
 
@@ -47,57 +72,41 @@ export const BreedDetails = () => {
           </div>
         </div>
 
-        <div className="flex flex-col grow gap-8">
-          <div className="bg-light-gray p-6 rounded-md shadow-lg">
-            <h3 className="text-2xl font-semibold text-accent-brown mb-4">
-              Barošana
-            </h3>
-            <p className="text-dark-brown text-lg">
-              Meinkūns ir liela šķirne, kurai nepieciešama sabalansēta diēta,
-              kas satur pietiekami daudz proteīna, lai uzturētu viņu muskuļu
-              masu un enerģijas līmeni. Ieteicams piedāvāt augstas kvalitātes
-              sausās vai mitrās barības, īpaši piemērotas lielu šķirņu kaķiem.
-              Svarīgi arī, lai viņiem vienmēr būtu pieejams svaigs ūdens.
-            </p>
-          </div>
+        {breed && (
+          <div className="flex flex-col grow gap-8 font-poppins">
+            <div className="bg-light-gray p-6 rounded-md shadow-lg">
+              <h3 className="text-2xl font-semibold text-accent-brown mb-4">
+                Barošana
+              </h3>
+              <p className="text-dark-brown text-lg">{breed.feeding_info}</p>
+            </div>
 
-          <div className="bg-light-gray p-6 rounded-md shadow-lg">
-            <h3 className="text-2xl font-semibold text-accent-brown mb-4">
-              Personība
-            </h3>
-            <p className="text-dark-brown text-lg">
-              Meinkūns ir draudzīgs, neatkarīgs un sabiedrisks šķirnes kaķis.
-              Viņi ir pazīstami ar savu spēlētprasmi un mīlestību pret
-              cilvēkiem, kas padara viņus par lieliskiem mājas mīluļiem. Viņi ir
-              sabiedriski, bet vienlaikus spēj būt neatkarīgi un labi iztikt
-              vieni, ja nepieciešams.
-            </p>
-          </div>
+            <div className="bg-light-gray p-6 rounded-md shadow-lg">
+              <h3 className="text-2xl font-semibold text-accent-brown mb-4">
+                Personība
+              </h3>
+              <p className="text-dark-brown text-lg">
+                {breed.personality_info}
+              </p>
+            </div>
 
-          <div className="bg-light-gray p-6 rounded-md shadow-lg">
-            <h3 className="text-2xl font-semibold text-accent-brown mb-4">
-              Dzīves apstākļi
-            </h3>
-            <p className="text-dark-brown text-lg">
-              Meinkūni ir piemēroti dzīvot plašās mājās vai dzīvokļos ar vietu,
-              kur kāpt un spēlēties. Viņiem ir nepieciešama telpa, jo viņi ir
-              aktīvi un mīl izpētīt apkārtni. Šie kaķi var labi pielāgoties gan
-              iekštelpām, gan brīvdabai, bet viņiem patīk būt kopā ar cilvēkiem.
-            </p>
-          </div>
+            <div className="bg-light-gray p-6 rounded-md shadow-lg">
+              <h3 className="text-2xl font-semibold text-accent-brown mb-4">
+                Dzīves apstākļi
+              </h3>
+              <p className="text-dark-brown text-lg">
+                {breed.environment_info}
+              </p>
+            </div>
 
-          <div className="bg-light-gray p-6 rounded-md shadow-lg">
-            <h3 className="text-2xl font-semibold text-accent-brown mb-4">
-              Noderīgi padomi
-            </h3>
-            <p className="text-dark-brown text-lg">
-              Meinkūns var būt jūtīgs pret aukstumu un karstumu, bet parasti
-              labi pielāgojas. Šīs šķirnes kaķiem ir nepieciešama liela uzmanība
-              spalvas kopšanai, jo tai nepieciešama regulāra ķemmēšana. Turklāt
-              šie kaķi mēdz baudīt ūdens rotaļas, kas ir neparasts kaķu vidū.
-            </p>
+            <div className="bg-light-gray p-6 rounded-md shadow-lg">
+              <h3 className="text-2xl font-semibold text-accent-brown mb-4">
+                Noderīgi padomi
+              </h3>
+              <p className="text-dark-brown text-lg">{breed.tips_info}</p>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {isModalOpen && (

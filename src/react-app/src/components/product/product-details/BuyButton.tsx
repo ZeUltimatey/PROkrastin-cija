@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Product } from "../../universal/interfaces/Product";
 import { useCart } from "../../universal/Cart";
+import { IProduct } from "../../universal/interfaces/IProduct";
 
-export const BuyButton = ({ product }: { product: Product }) => {
+export const BuyButton = ({ product }: { product: IProduct }) => {
   const [count, setCount] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 

@@ -31,11 +31,18 @@ export const LoginForm = () => {
           setTimeout(() => navigate("/"), 1000);
         } else {
           const data = await response.json();
-          showToast(false, data.error);
+          switch (data.error) {
+            case "Invalid credentials":
+              showToast(false, "Nepareizs e-pasts vai parole.");
+              break;
+            default:
+              showToast(false, "Kļūda autentifikācijā.");
+              break;
+          }
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   };
 
