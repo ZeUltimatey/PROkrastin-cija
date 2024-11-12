@@ -3,6 +3,7 @@ import { useToast } from "../../universal/Toast";
 import { Constants } from "../../universal/Constants";
 import { Spinner } from "../../universal/Spinner";
 import { PaymentModal } from "./PaymentModal";
+import { useConfirmation } from "../../universal/Confirmation";
 
 export const paymentMethod = {
   id: 0,
@@ -42,23 +43,28 @@ export const PaymentMethods = () => {
     fetchPaymentMethods();
   }, []);
 
+  const confirm = useConfirmation();
+
   const onMethodDelete = async (id: number) => {
-    await fetch(`${Constants.API_URL}/cards/remove/${id}`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem(
-          Constants.LOCAL_STORAGE.TOKEN
-        )}`,
-      },
-    }).then((response) => {
-      if (response.ok) {
-        showToast(true, "Maksājuma karte veiksmīgi dzēsta!");
-        const newMethods = methods.filter((methods) => methods.id !== id);
-        setMethods(newMethods);
-      } else {
-        showToast(false, "Kļūda dzēšot maksājuma karti.");
-      }
-    });
+    if (await confirm("Dzēst adresi?")) {
+      await fetch(`${Constants.API_URL}/cards/${id}`, {
+        method: "delete",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            Constants.LOCAL_STORAGE.TOKEN
+          )}`,
+        },
+      }).then((response) => {
+        if (response.ok) {
+          showToast(true, "Maksājuma karte veiksmīgi dzēsta!");
+          const newMethods = methods.filter((methods) => methods.id !== id);
+          setMethods(newMethods);
+        } else {
+          showToast(false, "Kļūda dzēšot maksājuma karti.");
+        }
+      });
+    }
+    return;
   };
 
   const closeModal = () => {

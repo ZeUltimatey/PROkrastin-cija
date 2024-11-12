@@ -35,6 +35,7 @@ import { SavedAddresses } from "./components/instruction/SavedAddresses";
 import { PayMethods } from "./components/instruction/PayMethods";
 import { BrowseInfo } from "./components/instruction/BrowseInfo";
 import { BasketInfo } from "./components/instruction/BasketInfo";
+import { PaymentSuccessful } from "./components/universal/PaymentSuccessful";
 
 function App() {
   return (
@@ -45,6 +46,10 @@ function App() {
             <Routes>
               <Route path="/" element={<GeneralLayout />}>
                 <Route index element={<Homepage />} />
+                <Route
+                  path="/paymentsuccessful"
+                  element={<PaymentSuccessful />}
+                />
                 <Route path="/product/:productId" element={<ProductView />} />
                 <Route path="/products" element={<Catalog />} />
                 <Route path="/profile" element={<Profile />} />

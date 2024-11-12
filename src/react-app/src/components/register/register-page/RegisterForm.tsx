@@ -3,6 +3,7 @@ import { FormInput } from "../../universal/FormInput";
 import { Constants } from "../../universal/Constants";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../universal/Toast";
+import { Spinner } from "../../universal/Spinner";
 
 export const RegisterForm = () => {
   const navigate = useNavigate();
@@ -15,10 +16,12 @@ export const RegisterForm = () => {
     password: "",
     password_confirmation: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const showToast = useToast();
 
   const onSubmit = async (e: { preventDefault: () => void }) => {
+    setIsLoading(true);
     e.preventDefault();
     await fetch(`${Constants.API_URL}/register`, {
       method: "POST",
@@ -43,6 +46,7 @@ export const RegisterForm = () => {
       .catch((error) => {
         console.log(error);
       });
+    setIsLoading(false);
   };
 
   return (
@@ -138,11 +142,17 @@ export const RegisterForm = () => {
       </div>
       <div className="mt-2">
         <input
+          disabled={isLoading}
           type="submit"
           className="w-full bg-light-brown text-white font-semibold py-2 px-4 rounded-md hover:cursor-pointer hover:bg-medium-brown transition-all"
           value="Reģistrēties"
         />
       </div>
+      {isLoading && (
+        <div className="mx-auto">
+          <Spinner />
+        </div>
+      )}
       <div className="">
         <div className="text-center">
           <p className=" text-gray-500">Tev jau ir profils?</p>

@@ -75,7 +75,7 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
             <i className="fa-solid fa-pen-to-square m-1"></i> Iestatīt
           </button>
         </li>
-        <li>
+        {/* <li>
           <p className="text-dark-brown font-poppins">Parole</p>
           <button
             onClick={handleOpenPasswordChange}
@@ -83,7 +83,7 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
           >
             <i className="fa-solid fa-pen-to-square m-1"></i> Mainīt paroli
           </button>
-        </li>
+        </li> */}
         <li>
           <button
             onClick={handleAccountDelete}

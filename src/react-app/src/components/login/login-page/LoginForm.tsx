@@ -3,18 +3,21 @@ import { FormInput } from "../../universal/FormInput";
 import { Constants } from "../../universal/Constants";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../universal/Toast";
+import { Spinner } from "../../universal/Spinner";
 
 export const LoginForm = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const showToast = useToast();
 
   const onSubmit = async (e: { preventDefault: () => void }) => {
+    setIsLoading(true);
     e.preventDefault();
     await fetch(`${Constants.API_URL}/login`, {
       method: "POST",
@@ -44,6 +47,7 @@ export const LoginForm = () => {
       .catch((error) => {
         console.log(error);
       });
+    setIsLoading(false);
   };
 
   return (
@@ -77,10 +81,16 @@ export const LoginForm = () => {
         </a>
       </div>
       <input
+        disabled={isLoading}
         type="submit"
         value="Ienākt"
         className="w-full bg-light-brown text-white font-semibold py-2 px-4 rounded-md hover:bg-medium-brown transition-all"
       ></input>
+      {isLoading && (
+        <div className="mx-auto w-full">
+          <Spinner />
+        </div>
+      )}
       <div className="text-center">
         <p className="text-gray-500">Tev vēl nav profila?</p>
         <button
