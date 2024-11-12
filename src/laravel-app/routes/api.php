@@ -72,7 +72,7 @@ Route::get('/checkout/cancel', [UserController::class, 'successPaid'])->name('ch
 // Users only
 Route::middleware(['auth:sanctum'])->group(function () {
 
-    route::get('/tt', [UserController::class, 'tt']);
+    Route::get('/tt', [UserController::class, 'tt']);
     Route::get('/checkout', [UserController::class, 'basketPayment'])->name('checkout');
     Route::delete('/purchaseSuccesfull', [UserController::class, 'clear_basket_after_payment'])->name('clear-basket-after-payment');
     
