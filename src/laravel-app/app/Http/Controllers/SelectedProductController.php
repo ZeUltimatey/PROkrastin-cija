@@ -24,7 +24,11 @@ class SelectedProductController extends Controller
         $message = [];
         foreach ($selectedProducts as $selectedProduct) {
             $product = Product::find($selectedProduct->product_id);
-            if ($selectedProduct->amount > $product->stock) {
+            if ($product->stock == 0) {
+                $selectedProduct->delete();
+                // message for the user that the product was deleted from his basket
+                $message[] = "Product {$product->display_name} was deleted from your basket, due to having no stock.";
+            } elseif ($selectedProduct->amount > $product->stock) {
                 $selectedProduct->update(['amount' => $product->stock]);
                 // message for the user that the amount of the product was changed in his basket
                 $message[] = "Amount of product {$product->display_name} was changed to {$product->stock} due to less stock.";
@@ -69,6 +73,7 @@ class SelectedProductController extends Controller
         return $this->get_basket();
     }
 
+
     public function clear_basket()
     {
         // Get the authenticated user
@@ -77,6 +82,7 @@ class SelectedProductController extends Controller
         return response()->json("Basket cleared", 202); // Request accepted
     }
 
+
     public function removeFromBasket(int $product_id)
     {
         $user = Auth::user();
@@ -84,5 +90,22 @@ class SelectedProductController extends Controller
         $removedBasketProduct = SelectedProducts::where('user_id', $user->id)->where('product_id', $product_id)->delete();
 
         return response()->json($removedBasketProduct, 204);
+    }
+
+
+    public function clear_basket_after_payment()
+    {
+
+        // Get the authenticated user
+        $user = Auth::user();
+        dd($user);
+        $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
+        foreach ($basketProducts as $basketProduct) {
+            $basketProduct->product->stock -= $basketProduct->amount;
+            $basketProduct->product->save(); //TODO add this to transaction history before deleting
+            $basketProduct->delete();
+        }
+       // SelectedProducts::where('user_id', $user->id)->delete();
+        return redirect()->to(env('FRONTEND_URL')); ; // Request accepted
     }
 }
