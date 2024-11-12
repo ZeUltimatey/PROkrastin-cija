@@ -20,6 +20,7 @@ class Product extends Model
         'description',
         'pricing',
         'discount_pricing',
+        'price_id',
         'stock',
     ];
 

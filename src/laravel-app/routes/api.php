@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\BoughtProductsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LocationController;
@@ -12,7 +14,11 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SelectedProductController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Middleware\AdminMiddleware;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Free for all
@@ -32,8 +38,45 @@ Route::get('/reviews/{product_id}', [ReviewController::class, 'show']);
 // Guests only
 Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum');
 
+
+
+Route::post('/v1/products', [ProductController::class, 'importProducts']); // use at your own risk
+
+// Route::get('/checkout', [UserController::class, 'basketPayment'])->name('checkout');
+ 
+// Route::view('/checkout/success', 'checkout.success')->name('checkout-success');
+// Route::view('/checkout/cancel', 'checkout.cancel')->name('checkout-cancel');
+
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+    if (!$request->hasValidSignature()) {
+        return redirect()->to(env('FRONTEND_URL'). '/auth/invalid-token');
+    }
+
+    $user = User::findOrFail($id);
+
+    if ($user->hasVerifiedEmail()) {
+        return redirect()->to(env('FRONTEND_URL'). '/auth/already-verified');
+    }
+
+    $user->markEmailAsVerified();
+
+    return redirect()->to(env('FRONTEND_URL'). '/auth?token=' . $user->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken);
+})->name('verification.verify');
+Route::get('/checkout/success', [UserController::class, 'successPaid'])->name('checkout-success')->middleware('api');
+Route::get('/checkout/cancel', [UserController::class, 'successPaid'])->name('checkout-cancel');
+
 // Users only
 Route::middleware(['auth:sanctum'])->group(function () {
+
+    Route::get('/tt', [UserController::class, 'tt']);
+    Route::get('/checkout', [UserController::class, 'basketPayment'])->name('checkout');
+    Route::delete('/purchaseSuccesfull', [UserController::class, 'clear_basket_after_payment'])->name('clear-basket-after-payment');
+    
+
     Route::post('/logout', [UserController::class, 'logout']);
     Route::get('/user', [UserController::class, 'get']);
     Route::post('/user/image/add', [UserController::class, 'addProfilePicture']);

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Constants } from "../universal/Constants";
 
 export const Cart = () => {
-  const { cartItems, removeFromCart, addToCart, fetchCart } = useCart();
+  const { cartItems, removeFromCart, addToCart, fetchCart, payForBasket } = useCart();
   const [user, setUser] = useState<IUser>(null);
   const navigate = useNavigate();
 
@@ -117,6 +117,7 @@ export const Cart = () => {
           <PaymentMethods />
           <button
             disabled={cartItems.length == 0}
+            onClick={() => payForBasket()}
             className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown font-poppins mt-4 disabled:bg-opacity-10 disabled:text-dark-brown disabled:cursor-not-allowed"
           >
             <i className="fa-regular fa-credit-card mr-2"></i>

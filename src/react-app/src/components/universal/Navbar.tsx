@@ -37,7 +37,7 @@ export const Navbar = () => {
         max_price: 9999999,
       };
       localStorage.setItem(
-        Constants.LOCAL_STORAGE.QUERY,
+        Constants.LOCAL_STORAGE.QUERY_CATALOG,
         JSON.stringify(newQuery)
       );
       window.location.assign("/products");

@@ -11,7 +11,10 @@ export const Button = ({ isInfoButton }: { isInfoButton: boolean }) => {
       product_type: CategoryNames.CATS,
     };
 
-    localStorage.setItem(Constants.LOCAL_STORAGE.QUERY, JSON.stringify(query));
+    localStorage.setItem(
+      Constants.LOCAL_STORAGE.QUERY_CATALOG,
+      JSON.stringify(query)
+    );
     navigate("/products");
   };
 

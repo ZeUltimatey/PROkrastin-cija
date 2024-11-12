@@ -47,7 +47,8 @@ class CatBreedController extends Controller
     public function show(int $id)
     {
         // Find the cat breed by id
-        $cat_breed = CatBreedResource::find($id);
+      
+        $cat_breed = CatBreedResource::collection(CatBreed::where('id', $id)->get());
         if ($cat_breed->resource == null) { return response()->json(null, 404); } // Not found
 
         // Return the cat breed

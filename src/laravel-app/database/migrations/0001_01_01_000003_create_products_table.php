@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description');
             $table->float('pricing');
             $table->float('discount_pricing')->nullable();
+            $table->string('price_id')->nullable();
             $table->unsignedInteger('stock');
             $table->timestamps();
         });

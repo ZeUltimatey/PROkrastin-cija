@@ -23,7 +23,7 @@ export const Category = ({
       max_price: 9999999,
     };
     localStorage.setItem(
-      Constants.LOCAL_STORAGE.QUERY,
+      Constants.LOCAL_STORAGE.QUERY_CATALOG,
       JSON.stringify(newQuery)
     );
     navigate("/products");
