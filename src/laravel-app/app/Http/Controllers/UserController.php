@@ -5,12 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\SelectedProductController;
+use App\Models\SelectedProduct;
+use App\Models\Product;
+use Laravel\Cashier\Cashier;
 use App\Models\SelectedProducts;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
 use App\Jobs\SendEmailVerification;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -20,7 +26,7 @@ use Laravel\Sanctum\Http\Controllers\AuthenticatedSessionController;
 
 class UserController extends Controller
 {
-    /**
+    /** 
      * Show all users.
      */
     public function index()
@@ -237,5 +243,103 @@ class UserController extends Controller
         $user->image_url = '';
         return response()->json(true, 204);
 
+    }
+
+
+    public function basketPayment (Request $request) {
+        $user = Auth::user();
+        // $stripePriceId = 'price_1QJk5qG6wIBbt2iyeYY9aBEV';
+        // $quantity = 1;
+        $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
+
+        $order = array();
+        foreach ($basketProducts as $basketProduct) {
+            $order[$basketProduct->product->price_id] = $basketProduct->amount;
+        }
+
+        $session = $user->checkout($order, [
+            'success_url' => route('checkout-success'),
+            'cancel_url' => route('checkout-cancel'),
+            'metadata' => ['user_id' => $user->id],
+        ]);
+        $user = Auth::user();
+        $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
+    foreach ($basketProducts as $basketProduct) {
+        $basketProduct->product->stock -= $basketProduct->amount;
+        $basketProduct->product->save(); //TODO add this to transaction history before deleting
+        $basketProduct->delete();
+    }
+
+        return  response()->json(['url' => $session->url], 200);
+    }
+
+
+    public function tt (Request $request) {
+        $user = Auth::user();
+        $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
+        foreach ($basketProducts as $basketProduct) {
+            $basketProduct->product->stock -= $basketProduct->amount;
+            $basketProduct->product->save();
+            
+            $basketProduct->delete();
+            dd($basketProducts);
+        }
+        
+    }
+    public function successPaid (Request $request) {
+        $sessionId = $request->get('session_id');
+        if ($sessionId === null) {
+        //     $user = Auth::user();
+        //     $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
+        // foreach ($basketProducts as $basketProduct) {
+        //     $basketProduct->product->stock -= $basketProduct->amount;
+        //     $basketProduct->product->save(); //TODO add this to transaction history before deleting
+        //     $basketProduct->delete();
+        // }
+        //return redirect()->to(env('FRONTEND_URL'))->with('run_route', 'clear-basket-after-payment');
+            return redirect()->to(env('FRONTEND_URL'));
+        }
+     
+        $session = Cashier::stripe()->checkout->sessions->retrieve($sessionId);
+     
+        if ($session->payment_status !== 'paid') {
+            
+            return redirect()->to(env('FRONTEND_URL'));        
+        }
+     
+        $orderId = $session['metadata']['order_id'] ?? null;
+     
+        $order = Order::findOrFail($orderId);
+     
+        $order->update(['status' => 'completed']);
+
+        $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
+        foreach ($basketProducts as $basketProduct) {
+            $basketProduct->product->stock -= $basketProduct->amount;
+            $basketProduct->product->save(); //TODO add this to transaction history before deleting
+            $basketProduct->delete();
+        }
+     
+        return redirect()->to(env('FRONTEND_URL'));    
+    }
+
+    public function failedPaid (Request $request) {
+        $sessionId = $request->get('session_id');
+        if ($sessionId === null) {
+            return redirect()->to(env('FRONTEND_URL'));
+        }
+     
+        $session = Cashier::stripe()->checkout->sessions->retrieve($sessionId);
+     
+        if ($session->payment_status !== 'paid') {
+            return redirect()->to(env('FRONTEND_URL'));        }
+     
+        $orderId = $session['metadata']['order_id'] ?? null;
+     
+        $order = Order::findOrFail($orderId);
+     
+        $order->update(['status' => 'cancelled']);
+     
+        return redirect()->to(env('FRONTEND_URL'));    // redirect uz failed
     }
 }

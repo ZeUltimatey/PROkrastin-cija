@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Mail\MurratavaMail;
 use Illuminate\Support\Facades\Mail;
 

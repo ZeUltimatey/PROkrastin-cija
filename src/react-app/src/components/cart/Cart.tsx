@@ -4,7 +4,7 @@ import { useCart } from "../universal/Cart";
 import { PaymentMethods } from "./cart-page/PaymentMethods";
 
 export const Cart = () => {
-  const { cartItems, removeFromCart, addToCart, fetchCart } = useCart();
+  const { cartItems, removeFromCart, addToCart, fetchCart, payForBasket } = useCart();
 
   const shippingCosts = Math.random() > 0.5 ? 0 : 5;
 
@@ -92,9 +92,14 @@ export const Cart = () => {
       <div className=" bg-content-white p-6 shadow-lg w-1/4">
         <h3 className="text-xl font-bold text-dark-brown mb-4">Apmaksāt</h3>
         <PaymentMethods />
-        <button className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown font-poppins mt-4">
+        
+        <button 
+          onClick={() => payForBasket()}
+          className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown font-poppins mt-4"
+        >
           <i className="fa-regular fa-credit-card mr-2"></i>
           Apmaksāt
+          
         </button>
       </div>
     </div>

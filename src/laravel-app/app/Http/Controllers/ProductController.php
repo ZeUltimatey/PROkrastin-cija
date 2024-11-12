@@ -11,6 +11,8 @@ use Psy\Util\Json;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ProductImage;
 use App\Http\Resources\ProductResource;
+use Stripe\Stripe; 
+use Stripe\PaymentIntent;
 
 class ProductController extends Controller
 {
@@ -154,5 +156,30 @@ class ProductController extends Controller
         $image->delete();
         return response()->json(true, 204); // No content
     }
+
+    // Import products to Stripe system
+    public function importProducts() {
+        $stripe = new \Stripe\StripeClient('sk_test_51QJH6GG6wIBbt2iyQVg6IQJayaNghHn2TdAkBwM6IIH7oUsVwzxUJLXAZmzhce8frnKbvXY2Dp7HsLCqVIqGA5AE00PBU1G7Jp');
+
+        $products = Product::all();
+        // works when there are no products in the STRIPE system
+        foreach ($products as $product) {
+            $stripe->products->create([
+                'id' => $product->id,
+                'name' => $product->display_name,
+                'description' => $product->description,
+            ]);
+            $prices = $stripe->prices->create([
+                'currency' => 'eur',
+                'unit_amount' => $product->pricing*100,
+                'product' => $product->id,
+            ]);
+            $product->update([
+               'price_id' => $prices->id,
+            ]);
+        }
+        
+    }
+
 }
 
