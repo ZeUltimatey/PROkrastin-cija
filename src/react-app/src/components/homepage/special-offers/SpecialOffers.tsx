@@ -1,5 +1,4 @@
 import { ItemCard } from "../../product/ItemCard";
-import catItems from "../../../data/cat_items.json";
 import { useEffect, useState } from "react";
 import Carousel from "react-multi-carousel";
 import { Constants } from "../../universal/Constants";
@@ -42,7 +41,7 @@ export const SpecialOffers = () => {
 
   return (
     <div className="p-12 bg-content-white h-auto">
-      <div className="flex flex-col gap-6 bg-light-gray p-8 rounded-md">
+      <div className="flex flex-col bg-light-gray p-8 rounded-md">
         <div className="flex place-items-center gap-6">
           <div className="grow h-[1px] bg-dark-brown" />
           <span className="text-3xl font-poppins font-bold text-dark-brown">
@@ -69,7 +68,7 @@ export const SpecialOffers = () => {
                     <ItemCard
                       key={item.id}
                       id={item.id}
-                      image_url={item.image_url ?? "../images/products/9.png"}
+                      images={item.images}
                       display_name={item.display_name}
                       description={item.description}
                       pricing={item.pricing}

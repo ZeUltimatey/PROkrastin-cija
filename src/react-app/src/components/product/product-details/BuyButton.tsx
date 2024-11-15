@@ -20,30 +20,32 @@ export const BuyButton = ({ product }: { product: IProduct }) => {
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center">
-        <button
-          onClick={countMinus}
-          className="bg-light-brown text-black font-bold w-10 h-10 rounded-l-md hover:bg-medium-brown"
-        >
-          <i className="fa-solid fa-minus text-[#3e2a19]"></i>
-        </button>
+      {product.product_type !== "CATS" && (
+        <div className="flex items-center">
+          <button
+            onClick={countMinus}
+            className="bg-light-brown text-black font-bold w-10 h-10 rounded-l-md hover:bg-medium-brown"
+          >
+            <i className="fa-solid fa-minus text-[#3e2a19]"></i>
+          </button>
 
-        <input
-          value={count}
-          onChange={(e) => setCount(parseInt(e.target.value))}
-          type="number"
-          max={99}
-          min={1}
-          className="bg-content-white font-semibold w-10 h-10  text-lg text-center "
-        />
+          <input
+            value={count}
+            onChange={(e) => setCount(parseInt(e.target.value))}
+            type="number"
+            max={99}
+            min={1}
+            className="bg-content-white font-semibold w-10 h-10  text-lg text-center "
+          />
 
-        <button
-          onClick={countPlus}
-          className="bg-light-brown text-black font-bold w-10 h-10 rounded-r-md hover:bg-medium-brown"
-        >
-          <i className="fa-solid fa-plus text-[#3e2a19]"></i>
-        </button>
-      </div>
+          <button
+            onClick={countPlus}
+            className="bg-light-brown text-black font-bold w-10 h-10 rounded-r-md hover:bg-medium-brown"
+          >
+            <i className="fa-solid fa-plus text-[#3e2a19]"></i>
+          </button>
+        </div>
+      )}
       <button
         disabled={isLoading}
         onClick={() => {

@@ -5,6 +5,7 @@ import { useToast } from "../../universal/Toast";
 import { FormInput } from "../../universal/FormInput";
 import { Spinner } from "../../universal/Spinner";
 import { IUser } from "../../universal/interfaces/IUser";
+import { useConfirmation } from "../../universal/Confirmation";
 
 export const ProfileInfo = ({ user }: { user: IUser }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,6 +14,7 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
   const showToast = useToast();
 
   const navigate = useNavigate();
+  const confirm = useConfirmation();
 
   const handleLogoutClick = async () => {
     await fetch(`${Constants.API_URL}/logout`, {
@@ -37,6 +39,9 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
   const updateUserInfo = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsLoading(true);
+    if (formData.image_url) {
+      await handleProfilePictureAdd();
+    }
     fetch(`${Constants.API_URL}/user`, {
       method: "PUT",
       headers: {
@@ -58,6 +63,48 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
     setIsLoading(false);
   };
 
+  const handleProfilePictureAdd = async () => {
+    const imageData = new FormData();
+    imageData.append("image", formData.image_url);
+    await fetch(`${Constants.API_URL}/user/image/add`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+      body: imageData,
+    }).then(async (response) => {
+      if (response.ok) {
+        showToast(true, "Profila bilde pievienota.");
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        showToast(false, "Kļūda profila bildes pievienošanā.");
+      }
+    });
+  };
+
+  const handleProfilePictureRemove = async () => {
+    if (await confirm("Noņemt profila bildi?")) {
+      await fetch(`${Constants.API_URL}/user/image/remove`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            Constants.LOCAL_STORAGE.TOKEN
+          )}`,
+        },
+      }).then(async (response) => {
+        if (response.ok) {
+          showToast(true, "Profila bilde noņemta.");
+          setTimeout(() => window.location.reload(), 1000);
+        } else {
+          showToast(false, "Kļūda profila bildes noņemšanā.");
+        }
+      });
+    }
+    return;
+  };
+
   return (
     <div className="bg-light-gray shadow-md rounded-md border-2 h-40 border-medium-brown">
       {user && (
@@ -65,7 +112,11 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
           <div className="flex items-center gap-4">
             <img
               className="w-24 h-24 rounded-full object-cover border-4 border-medium-brown"
-              src="https://via.placeholder.com/150"
+              src={
+                user.image_url
+                  ? Constants.BASE_URL + user.image_url
+                  : "https://t3.ftcdn.net/jpg/01/79/88/20/360_F_179882080_Zga46fOuCNnZlF9o2IC6gYgHVQFDVKMv.jpg"
+              }
               alt="Lietotāja attēls"
             />
             <div>
@@ -180,33 +231,44 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
                   }
                 />
               </div>
+              <div>
+                <label className="text-sm text-dark-brown font-poppins mb-1 font-semibold">
+                  Augšupielādēt profila bildi
+                </label>
+                <input
+                  onChange={(e) =>
+                    setFormData({ ...formData, image_url: e.target.files[0] })
+                  }
+                  type="file"
+                  accept="image/*"
+                  className="mt-1 w-full px-4 py-2 border accent-accent-brown font-poppins border-gray-300 rounded-md shadow-sm "
+                />
+                <p className="text-sm opacity-40">
+                  Bildes izmērs nedrīkst pārsniegt 4MB.
+                </p>
+                {user.image_url && (
+                  <div
+                    onClick={handleProfilePictureRemove}
+                    className="flex gap-2 place-items-center hover:opacity-70 hover:cursor-pointer"
+                  >
+                    <i className="fa-solid fa-xmark text-sm"></i>
+                    <p className="text-sm text-dark-brown font-poppins my-1">
+                      Noņemt profila bildi
+                    </p>
+                  </div>
+                )}
+              </div>
               <div className="flex gap-2">
                 <div className="w-full">
                   <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
                     Parole
                   </label>
                   <FormInput
-                    placeholder="Ievadiet jaunu paroli"
+                    placeholder="Ievadiet savu paroli"
                     value={formData.password}
                     type="password"
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="w-full">
-                  <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
-                    Paroles apstiprinājums
-                  </label>
-                  <FormInput
-                    placeholder="Apstipriniet paroli"
-                    value={formData.password_confirmation}
-                    type="password"
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        password_confirmation: e.target.value,
-                      })
                     }
                   />
                 </div>

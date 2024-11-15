@@ -127,7 +127,7 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::put('/users/update/{id}', [AdminController::class, 'update']); //put changed
 
     Route::post('/products', [ProductController::class, 'store']);
-    Route::post('/products/{id}/images/add', [ProductController::class, 'addImage']); // gonna need to explain this
+    Route::post('/products/{id}/images/add', [ProductController::class, 'addImages']); // gonna need to explain this
     Route::post('/products/images/{image}/remove', [ProductController::class, 'removeImage']);  //gonna need to explain this
     Route::post('/cats', [CatController::class, 'store']);
     Route::post('/breeds', [CatBreedController::class, 'store']);

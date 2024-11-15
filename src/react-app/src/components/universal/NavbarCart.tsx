@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useCart } from "./Cart";
 import { useNavigate } from "react-router-dom";
+import { Constants } from "./Constants";
 
 export const NavbarCart = () => {
   const { cartItems, removeFromCart } = useCart();
@@ -26,7 +27,11 @@ export const NavbarCart = () => {
                 <div className="flex flex-col">
                   <div className="flex w-full gap-2">
                     <img
-                      src="./images/products/9.png"
+                      src={
+                        item.product.images[0]
+                          ? Constants.BASE_URL + item.product.images[0].url
+                          : "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
+                      }
                       className="w-12 h-12 shadow-sm rounded-md"
                     />
                     <div className="flex flex-col w-full justify-between">

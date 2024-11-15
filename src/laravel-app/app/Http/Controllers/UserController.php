@@ -238,6 +238,8 @@ class UserController extends Controller
 
     public function removeProfilePicture(){
         $user = Auth::user();
+        $user->image_url = null;
+        $user->save();
         $oldImagePath = str_replace('/storage/', '', $user->image_url);
         Storage::disk('public')->delete($oldImagePath);
         $user->image_url = '';

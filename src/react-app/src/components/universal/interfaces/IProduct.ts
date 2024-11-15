@@ -6,5 +6,6 @@ export interface IProduct {
   description: string;
   pricing: number;
   discount_pricing?: number;
-  image_url?: string;
+  images?: any[];
+  stock?: number;
 }

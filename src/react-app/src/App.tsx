@@ -56,7 +56,7 @@ function App() {
                 <Route path="/policy" element={<Policy />} />
                 <Route path="/contact" element={<ContactInfo />} />
                 <Route path="/cart" element={<Cart />} />
-                <Route path="/reviews" element={<Reviews />} />
+                <Route path="/reviews/:productId" element={<Reviews />} />
                 <Route path="/receipt" element={<Receipt />} />
                 <Route path="/breeds" element={<BreedCatalog />} />
                 <Route path="/breed/:breedId" element={<BreedDetails />} />

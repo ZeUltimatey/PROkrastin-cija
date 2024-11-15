@@ -1,10 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../universal/Cart";
 import { IProduct } from "../universal/interfaces/IProduct";
+import { Constants } from "../universal/Constants";
 
 export const ItemCard = (props: IProduct) => {
-  const navigate = useNavigate();
-
   const { addToCart } = useCart();
 
   return (
@@ -20,13 +19,17 @@ export const ItemCard = (props: IProduct) => {
       </button>
       <div
         onClick={() => {
-          navigate(`/product/${props.id}`);
+          window.location.assign(`/product/${props.id}`);
         }}
         className=" hover:cursor-pointer"
       >
         <img
           className="rounded-t-md"
-          src={props.image_url}
+          src={
+            props.images[0]
+              ? Constants.BASE_URL + props.images[0].url
+              : "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
+          }
           alt={props.description}
         />
 

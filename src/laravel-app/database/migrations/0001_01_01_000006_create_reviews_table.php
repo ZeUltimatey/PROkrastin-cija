@@ -26,6 +26,7 @@ return new class extends Migration
 
             $table->text('content');
             $table->unsignedInteger('rating');
+            $table->boolean('is_anonymous')->default(false);
             $table->timestamps();
         });
     }

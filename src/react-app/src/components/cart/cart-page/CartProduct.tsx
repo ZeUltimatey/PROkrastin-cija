@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { IProduct } from "../../universal/interfaces/IProduct";
+import { Constants } from "../../universal/Constants";
 
 interface ICartProductProps {
   product: IProduct;
@@ -51,9 +52,13 @@ export const CartProduct = (props: ICartProductProps) => {
     <tr className="border-b border-gray-200">
       <td className="flex items-center py-4">
         <img
-          src={product.image_url ?? "https://via.placeholder.com/150"}
+          src={
+            product.images[0]?.url
+              ? Constants.BASE_URL + product.images[0].url
+              : "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
+          }
           alt={product.display_name}
-          className="h-24 w-24 object-cover mr-4"
+          className="h-24 w-24 object-cover mr-4 shadow-md"
         />
         <span className="text-dark-brown font-semibold">
           {product.display_name}
