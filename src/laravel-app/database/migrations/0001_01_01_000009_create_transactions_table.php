@@ -21,7 +21,8 @@ return new class extends Migration
             $table->unsignedBigInteger('location_id')->nullable();
             $table->foreign('location_id')
                 ->references('id')
-                ->on('locations');
+                ->on('locations')
+                ->onDelete('cascade');
 
             $table->float('total_pricing');
             $table->text('check_content');

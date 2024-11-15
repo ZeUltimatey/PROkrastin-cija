@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 // Free for all
 Route::get('/login', function () {
-    return response()->json(['error' => 'Unauthorized'], 401);
+    return response()->json(['error' => 'Unauthorized or invalid token'], 401);
 })->name('login');
 Route::post('/register', [UserController::class, 'register']);
 

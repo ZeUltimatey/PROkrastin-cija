@@ -36,8 +36,11 @@ class UserController extends Controller
         $query->where('user_role', 'LIKE', 'User');
 
         if ($request->has('deactivated')) {
-            $search_deactivated = $request->deactivated === 'true';
-            $query->where('deactivated', $search_deactivated);
+            $query->where('deactivated', $request->deactivated === 'true');
+        }
+
+        if ($request->has('deleted')) {
+            $query->where('deleted', $request->deleted === 'true');
         }
 
         // Filter by keyword in display_name or description (if provided)
@@ -115,6 +118,7 @@ class UserController extends Controller
         // Check if the user is banned
         $user_model = Auth::user();
         $user = new UserResource($user_model);
+        if ($user['deleted']) { return response()->json(['error' => 'Dzēsts profils'], 403); } // Forbidden
         if ($user['deactivated']) { return response()->json(['error' => 'Jūsu profils ir bloķēts, ja uzskatāt, ka tā ir kļūda, sazinieties ar administratoru!'], 403); } // Forbidden
 
         // Create token on successful login
@@ -204,7 +208,7 @@ class UserController extends Controller
         Auth::user()->tokens()->delete();
 
         // Delete the user
-        $user_model->delete();
+        $user_model->update(['deleted' => true]);
         return response()->json(null, 204); // No content
     }
 

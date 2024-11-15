@@ -33,6 +33,7 @@ class UserResource extends JsonResource
             'display_name' => $this->display_name,
             'user_role'    => $this->user_role,
             'deactivated'  => $this->deactivated,
+            'deleted'      => $this->deleted
         ];
 
         // Show extra information - usually for administrators and yourself
