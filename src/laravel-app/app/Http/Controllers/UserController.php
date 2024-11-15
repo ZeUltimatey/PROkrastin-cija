@@ -86,8 +86,7 @@ class UserController extends Controller
             'name'              => $user_data['name'],
             'surname'           => $user_data['surname'],
             'phone_number'      => $user_data['phone_number'] ?? null,
-            'user_role'         => $user_data['user_role'] ?? 'User',
-            'deactivated'       => false,
+            'user_role'         => $user_data['user_role'] ?? 'User'
         ]);
 
         // Return response with user data and token
