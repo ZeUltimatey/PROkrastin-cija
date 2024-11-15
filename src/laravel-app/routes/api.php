@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SearchController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\BoughtProductsController;
@@ -30,6 +31,7 @@ Route::post('/register', [UserController::class, 'register']);
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/cats', [CatController::class, 'index']);
 Route::get('/breeds', [CatBreedController::class, 'index']);
+Route::get('/search', [SearchController::class, 'index']);
 
 Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/breeds/{id}', [CatBreedController::class, 'show']);
@@ -43,7 +45,7 @@ Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanct
 Route::post('/v1/products', [ProductController::class, 'importProducts']); // use at your own risk
 
 // Route::get('/checkout', [UserController::class, 'basketPayment'])->name('checkout');
- 
+
 // Route::view('/checkout/success', 'checkout.success')->name('checkout-success');
 // Route::view('/checkout/cancel', 'checkout.cancel')->name('checkout-cancel');
 
@@ -75,7 +77,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/tt', [UserController::class, 'tt']);
     Route::get('/checkout', [UserController::class, 'basketPayment'])->name('checkout');
     Route::delete('/purchaseSuccesfull', [UserController::class, 'clear_basket_after_payment'])->name('clear-basket-after-payment');
-    
+
 
     Route::post('/logout', [UserController::class, 'logout']);
     Route::get('/user', [UserController::class, 'get']);
