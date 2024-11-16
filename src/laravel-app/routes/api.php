@@ -85,9 +85,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/user/image/remove', [UserController::class, 'removeProfilePicture']);
 
     Route::delete('/user', [UserController::class, 'destroy']);
-
     Route::put('/user', [UserController::class, 'update']);
-//    Route::get('/user/{id}', [UserController::class, 'show']); // jau ir user/{id} GET adminiem
+    Route::put('/change_password', [UserController::class, 'change_password']);
 
     Route::get('/bought_products/{transaction_id}', [BoughtProductsController::class, 'index']);
 

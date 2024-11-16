@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Resources\UserResource;
@@ -217,6 +218,21 @@ class UserController extends Controller
     public function change(Request $request)
     {
         //
+    }
+
+    public function change_password(ChangePasswordRequest $request)
+    {
+        $user_model = Auth::user();
+        $user = new UserResource($user_model);
+
+        if (!Hash::check($request->old_password, $user->password))
+            return response()->json(['error' => 'Old password is wrong.'], 422);
+
+        if (Hash::check($request->new_password, $user->password))
+            return response()->json(['error' => 'New password is the same as the old password.'], 422);
+
+        $user->update(['password' => $request->new_password]);
+        return response()->json(null, 202); // Request accepted
     }
 
     public function addProfilePicture(Request $request)
