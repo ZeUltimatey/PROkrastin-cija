@@ -90,7 +90,7 @@ class PaginateService
         ];
 
         return [
-            'data' => $data->values(),
+            'data' => $data->toArray(),
             'links' => [
                 'first' => $first_url,
                 'last' => $last_url,

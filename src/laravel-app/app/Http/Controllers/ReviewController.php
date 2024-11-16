@@ -6,6 +6,7 @@ use App\Http\Requests\ReviewRequest;
 use App\Http\Resources\ReviewResource;
 use App\Models\Product;
 use App\Models\Review;
+use App\Services\PaginateService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,11 +30,17 @@ class ReviewController extends Controller
      *
      * @param int $product_id
      */
-    public function show(int $product_id)
+    public function show(Request $request, int $product_id)
     {
         // Fetch the review that matches the given id and join with the users table
-        $reviews = Review::where('product_id', $product_id)->get();
-        return ReviewResource::collection($reviews);
+        $review_models = Review::where('product_id', $product_id)->get();
+        $reviews = ReviewResource::collection($review_models);
+
+        $paginate = new PaginateService($request, [$reviews]);
+        $per_page = $request->get('per_page', 12);
+        $page = $request->get('page', 1);
+
+        return $paginate->get_page($page, $per_page);
     }
 
     /**
