@@ -3,7 +3,7 @@ export const Footer = () => {
     <footer className="py-6 bg-content-white rounded-b-md font-poppins">
       <div className="container px-6 mx-auto">
         <div className="flex flex-col items-center py-4 border-t border-dark-brown">
-          <nav className="flex gap-6 mb-4">
+          <nav className="flex flex-col lg:flex-row  gap-6 mb-4 text-center">
             <a
               href="/contact"
               className="text-dark-brown hover:text-medium-brown"

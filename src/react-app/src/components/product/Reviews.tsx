@@ -83,6 +83,11 @@ export const Reviews = () => {
       return;
     }
 
+    if (comment.length < 10) {
+      showToast(false, "Lūdzu, ievadiet saturīgu atsauksmi!");
+      return;
+    }
+
     await fetch(`${Constants.API_URL}/reviews/${productId}`, {
       method: "POST",
       headers: {
@@ -166,7 +171,7 @@ export const Reviews = () => {
           ))}
       </div>
 
-      {user && (
+      {user && !reviews?.find((review) => review.reviewer.id == user.id) && (
         <form onSubmit={postReview} className="flex flex-col gap-4">
           <textarea
             value={comment}

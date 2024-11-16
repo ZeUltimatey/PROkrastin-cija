@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { Sidebar } from "../admin-panel/Sidebar";
 import { FormInput } from "../../universal/FormInput";
 import { Constants } from "../../universal/Constants";
 import { useToast } from "../../universal/Toast";
 import { CategoryNames } from "../../universal/CategoryNames";
-import { ProductTable } from "./table/ProductTable";
 import { useConfirmation } from "../../universal/Confirmation";
 import {
   createColumnHelper,

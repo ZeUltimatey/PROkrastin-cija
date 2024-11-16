@@ -36,6 +36,7 @@ import { PayMethods } from "./components/instruction/PayMethods";
 import { BrowseInfo } from "./components/instruction/BrowseInfo";
 import { BasketInfo } from "./components/instruction/BasketInfo";
 import { PaymentSuccessful } from "./components/universal/PaymentSuccessful";
+import { ForgotPassword } from "./components/login/login-page/ForgotPassword";
 
 function App() {
   return (
@@ -111,6 +112,7 @@ function App() {
 
               <Route path="/auth" element={<AuthLayout />}>
                 <Route path="login" element={<Login />} />
+                <Route path="forgotpassword" element={<ForgotPassword />} />
                 <Route path="register" element={<Register />} />
               </Route>
             </Routes>

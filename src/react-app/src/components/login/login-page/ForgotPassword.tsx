@@ -5,12 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../../universal/Toast";
 import { Spinner } from "../../universal/Spinner";
 
-export const LoginForm = () => {
+export const ForgotPassword = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [isEmailSent, setIsEmailSent] = useState(false);
 
   const navigate = useNavigate();
 
@@ -61,58 +62,44 @@ export const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4 font-poppins">
-      <div>
-        <label htmlFor="email" className="text-dark-brown">
-          E-pasts
-        </label>
-        <FormInput
-          id="email"
-          placeholder="Ievadi savu e-pastu"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-        />
-      </div>
-      <div>
-        <label className="text-dark-brown">Parole</label>
-        <FormInput
-          id="password"
-          placeholder="••••••••"
-          type="password"
-          value={formData.password}
-          onChange={(e) =>
-            setFormData({ ...formData, password: e.target.value })
-          }
-        />
-      </div>
-      <div className="flex items-center justify-between">
-        <p
-          onClick={() => navigate("/auth/forgotpassword")}
-          className="text-sm text-dark-brown hover:underline hover:cursor-pointer"
-        >
-          Aizmirsi paroli?
+    <div className="absolute flex flex-col bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+      <div className="flex">
+        <p onClick={() => navigate("/auth/login")}>
+          <i className="fa-solid fa-arrow-left text-2xl hover:cursor-pointer"></i>
         </p>
+        <span className="text-2xl font-bold text-center mb-4 text-dark-brown grow">
+          Aizmirsi paroli?
+        </span>
       </div>
-      <input
-        disabled={isLoading}
-        type="submit"
-        value="Ienākt"
-        className="w-full bg-light-brown text-white font-semibold py-2 px-4 rounded-md hover:bg-medium-brown transition-all"
-      ></input>
-      {isLoading && (
-        <div className="mx-auto w-full">
-          <Spinner />
-        </div>
-      )}
-      <div className="text-center">
-        <p className="text-gray-500">Tev vēl nav profila?</p>
-        <button
-          onClick={() => navigate("/auth/register")}
-          className="text-dark-brown hover:underline font-semibold"
-        >
-          Reģistrējies šeit!
-        </button>
-      </div>
-    </form>
+      <form onSubmit={onSubmit} className="space-y-4 font-poppins">
+        {!isEmailSent && (
+          <div>
+            <label htmlFor="email" className="text-dark-brown">
+              E-pasts
+            </label>
+            <FormInput
+              id="email"
+              placeholder="Ievadi savu e-pastu!"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+            />
+          </div>
+        )}
+
+        <input
+          disabled={isLoading}
+          type="submit"
+          value="Tālāk"
+          className="w-full bg-light-brown text-white font-semibold py-2 px-4 rounded-md hover:bg-medium-brown transition-all"
+        ></input>
+        {isLoading && (
+          <div className="mx-auto w-full">
+            <Spinner />
+          </div>
+        )}
+      </form>
+    </div>
   );
 };

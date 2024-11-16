@@ -21,8 +21,28 @@ export const RegisterForm = () => {
   const showToast = useToast();
 
   const onSubmit = async (e: { preventDefault: () => void }) => {
-    setIsLoading(true);
     e.preventDefault();
+    setIsLoading(true);
+    if (!/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/.test(formData.email)) {
+      showToast(false, "Lūdzu, ievadiet pareizu e-pastu!");
+      setIsLoading(false);
+      return;
+    }
+    if (!formData.password) {
+      showToast(false, "Lūdzu, ievadiet paroli!");
+      setIsLoading(false);
+      return;
+    }
+    if (formData.password !== formData.password_confirmation) {
+      showToast(false, "Paroles nesakrīt!");
+      setIsLoading(false);
+      return;
+    }
+    if (!formData.name || !formData.surname || !formData.display_name) {
+      showToast(false, "Lūdzu, aizpildiet visus laukus!");
+      setIsLoading(false);
+      return;
+    }
     await fetch(`${Constants.API_URL}/register`, {
       method: "POST",
       headers: {

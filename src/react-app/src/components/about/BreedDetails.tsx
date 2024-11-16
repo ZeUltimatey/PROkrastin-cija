@@ -16,7 +16,7 @@ export const BreedDetails = () => {
       async (response) => {
         if (response.ok) {
           const data = await response.json();
-          setBreed(data.data);
+          setBreed(data.data[0]);
         }
       }
     );
@@ -27,7 +27,7 @@ export const BreedDetails = () => {
   }, []);
 
   return (
-    <div className="bg-content-white min-h-screen p-8">
+    <div className="bg-content-white min-h-screen">
       <div className="relative w-full h-80 bg-temp-bg-image bg-cover bg-center p-12 flex flex-col justify-center">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-60"></div>
 
@@ -41,31 +41,33 @@ export const BreedDetails = () => {
         </div>
 
         <div className="relative z-20 text-center text-light-gray">
-          <span className="text-6xl font-baloo font-bold">Meinkūns</span>
+          <span className="text-6xl font-baloo font-bold">
+            {breed && breed.display_name}
+          </span>
           <p className="text-xl font-hind font-medium mt-2">
             Uzziniet vairāk par šo šķirni.
           </p>
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-12 p-8">
+      <div className="flex flex-col lg:flex-row gap-12 p-12">
         <div className="lg:w-1/3 flex flex-col gap-6">
           <div
-            className="w-64 h-80 cursor-pointer"
+            className="grow h-80 cursor-pointer"
             onClick={() => setIsModalOpen(true)}
           >
             <div className="w-full h-full bg-gray-300 rounded-md shadow-lg flex items-center justify-center"></div>
           </div>
 
           <div
-            className="w-64 h-80 cursor-pointer"
+            className="grow h-80 cursor-pointer"
             onClick={() => setIsModalOpen(true)}
           >
             <div className="w-full h-full bg-gray-300 rounded-md shadow-lg flex items-center justify-center"></div>
           </div>
 
           <div
-            className="w-64 h-80 cursor-pointer"
+            className="grow h-80 cursor-pointer"
             onClick={() => setIsModalOpen(true)}
           >
             <div className="w-full h-full bg-gray-300 rounded-md shadow-lg flex items-center justify-center"></div>

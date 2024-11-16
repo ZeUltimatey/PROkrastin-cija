@@ -6,17 +6,21 @@ import { Constants } from "../universal/Constants";
 export const ItemCard = (props: IProduct) => {
   const { addToCart } = useCart();
 
+  const token = localStorage.getItem(Constants.LOCAL_STORAGE.TOKEN);
+
   return (
     <div className="h-[316px] group mx-auto bg-light-gray shadow-sm my-4 brightness-95 flex flex-col w-60 rounded-md  hover:shadow-md transition-all">
-      <button
-        onClick={() => addToCart(props, null)}
-        className="hover:brightness-90 absolute h-0 group-hover:h-12  bg-light-brown flex transition-all place-items-center w-full justify-center font-poppins gap-4 rounded-t-md shadow-md"
-      >
-        <span className="text-lg opacity-0 group-hover:opacity-100 transition-all">
-          Pievienot grozam
-        </span>
-        <i className="fa-solid fa-cart-arrow-down opacity-0 group-hover:opacity-100 transition-all"></i>
-      </button>
+      {token && (
+        <button
+          onClick={() => addToCart(props, null)}
+          className="hover:brightness-90 absolute h-0 group-hover:h-12  bg-light-brown flex transition-all place-items-center w-full justify-center font-poppins gap-4 rounded-t-md shadow-md"
+        >
+          <span className="text-lg opacity-0 group-hover:opacity-100 transition-all">
+            Pievienot grozam
+          </span>
+          <i className="fa-solid fa-cart-arrow-down opacity-0 group-hover:opacity-100 transition-all"></i>
+        </button>
+      )}
       <div
         onClick={() => {
           window.location.assign(`/product/${props.id}`);
