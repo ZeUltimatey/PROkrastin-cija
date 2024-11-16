@@ -212,13 +212,22 @@ class TestSeeder extends Seeder
             "reviewer_id" => 2,
             "product_id" => 1,
             "content" => "Wow very good bed for me, my cat doesn\'t like it though..",
-            "rating" => 8,
+            "is_anonymous" => false,
+            "rating" => 3,
         ]);
         Review::create([
             "reviewer_id" => 1,
             "product_id" => 1,
             "content" => "My cat likes it, I can't sleep at night because she is snoring in it. But good product 👍",
-            "rating" => 10,
+            "is_anonymous" => false,
+            "rating" => 5,
+        ]);
+        Review::create([
+            "reviewer_id" => 2,
+            "product_id" => 1,
+            "content" => "I am anonymous",
+            "is_anonymous" => true,
+            "rating" => 5,
         ]);
 
         CardInformation::create([

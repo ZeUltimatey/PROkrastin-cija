@@ -4,10 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../../universal/Toast";
 import { useConfirmation } from "../../universal/Confirmation";
 import { IUser } from "../../universal/interfaces/IUser";
+import { FormInput } from "../../universal/FormInput";
 
 export const ProfileSettings = ({ user }: { user: IUser }) => {
   const [isPreferencesModalOpen, setIsPreferencesModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    old_password: "",
+    new_password: "",
+    confirm_password: "",
+  });
 
   const navigate = useNavigate();
 
@@ -46,6 +53,12 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
       });
     }
     return;
+  };
+
+  const handlePasswordChange = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
+    //todo lol
   };
 
   return (
@@ -180,52 +193,66 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
                 <i className="fa-solid fa-x"></i>
               </button>
             </div>
-            <form className="space-y-4">
-              <div>
-                <label className="text-sm text-dark-brown font-poppins block mb-1">
+            <form onSubmit={handlePasswordChange} className="space-y-4">
+              <div className="w-full">
+                <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
                   Vecā parole
                 </label>
-                <input
-                  type="password"
-                  className="w-full border border-medium-brown rounded-md p-2"
+                <FormInput
                   placeholder="Ievadiet veco paroli"
+                  value={formData.old_password}
+                  type="password"
+                  onChange={(e) =>
+                    setFormData({ ...formData, old_password: e.target.value })
+                  }
                 />
               </div>
-              <div>
-                <label className="text-sm text-dark-brown font-poppins block mb-1">
+              <div className="w-full">
+                <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
                   Jaunā parole
                 </label>
-                <input
-                  type="password"
-                  className="w-full border border-medium-brown rounded-md p-2"
+                <FormInput
                   placeholder="Ievadiet jauno paroli"
-                />
-              </div>
-              <div>
-                <label className="text-sm text-dark-brown font-poppins block mb-1">
-                  Apstiprināt jauno paroli
-                </label>
-                <input
+                  value={formData.new_password}
                   type="password"
-                  className="w-full border border-medium-brown rounded-md p-2"
-                  placeholder="Apstipriniet jauno paroli"
+                  onChange={(e) =>
+                    setFormData({ ...formData, new_password: e.target.value })
+                  }
                 />
               </div>
-              <div className="flex justify-end space-x-4 mt-4">
+              <div className="w-full">
+                <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
+                  Paroles apstiprinājums
+                </label>
+                <FormInput
+                  placeholder="Apstipriniet paroli"
+                  value={formData.confirm_password}
+                  type="password"
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      confirm_password: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="flex justify-end space-x-4 mt-6">
                 <button
-                  type="button"
-                  onClick={handleCloseModal}
-                  className="bg-light-gray text-dark-brown px-4 py-2 rounded-md shadow font-poppins"
+                  onClick={() => setIsPasswordModalOpen(false)}
+                  className="bg-light-gray text-dark-brown hover:bg-opacity-70 px-4 py-2 rounded-md shadow font-poppins"
                 >
                   Atcelt
                 </button>
-                <button
-                  type="button"
-                  onClick={handleCloseModal}
-                  className="bg-medium-brown text-white px-6 py-2 rounded-md shadow font-poppins"
-                >
-                  Saglabāt
-                </button>
+                <input
+                  type="submit"
+                  value="Saglabāt"
+                  disabled={isLoading}
+                  className={`${
+                    isLoading
+                      ? "bg-gray-200 hover:cursor-not-allowed"
+                      : "hover:cursor-pointer bg-medium-brown hover:bg-opacity-70"
+                  }   text-white px-6 py-2 rounded-md shadow font-poppins`}
+                />
               </div>
             </form>
           </div>

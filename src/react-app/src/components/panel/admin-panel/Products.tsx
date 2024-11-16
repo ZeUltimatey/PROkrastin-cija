@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { Sidebar } from "../admin-panel/Sidebar";
 import { FormInput } from "../../universal/FormInput";
 import { Constants } from "../../universal/Constants";
 import { useToast } from "../../universal/Toast";
 import { CategoryNames } from "../../universal/CategoryNames";
-import { ProductTable } from "./table/ProductTable";
 import { useConfirmation } from "../../universal/Confirmation";
 import {
   createColumnHelper,
@@ -23,7 +21,7 @@ export const Product = {
   discount_pricing: null as number,
   product_type: "FOOD",
   stock: 0,
-  image_url: "",
+  image_url: null as any,
 };
 
 export const Products = () => {
@@ -139,6 +137,9 @@ export const Products = () => {
   const onFormSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsLoading(true);
+    if (formData.image_url) {
+      await handlePictureAdd();
+    }
     await fetch(`${Constants.API_URL}/products`, {
       method: "POST",
       headers: {
@@ -160,10 +161,42 @@ export const Products = () => {
     setIsLoading(false);
   };
 
+  const handlePictureAdd = async () => {
+    const imageData = new FormData();
+    Array.from(formData.image_url).forEach((image: any, index: number) => {
+      imageData.append(`images[${index}]`, image);
+    });
+    console.log(formData.image_url);
+    await fetch(
+      `${Constants.API_URL}/products/${
+        formData.id == 0 ? products.length + 1 : formData.id
+      }/images/add`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            Constants.LOCAL_STORAGE.TOKEN
+          )}`,
+        },
+        body: imageData,
+      }
+    ).then(async (response) => {
+      if (response.ok) {
+        showToast(true, "Profila bilde pievienota.");
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        showToast(false, "Kļūda profila bildes pievienošanā.");
+      }
+    });
+  };
+
   const onEditSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsEditing(false);
     setIsLoading(true);
+    if (formData.image_url) {
+      await handlePictureAdd();
+    }
     await fetch(`${Constants.API_URL}/products/${formData.id}`, {
       method: "PUT",
       headers: {
@@ -431,10 +464,17 @@ export const Products = () => {
                     Augšupielādēt attēlu
                   </label>
                   <input
+                    onChange={(e) =>
+                      setFormData({ ...formData, image_url: e.target.files })
+                    }
                     type="file"
                     accept="image/*"
+                    multiple
                     className="mt-1 w-full px-4 py-2 border accent-accent-brown font-poppins border-gray-300 rounded-md shadow-sm "
                   />
+                  <p className="text-sm opacity-40">
+                    Bildes izmērs nedrīkst pārsniegt 4MB.
+                  </p>
                 </div>
                 <div className="flex justify-end space-x-4 mt-6">
                   <button

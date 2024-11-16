@@ -148,7 +148,7 @@ export const Filter = ({
           </span>
           <input
             type="number"
-            value={filter.price.to || ""}
+            value={filter.price.to == 9999999 ? "" : filter.price.to || ""}
             onChange={(e) =>
               handlePriceChange(
                 e.target.value ? parseInt(e.target.value) : null,

@@ -1,32 +1,39 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../universal/Cart";
 import { IProduct } from "../universal/interfaces/IProduct";
+import { Constants } from "../universal/Constants";
 
 export const ItemCard = (props: IProduct) => {
-  const navigate = useNavigate();
-
   const { addToCart } = useCart();
+
+  const token = localStorage.getItem(Constants.LOCAL_STORAGE.TOKEN);
 
   return (
     <div className="h-[316px] group mx-auto bg-light-gray shadow-sm my-4 brightness-95 flex flex-col w-60 rounded-md  hover:shadow-md transition-all">
-      <button
-        onClick={() => addToCart(props, null)}
-        className="hover:brightness-90 absolute h-0 group-hover:h-12  bg-light-brown flex transition-all place-items-center w-full justify-center font-poppins gap-4 rounded-t-md shadow-md"
-      >
-        <span className="text-lg opacity-0 group-hover:opacity-100 transition-all">
-          Pievienot grozam
-        </span>
-        <i className="fa-solid fa-cart-arrow-down opacity-0 group-hover:opacity-100 transition-all"></i>
-      </button>
+      {token && (
+        <button
+          onClick={() => addToCart(props, null)}
+          className="hover:brightness-90 absolute h-0 group-hover:h-12  bg-light-brown flex transition-all place-items-center w-full justify-center font-poppins gap-4 rounded-t-md shadow-md"
+        >
+          <span className="text-lg opacity-0 group-hover:opacity-100 transition-all">
+            Pievienot grozam
+          </span>
+          <i className="fa-solid fa-cart-arrow-down opacity-0 group-hover:opacity-100 transition-all"></i>
+        </button>
+      )}
       <div
         onClick={() => {
-          navigate(`/product/${props.id}`);
+          window.location.assign(`/product/${props.id}`);
         }}
         className=" hover:cursor-pointer"
       >
         <img
           className="rounded-t-md"
-          src={props.image_url}
+          src={
+            props.images[0]
+              ? Constants.BASE_URL + props.images[0].url
+              : "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
+          }
           alt={props.description}
         />
 

@@ -141,7 +141,7 @@ export const Catalog = () => {
                     pricing={product.pricing}
                     discount_pricing={product.discount_pricing}
                     product_type={product.product_type}
-                    image_url={"../images/products/16.png"}
+                    images={product.images}
                   />
                 ))}
             </div>

@@ -5,7 +5,7 @@ import { Footer } from "../universal/Footer";
 export const GeneralLayout = () => {
   return (
     <div className="" style={{ backgroundImage: `url(../cat_pattern_bg.jpg)` }}>
-      <div className="lg:px-32 bg-background-brown bg-opacity-95 pt-6">
+      <div className="lg:px-32 bg-background-brown bg-opacity-95 lg:pt-6">
         <Navbar />
 
         <Outlet />

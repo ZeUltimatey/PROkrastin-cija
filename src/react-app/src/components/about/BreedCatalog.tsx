@@ -147,31 +147,12 @@ export const BreedCatalog = () => {
         <span className="text-6xl font-baloo text-dark-brown font-bold">
           Kaķu šķirņu enciklopēdija
         </span>
-        <p className="text-xl font-hind text-medium-brown font-medium">
+        <p className="text-xl font-hind text-dark-brown font-medium">
           Uzziniet par dažādām kaķu šķirnēm un to īpatnībām.
         </p>
       </div>
 
       <div className="flex flex-col lg:flex-row-reverse gap-6 p-8">
-        <div className="w-full lg:w-1/4 p-4 rounded-md bg-content-white shadow-lg">
-          <label
-            htmlFor="category"
-            className="text-dark-brown font-bold font-poppins text-lg"
-          >
-            Šķirne:
-          </label>
-          <div className="flex flex-col gap-2 mt-2">
-            {Object.keys(filter.category).map((categoryKey) => (
-              <CategoryItem
-                key={categoryKey}
-                onSelect={() => handleCategoryChange(categoryKey)}
-                filter={filter}
-                item={categoryKey}
-              />
-            ))}
-          </div>
-        </div>
-
         <div className="flex flex-col grow gap-4">
           <SearchSort
             filteredItemAmount={breeds?.length}
@@ -203,7 +184,7 @@ export const BreedCatalog = () => {
                       </h3>
                       <p className="">
                         {breed.personality_info.length > 100
-                          ? `${breed.personality_info.slice(1, 100)}...`
+                          ? `${breed.personality_info.slice(1, 300)}...`
                           : breed.personality_info}
                       </p>
                     </div>

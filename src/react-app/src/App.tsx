@@ -35,6 +35,8 @@ import { SavedAddresses } from "./components/instruction/SavedAddresses";
 import { PayMethods } from "./components/instruction/PayMethods";
 import { BrowseInfo } from "./components/instruction/BrowseInfo";
 import { BasketInfo } from "./components/instruction/BasketInfo";
+import { PaymentSuccessful } from "./components/universal/PaymentSuccessful";
+import { ForgotPassword } from "./components/login/login-page/ForgotPassword";
 
 function App() {
   return (
@@ -45,13 +47,17 @@ function App() {
             <Routes>
               <Route path="/" element={<GeneralLayout />}>
                 <Route index element={<Homepage />} />
+                <Route
+                  path="/paymentsuccessful"
+                  element={<PaymentSuccessful />}
+                />
                 <Route path="/product/:productId" element={<ProductView />} />
                 <Route path="/products" element={<Catalog />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/policy" element={<Policy />} />
                 <Route path="/contact" element={<ContactInfo />} />
                 <Route path="/cart" element={<Cart />} />
-                <Route path="/reviews" element={<Reviews />} />
+                <Route path="/reviews/:productId" element={<Reviews />} />
                 <Route path="/receipt" element={<Receipt />} />
                 <Route path="/breeds" element={<BreedCatalog />} />
                 <Route path="/breed/:breedId" element={<BreedDetails />} />
@@ -106,6 +112,7 @@ function App() {
 
               <Route path="/auth" element={<AuthLayout />}>
                 <Route path="login" element={<Login />} />
+                <Route path="forgotpassword" element={<ForgotPassword />} />
                 <Route path="register" element={<Register />} />
               </Route>
             </Routes>

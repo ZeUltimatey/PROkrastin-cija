@@ -108,9 +108,9 @@ export const Navbar = () => {
     });
   };
   return (
-    <nav className="bg-content-white rounded-t-md">
-      <div className="flex items-center justify-between h-20 gap-2 px-6">
-        <div className="p-4 w-52">
+    <nav className="bg-content-white lg:rounded-t-md">
+      <div className="flex items-center justify-between h-12 lg:h-20 gap-2 lg:px-6 px-4">
+        <div className="lg:p-4 lg:w-52 w-28">
           <a href="/">
             <img src={"../cat_logo.png"} alt="Murrātava" />
           </a>
@@ -139,7 +139,7 @@ export const Navbar = () => {
                 .getElementById("categories")
                 ?.scrollIntoView({ behavior: "smooth" })
             }
-            className="flex place-items-center gap-2 h-20 px-4 group-hover:border-b-4 border-[#A67144] transition-all"
+            className="lg:flex place-items-center gap-2 h-20 px-4 group-hover:border-b-4 border-[#A67144] transition-all hidden"
           >
             <i className="text-2xl fa-solid fa-layer-group"></i>
             <span className="font-bold font-poppins">Kategorijas</span>
@@ -164,6 +164,7 @@ export const Navbar = () => {
             <div
               onPointerEnter={handleCartHover}
               onPointerLeave={() => setShowCart(false)}
+              className="lg:block hidden"
             >
               <button
                 onClick={() => navigate("/cart")}
@@ -188,42 +189,83 @@ export const Navbar = () => {
           )}
           <button
             onClick={() => navigate("/breeds")}
-            className={`h-full px-6 hover:border-b-4 border-accent-brown transition-all`}
+            className={`h-full px-6 hover:border-b-4 border-accent-brown transition-all lg:block hidden`}
           >
             <i className="text-xl fa-solid fa-book lg:text-2xl"></i>
           </button>
-          <button
-            onClick={() => handleUserClick()}
-            className="h-full px-6 transition-all hover:border-b-4 border-accent-brown"
-          >
-            <i className="text-xl fa-solid fa-user lg:text-2xl"></i>
-          </button>
+          <div className="flex">
+            <button
+              onClick={() => handleUserClick()}
+              className="h-full px-6 transition-all hover:border-b-4 border-accent-brown"
+            >
+              <i className="text-xl fa-solid fa-user lg:text-2xl"></i>
+            </button>
+            <button className="flex items-center md:hidden">
+              <i
+                className="text-2xl fa-solid fa-bars"
+                onClick={() => setNavbarToggle(!navbarToggle)}
+              ></i>
+            </button>
+          </div>
           {user && (
             <button
               onClick={() => handleLogout()}
-              className="h-full px-6 transition-all hover:border-b-4 border-accent-brown"
+              className="h-full px-6 transition-all hover:border-b-4 border-accent-brown lg:block hidden"
             >
               <i className="text-xl fa-solid fa-right-from-bracket lg:text-2xl"></i>
             </button>
           )}
         </div>
-
-        <div className="flex items-center md:hidden">
-          <i
-            className="text-2xl fa-solid fa-bars"
-            onClick={() => setNavbarToggle(!navbarToggle)}
-          ></i>
-        </div>
       </div>
 
-      {/* {navbarToggle && (
+      {navbarToggle && (
         <ul className="p-4 text-lg font-semibold md:hidden bg-content-white font-poppins">
-          <li key={} className="py-2 hover:cursor-pointer">Kaķi</li>
-          <li className="py-2 hover:cursor-pointer">Barība</li>
-          <li className="py-2 hover:cursor-pointer">Rotaļlietas</li>
-          <li className="py-2 hover:cursor-pointer">Aksesuāri</li>
+          <li className="py-2 hover:cursor-pointer">
+            <button
+              onClick={() =>
+                document
+                  .getElementById("categories")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+              className="flex items-center gap-2"
+            >
+              <i className="text-xl fa-solid fa-layer-group"></i>
+              Kategorijas
+            </button>
+          </li>
+          {user && (
+            <li className="py-2 hover:cursor-pointer">
+              <button
+                onClick={() => navigate("/cart")}
+                className="flex items-center gap-2"
+              >
+                <i className="text-xl fa-solid fa-basket-shopping"></i>
+                Grozs
+              </button>
+            </li>
+          )}
+          <li className="py-2 hover:cursor-pointer">
+            <button
+              onClick={() => navigate("/breeds")}
+              className="flex items-center gap-2"
+            >
+              <i className="text-xl fa-solid fa-book"></i>
+              Šķirņu katalogs
+            </button>
+          </li>
+          {user && (
+            <li className="py-2 hover:cursor-pointer">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2"
+              >
+                <i className="text-xl fa-solid fa-right-from-bracket"></i>
+                Iziet
+              </button>
+            </li>
+          )}
         </ul>
-      )} */}
+      )}
     </nav>
   );
 };

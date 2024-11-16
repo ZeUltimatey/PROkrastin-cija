@@ -18,6 +18,7 @@ class ReviewResource extends JsonResource
             "id"         => $this->id,
             "content"    => $this->content,
             "rating"     => $this->rating,
+            "is_anonymous" => $this->is_anonymous,	
             "created_at" => $this->created_at,
         ];
 

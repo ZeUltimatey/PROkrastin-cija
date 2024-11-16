@@ -140,27 +140,41 @@ class ProductController extends Controller
     }
 
 
-    public function addImage(Request $request, int $id){
+    public function addImages(Request $request, int $id)
+{
+    // Validate the images array and each individual image
+    $validator = Validator::make($request->all(), [
+        'images.*' => 'required|image|mimes:jpeg,png,jpg|max:4096', // Each image must meet these criteria
+        'images' => 'required|array|min:1', // Ensure at least one image is uploaded
+    ]);
 
-        $validator = Validator::make($request->all(),
-            [
-                'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            ]
-        );
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors(),
-            ], 422); // Unprocessable Entity
-        }
-        $image = $request->file('image');
+    if ($validator->fails()) {
+        return response()->json([
+            'errors' => $validator->errors(),
+        ], 422); // Unprocessable Entity
+    }
+
+    $uploadedImages = []; // To store details of uploaded images
+
+    foreach ($request->file('images') as $image) {
         $path = $image->store('images/products', 'public');
         $imageUrl = Storage::url($path);
 
-        return ProductImage::create([
+        // Save the image to the database
+        $uploadedImage = ProductImage::create([
             'product_id' => $id,
             'url' => $imageUrl,
         ]);
+
+        $uploadedImages[] = $uploadedImage; // Add to the result list
     }
+
+    return response()->json([
+        'message' => 'Images uploaded successfully.',
+        'images' => $uploadedImages,
+    ]);
+}
+
 
 
     public function removeImage(Request $request, ProductImage $image){

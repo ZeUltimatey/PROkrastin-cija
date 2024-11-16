@@ -20,7 +20,7 @@ export const Breed = {
   personality_info: "",
   environment_info: "",
   tips_info: "",
-  attachment_id: 0,
+  attachment_id: "",
 };
 
 export const Breeds = () => {
@@ -60,7 +60,7 @@ export const Breeds = () => {
     }).then(async (response) => {
       if (response.ok) {
         const data = await response.json();
-        setFormData(data.data);
+        setFormData(data.data[0]);
         setIsModalOpen(true);
       }
     });
@@ -139,6 +139,35 @@ export const Breeds = () => {
     });
     setIsLoading(false);
   };
+
+  // const handlePictureAdd = async () => {
+  //   const imageData = new FormData();
+  //   Array.from(formData.image_url).forEach((image: any, index: number) => {
+  //     imageData.append(`images[${index}]`, image);
+  //   });
+  //   console.log(formData.image_url);
+  //   await fetch(
+  //     `${Constants.API_URL}/products/${
+  //       formData.id == 0 ? products.length + 1 : formData.id
+  //     }/images/add`,
+  //     {
+  //       method: "POST",
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem(
+  //           Constants.LOCAL_STORAGE.TOKEN
+  //         )}`,
+  //       },
+  //       body: imageData,
+  //     }
+  //   ).then(async (response) => {
+  //     if (response.ok) {
+  //       showToast(true, "Profila bilde pievienota.");
+  //       setTimeout(() => window.location.reload(), 1000);
+  //     } else {
+  //       showToast(false, "Kļūda profila bildes pievienošanā.");
+  //     }
+  //   });
+  // };
 
   const onEditSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
