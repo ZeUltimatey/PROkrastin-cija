@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Resources\UserResource;
@@ -26,12 +27,46 @@ use Laravel\Sanctum\Http\Controllers\AuthenticatedSessionController;
 
 class UserController extends Controller
 {
-    /** 
+    /**
      * Show all users.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json(User::all());
+        // Initialize a query builder for the Product model
+        $query = User::query();
+        $query->where('user_role', 'LIKE', 'User');
+
+        if ($request->has('deactivated')) {
+            $query->where('deactivated', $request->deactivated === 'true');
+        }
+
+        if ($request->has('deleted')) {
+            $query->where('deleted', $request->deleted === 'true');
+        }
+
+        // Filter by keyword in display_name or description (if provided)
+        if ($request->has('keyword')) {
+            $keyword = strtolower(str_replace(' ', '', $request->keyword)); // Convert keyword to lowercase and remove spaces
+
+            $query->where(function($q) use ($keyword) {
+                $q->whereRaw("LOWER(REPLACE(REPLACE(display_name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(surname, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(email, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"]);
+            });
+        }
+
+        // Set the default number of records per page to 12 if not provided
+        $perPage = $request->get('per_page', 12);  // Default to 12 records per page
+
+        // Get paginated results
+        $products = $query->paginate($perPage);
+
+        // Append current request parameters to pagination links
+        $products->appends($request->except('page'));
+
+        // Return paginated products as a resource collection
+        return UserResource::collection($products);
     }
 
     /**
@@ -52,8 +87,7 @@ class UserController extends Controller
             'name'              => $user_data['name'],
             'surname'           => $user_data['surname'],
             'phone_number'      => $user_data['phone_number'] ?? null,
-            'user_role'         => $user_data['user_role'] ?? 'User',
-            'deactivated'       => false,
+            'user_role'         => $user_data['user_role'] ?? 'User'
         ]);
 
         // Return response with user data and token
@@ -84,6 +118,7 @@ class UserController extends Controller
         // Check if the user is banned
         $user_model = Auth::user();
         $user = new UserResource($user_model);
+        if ($user['deleted']) { return response()->json(['error' => 'Dzēsts profils'], 403); } // Forbidden
         if ($user['deactivated']) { return response()->json(['error' => 'Jūsu profils ir bloķēts, ja uzskatāt, ka tā ir kļūda, sazinieties ar administratoru!'], 403); } // Forbidden
 
         // Create token on successful login
@@ -180,51 +215,9 @@ class UserController extends Controller
         Auth::user()->tokens()->delete();
 
         // Delete the user
-        $user_model->delete();
+        $user_model->update(['deleted' => true]);
         return response()->json(null, 204); // No content
     }
-
-    /**
-     * Change own user information.
-     */
-    public function change(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Ban or unban an user.
-     */
-    public function deactivate(Request $request, int $id)
-    {
-        // Find the user by id
-        $user = User::find($id);
-
-        // Check if the user exists
-        if (!$user) {
-            return response()->json(['error' => 'User not found.'], 404); // Not found
-        }
-
-        // Prevent deactivating Admin users
-        if ($user->user_role === 'Admin') {
-            return response()->json(['deactivated' => false], 403); // Forbidden
-        }
-
-        // Validate the request to ensure 'deactivate' is a boolean
-        $request->validate([
-            'deactivate' => 'required|boolean',
-        ]);
-
-        // Set the 'deactivated' field based on the 'deactivate' request
-        $user->deactivated = $request->input('deactivate');
-
-        // Save the updated user model
-        $user->save();
-
-        // Return the updated user state
-        return response()->json(['deactivated' => $user->deactivated], 200); // OK
-    }
-
 
     public function addProfilePicture(Request $request)
     {
@@ -289,11 +282,11 @@ class UserController extends Controller
         foreach ($basketProducts as $basketProduct) {
             $basketProduct->product->stock -= $basketProduct->amount;
             $basketProduct->product->save();
-            
+
             $basketProduct->delete();
             dd($basketProducts);
         }
-        
+
     }
     public function successPaid (Request $request) {
         $sessionId = $request->get('session_id');
@@ -308,18 +301,18 @@ class UserController extends Controller
         //return redirect()->to(env('FRONTEND_URL'))->with('run_route', 'clear-basket-after-payment');
             return redirect()->to(env('FRONTEND_URL'));
         }
-     
+
         $session = Cashier::stripe()->checkout->sessions->retrieve($sessionId);
-     
+
         if ($session->payment_status !== 'paid') {
-            
-            return redirect()->to(env('FRONTEND_URL'));        
+
+            return redirect()->to(env('FRONTEND_URL'));
         }
-     
+
         $orderId = $session['metadata']['order_id'] ?? null;
-     
+
         $order = Order::findOrFail($orderId);
-     
+
         $order->update(['status' => 'completed']);
 
         $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
@@ -328,8 +321,8 @@ class UserController extends Controller
             $basketProduct->product->save(); //TODO add this to transaction history before deleting
             $basketProduct->delete();
         }
-     
-        return redirect()->to(env('FRONTEND_URL'));    
+
+        return redirect()->to(env('FRONTEND_URL'));
     }
 
     public function failedPaid (Request $request) {
@@ -337,18 +330,18 @@ class UserController extends Controller
         if ($sessionId === null) {
             return redirect()->to(env('FRONTEND_URL'));
         }
-     
+
         $session = Cashier::stripe()->checkout->sessions->retrieve($sessionId);
-     
+
         if ($session->payment_status !== 'paid') {
             return redirect()->to(env('FRONTEND_URL'));        }
-     
+
         $orderId = $session['metadata']['order_id'] ?? null;
-     
+
         $order = Order::findOrFail($orderId);
-     
+
         $order->update(['status' => 'cancelled']);
-     
+
         return redirect()->to(env('FRONTEND_URL'));    // redirect uz failed
     }
 }

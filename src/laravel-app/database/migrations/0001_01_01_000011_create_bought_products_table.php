@@ -20,7 +20,8 @@ return new class extends Migration
                 ->on('products');
             $table->foreign('transaction_id')
                 ->references('id')
-                ->on('transactions');
+                ->on('transactions')
+                ->onDelete('cascade');
 
             $table->string('display_name');
             $table->unsignedInteger('amount');

@@ -183,8 +183,8 @@ export const BreedCatalog = () => {
                         {breed.display_name}
                       </h3>
                       <p className="">
-                        {breed.personality_info.length > 100
-                          ? `${breed.personality_info.slice(1, 300)}...`
+                        {breed.personality_info?.length > 100
+                          ? `${breed.personality_info?.slice(1, 300)}...`
                           : breed.personality_info}
                       </p>
                     </div>

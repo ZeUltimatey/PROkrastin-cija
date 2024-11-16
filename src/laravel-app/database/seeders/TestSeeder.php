@@ -286,6 +286,16 @@ class TestSeeder extends Seeder
             "total_price" => 69.99,
         ]);
 
+
+        DB::table('product_images')->insert([
+             [
+                 'product_id' => 1,
+                 'url' => '/storage/images/profile/6R7ftJWczFUuQHDax5L8x3p63YJe5HyyXge7YRpA.jpg',
+                 'created_at' => now(),
+                 'updated_at' => now(),
+             ]
+        ]);
+
         // DB::table('selected_products')->insert([
         //     [
         //         'id' => 1,

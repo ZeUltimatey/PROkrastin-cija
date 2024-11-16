@@ -29,12 +29,66 @@ class TransactionController extends Controller
     /**
      * Show all transactions.
      */
-    public function index_all()
+    public function index_all(Request $request)
     {
         // Fetch all transactions
-        return TransactionResource::collection(Transaction::all())->each(function ($transaction) {
-            $transaction->with_transactor();
-        });
+//        return TransactionResource::collection(Transaction::all())->each(function ($transaction) {
+//            $transaction->with_transactor();
+//        });
+
+        // Initialize a query builder for the Product model
+//        $query = Transaction::query();
+        $query = Transaction::query()
+            ->select('transactions.*')
+            ->leftJoin('users', 'transactions.transactor_id', '=', 'users.id')
+            ->leftJoin('locations', 'transactions.location_id', '=', 'locations.id');
+
+        // Filter by price range (if provided)
+        if ($request->has('min') || $request->has('max')) {
+            $query->where(function ($q) use ($request) {
+                if ($request->has('min')) {
+                    $q->where(function ($subQuery) use ($request) {
+                        $subQuery->where('total_pricing', '>=', $request->min);
+                    });
+                }
+                if ($request->has('max')) {
+                    $q->where(function ($subQuery) use ($request) {
+                        $subQuery->where('total_pricing', '<=', $request->max);
+                    });
+                }
+            });
+        }
+
+        // Filter by keyword in display_name or description (if provided)
+        if ($request->has('keyword')) {
+            $keyword = strtolower(str_replace(' ', '', $request->keyword)); // Convert keyword to lowercase and remove spaces
+
+            $query->where(function($q) use ($keyword) {
+                $q->whereRaw("LOWER(REPLACE(REPLACE(users.name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(users.surname, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(check_content, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"]);
+            });
+        }
+
+        // Sort by price if 'price_sort' parameter is provided
+        if ($request->has('total_sort') && in_array(strtolower($request->total_sort), ['asc', 'desc'])) {
+            $sortOrder = strtolower($request->total_sort) === 'asc' ? 'asc' : 'desc';
+
+            // Sorting by discounted price first if it exists, else regular price using CASE WHEN
+            $query->orderByRaw("total_pricing " . $sortOrder);
+        }
+
+        // Set the default number of records per page to 12 if not provided
+        $perPage = $request->get('per_page', 12);  // Default to 12 records per page
+
+        // Get paginated results
+        $products = $query->paginate($perPage);
+
+        // Append current request parameters to pagination links
+        $products->appends($request->except('page'));
+
+        // Return paginated products as a resource collection
+        return TransactionResource::collection($products);
     }
 
     /**

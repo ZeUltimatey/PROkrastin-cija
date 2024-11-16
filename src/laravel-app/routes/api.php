@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SearchController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\BoughtProductsController;
@@ -23,13 +24,13 @@ use Illuminate\Support\Facades\Route;
 
 // Free for all
 Route::get('/login', function () {
-    return response()->json(['error' => 'Unauthorized'], 401);
+    return response()->json(['error' => 'Unauthorized or invalid token'], 401);
 })->name('login');
 Route::post('/register', [UserController::class, 'register']);
 
 Route::get('/products', [ProductController::class, 'index']);
-Route::get('/cats', [CatController::class, 'index']);
 Route::get('/breeds', [CatBreedController::class, 'index']);
+Route::get('/search', [SearchController::class, 'index']);
 
 Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/breeds/{id}', [CatBreedController::class, 'show']);
@@ -43,7 +44,7 @@ Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanct
 Route::post('/v1/products', [ProductController::class, 'importProducts']); // use at your own risk
 
 // Route::get('/checkout', [UserController::class, 'basketPayment'])->name('checkout');
- 
+
 // Route::view('/checkout/success', 'checkout.success')->name('checkout-success');
 // Route::view('/checkout/cancel', 'checkout.cancel')->name('checkout-cancel');
 
@@ -75,7 +76,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/tt', [UserController::class, 'tt']);
     Route::get('/checkout', [UserController::class, 'basketPayment'])->name('checkout');
     Route::delete('/purchaseSuccesfull', [UserController::class, 'clear_basket_after_payment'])->name('clear-basket-after-payment');
-    
+
 
     Route::post('/logout', [UserController::class, 'logout']);
     Route::get('/user', [UserController::class, 'get']);
@@ -83,9 +84,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/user/image/remove', [UserController::class, 'removeProfilePicture']);
 
     Route::delete('/user', [UserController::class, 'destroy']);
-
     Route::put('/user', [UserController::class, 'update']);
-//    Route::get('/user/{id}', [UserController::class, 'show']); // jau ir user/{id} GET adminiem
 
     Route::get('/bought_products/{transaction_id}', [BoughtProductsController::class, 'index']);
 
@@ -101,7 +100,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/locations/{id}', [LocationController::class, 'show']);
     Route::delete('/locations/{id}', [LocationController::class, 'destroy']);
 
-    Route::post('/reviews/{id}', [ReviewController::class, 'store']);
+    Route::post('/reviews/{product_id}', [ReviewController::class, 'store']);
 
     Route::get('/transactions', [TransactionController::class, 'show']);
     Route::post('/purchase', [TransactionController::class, 'purchase']);
