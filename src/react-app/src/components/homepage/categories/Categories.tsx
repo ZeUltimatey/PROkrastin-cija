@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Category } from "./Category";
 import { CategoryList } from "./CategoryList";
+import { Constants } from "../../universal/Constants";
 
 export const Categories = () => {
   const navigate = useNavigate();
@@ -33,7 +34,10 @@ export const Categories = () => {
         </div>
         <div className="lg:mx-12 mb-6">
           <button
-            onClick={() => navigate("/products")}
+            onClick={() => {
+              localStorage.removeItem(Constants.LOCAL_STORAGE.QUERY_CATALOG);
+              navigate("/products");
+            }}
             className="flex place-items-center justify-center h-16 w-full bg-content-white hover:brightness-90 transition-all hover:shadow-lg rounded-md shadow-md"
           >
             <span className="lg:text-2xl text-xl font-semibold text-dark-brown font-poppins">

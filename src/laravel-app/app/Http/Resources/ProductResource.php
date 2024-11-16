@@ -37,6 +37,7 @@ class ProductResource extends JsonResource
 
             if ($this->cat->cat_breed) {
                 $product['cat']['breed_name'] = $this->cat->cat_breed->display_name;
+                $product['cat']['breed_id'] = $this->cat->cat_breed->id;
             }
         }
         return $product;

@@ -49,7 +49,13 @@ export const ProductInfo = ({
             </p>
             <p>
               <strong>Šķirne: </strong>
-              {product.cat.breed_name}
+              {product.cat.breed_name}{" "}
+              <button
+                onClick={() => navigate(`/breed/${product.cat.breed_id}`)}
+                title="Uzzināt vairāk par šo šķirni..."
+              >
+                <i className="fa-solid fa-circle-info hover:opacity-80"></i>
+              </button>
             </p>
           </div>
         )}
