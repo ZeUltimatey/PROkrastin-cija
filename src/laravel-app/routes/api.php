@@ -29,7 +29,6 @@ Route::get('/login', function () {
 Route::post('/register', [UserController::class, 'register']);
 
 Route::get('/products', [ProductController::class, 'index']);
-Route::get('/cats', [CatController::class, 'index']);
 Route::get('/breeds', [CatBreedController::class, 'index']);
 Route::get('/search', [SearchController::class, 'index']);
 

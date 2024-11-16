@@ -11,7 +11,7 @@ use Psy\Util\Json;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ProductImage;
 use App\Http\Resources\ProductResource;
-use Stripe\Stripe; 
+use Stripe\Stripe;
 use Stripe\PaymentIntent;
 
 class ProductController extends Controller
@@ -22,7 +22,10 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         // Initialize a query builder for the Product model
-        $query = Product::query();
+        $query = Product::query()
+            ->select('products.*')
+            ->leftJoin('cats', 'products.id', '=', 'cats.id')
+            ->leftJoin('cat_breeds', 'cats.breed_id', '=', 'cat_breeds.id');
 
         // Filter by multiple product_types (if provided as a comma-separated string)
         if ($request->filled('product_type')) {
@@ -52,9 +55,10 @@ class ProductController extends Controller
         if ($request->has('keyword')) {
             $keyword = strtolower(str_replace(' ', '', $request->keyword)); // Convert keyword to lowercase and remove spaces
 
-            $query->where(function($q) use ($keyword) {
-                $q->whereRaw("LOWER(REPLACE(REPLACE(display_name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
-                    ->orWhereRaw("LOWER(REPLACE(REPLACE(description, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"]);
+            $query->where(function ($q) use ($keyword) {
+                $q->whereRaw("LOWER(REPLACE(REPLACE(products.display_name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(products.description, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
+                    ->orWhereRaw("LOWER(REPLACE(REPLACE(cat_breeds.display_name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"]);
             });
         }
 
@@ -205,7 +209,7 @@ class ProductController extends Controller
                'price_id' => $prices->id,
             ]);
         }
-        
+
     }
 
 }
