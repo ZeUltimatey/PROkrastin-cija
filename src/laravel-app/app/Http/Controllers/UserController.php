@@ -160,15 +160,15 @@ class UserController extends Controller
             $request->request->remove('email');
         }
         $validator = Validator::make($request->all(), [
-            'email'                 => 'sometimes|string|email|unique:users|max:255',
-            'password'              => 'nullable|string|min:8|confirmed',
-            'password_confirmation' => 'nullable|same:password',
-            'display_name'          => 'sometimes|string|unique:users|max:255',
-            'name'                  => 'nullable|string|max:255',
-            'surname'               => 'nullable|string|max:255',
-            'phone_number'          => 'nullable|string|max:15',
-            'user_role'             => 'nullable|in:User,Admin',
-            'deactivated'           => 'nullable|boolean',
+            'email'                     => 'sometimes|string|email|unique:users|max:255',
+            'password'                  => 'nullable|string|min:8|confirmed',
+            'password_confirmation'     => 'nullable|same:password',
+            'display_name'              => 'sometimes|string|unique:users|max:255',
+            'name'                      => 'nullable|string|max:255',
+            'surname'                   => 'nullable|string|max:255',
+            'phone_number'              => 'nullable|string|max:15',
+            'user_role'                 => 'nullable|in:User,Admin',
+            'deactivated'               => 'nullable|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -210,29 +210,6 @@ class UserController extends Controller
         // Delete the user
         $user_model->update(['deleted' => true]);
         return response()->json(null, 204); // No content
-    }
-
-    /**
-     * Change own user information.
-     */
-    public function change(Request $request)
-    {
-        //
-    }
-
-    public function change_password(ChangePasswordRequest $request)
-    {
-        $user_model = Auth::user();
-        $user = new UserResource($user_model);
-
-        if (!Hash::check($request->old_password, $user->password))
-            return response()->json(['error' => 'Old password is wrong.'], 422);
-
-        if (Hash::check($request->new_password, $user->password))
-            return response()->json(['error' => 'New password is the same as the old password.'], 422);
-
-        $user->update(['password' => $request->new_password]);
-        return response()->json(null, 202); // Request accepted
     }
 
     public function addProfilePicture(Request $request)
