@@ -100,7 +100,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/locations/{id}', [LocationController::class, 'show']);
     Route::delete('/locations/{id}', [LocationController::class, 'destroy']);
 
-    Route::post('/reviews/{id}', [ReviewController::class, 'store']);
+    Route::post('/reviews/{product_id}', [ReviewController::class, 'store']);
 
     Route::get('/transactions', [TransactionController::class, 'show']);
     Route::post('/purchase', [TransactionController::class, 'purchase']);

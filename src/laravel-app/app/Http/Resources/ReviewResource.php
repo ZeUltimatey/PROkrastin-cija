@@ -18,7 +18,7 @@ class ReviewResource extends JsonResource
             "id"         => $this->id,
             "content"    => $this->content,
             "rating"     => $this->rating,
-            "is_anonymous" => $this->is_anonymous,	
+            "is_anonymous" => $this->is_anonymous,
             "created_at" => $this->created_at,
         ];
 
@@ -40,7 +40,7 @@ class ReviewResource extends JsonResource
 
         // Check if reviewer is associated
         $reviewer = null;
-        if ($this->reviewer) {
+        if (!$this->is_anonymous && $this->reviewer) {
             $reviewer = $this->reviewer;
             $reviewer = [
                 "id"           => $reviewer->id,
