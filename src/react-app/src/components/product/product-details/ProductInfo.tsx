@@ -26,15 +26,33 @@ export const ProductInfo = ({
             {product.display_name}
           </div>
         </div>
-        <div
-          className="hover:cursor-pointer w-52 hover:opacity-70"
-          onClick={() => navigate(`/reviews/${product.id}`)}
-        >
-          <StarRating stars={reviews.data.length} />
-          <div className="text-sm ml-1 underline text-dark-brown">
-            {reviews.data.length} atsauksmes
+        {product.product_type !== "CATS" && (
+          <div
+            className="hover:cursor-pointer w-52 hover:opacity-70"
+            onClick={() => navigate(`/reviews/${product.id}`)}
+          >
+            <StarRating stars={reviews.data.length} />
+            <div className="text-sm ml-1 underline text-dark-brown">
+              {reviews.data.length} atsauksmes
+            </div>
           </div>
-        </div>
+        )}
+        {product.product_type === "CATS" && (
+          <div className="flex flex-col text-dark-brown">
+            <p>
+              <strong>Dz. datums: </strong>
+              {product.cat.birthdate}
+            </p>
+            <p>
+              <strong>Krāsa: </strong>
+              {product.cat.color}
+            </p>
+            <p>
+              <strong>Šķirne: </strong>
+              {product.cat.breed_name}
+            </p>
+          </div>
+        )}
       </div>
       <div className="text-xl text-[#3e2a19] font-hind">
         {product.description}
@@ -47,7 +65,9 @@ export const ProductInfo = ({
               : product.pricing.toFixed(2)}
           </span>
           &euro;
-          <span className="text-[#44392e] text-lg">/gab</span>
+          {product.product_type !== "CATS" && (
+            <span className="text-[#44392e] text-lg">/gab</span>
+          )}
         </div>
         {product.product_type !== "CATS" && (
           <p className="opacity-40">

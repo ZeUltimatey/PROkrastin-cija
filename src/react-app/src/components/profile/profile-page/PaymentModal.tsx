@@ -21,10 +21,11 @@ export const PaymentModal = ({ onClose }: IPaymentModalProps) => {
       ...formData,
       card_name: `${valid
         .number(formData.card_number)
-        .card.type.toUpperCase()} **** **** **** ${formData.card_number.slice(
+        ?.card?.type?.toUpperCase()} **** **** **** ${formData.card_number.slice(
         -4
       )}`,
     };
+
     if (!validateCard()) return;
     setIsLoading(true);
     await fetch(`${Constants.API_URL}/cards`, {

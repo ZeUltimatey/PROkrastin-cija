@@ -165,7 +165,7 @@ export const BreedCatalog = () => {
           <div className="mx-8 h-auto mb-6 font-poppins">
             <div className="flex flex-col gap-6 place-items-center justify-center">
               {!breeds && <Spinner />}
-              {breeds && breeds.length === 0 && (
+              {breeds && breeds?.length === 0 && (
                 <div className="font-poppins">
                   Diemžēl nav informāciju par šķirnēm.
                 </div>

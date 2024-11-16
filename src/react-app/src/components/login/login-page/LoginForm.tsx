@@ -39,6 +39,7 @@ export const LoginForm = () => {
       .then(async (response) => {
         if (response.ok) {
           const data = await response.json();
+
           localStorage.setItem(Constants.LOCAL_STORAGE.TOKEN, data.token);
           showToast(true, "Autentifikācija veiksmīga!");
           setTimeout(() => navigate("/"), 1000);
@@ -47,6 +48,12 @@ export const LoginForm = () => {
           switch (data.error) {
             case "Invalid credentials":
               showToast(false, "Nepareizs e-pasts vai parole.");
+              break;
+            case "Jūsu profils ir bloķēts, ja uzskatāt, ka tā ir kļūda, sazinieties ar administratoru!":
+              showToast(
+                false,
+                "Jūsu profils ir bloķēts, ja uzskatāt, ka tā ir kļūda, sazinieties ar administratoru!"
+              );
               break;
             default:
               showToast(false, "Kļūda autentifikācijā.");

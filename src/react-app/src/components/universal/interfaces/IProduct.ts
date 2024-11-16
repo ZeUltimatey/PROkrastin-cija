@@ -8,4 +8,5 @@ export interface IProduct {
   discount_pricing?: number;
   images?: any[];
   stock?: number;
+  cat?: any;
 }

@@ -20,7 +20,11 @@ type PaymentMethod = {
   card_name: string;
 };
 
-export const PaymentMethods = () => {
+export const PaymentMethods = ({
+  setPaymentReady,
+}: {
+  setPaymentReady: (paymentReady: boolean) => void;
+}) => {
   const [methods, setMethods] = useState<PaymentMethod[]>(null);
   const [addresses, setAddresses] = useState<SavedAddress[]>(null);
   const [paymentOpen, setPaymentOpen] = useState(false);
@@ -73,6 +77,14 @@ export const PaymentMethods = () => {
     fetchPaymentMethods();
     fetchSavedAddresses();
   }, []);
+
+  useEffect(() => {
+    if (selectedCard && selectedAddress) {
+      setPaymentReady(true);
+    } else {
+      setPaymentReady(false);
+    }
+  }, [selectedCard, selectedAddress]);
 
   const closeModal = () => {
     setAddressOpen(false);

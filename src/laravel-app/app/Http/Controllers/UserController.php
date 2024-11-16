@@ -126,7 +126,14 @@ class UserController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'email'                 => 'sometimes|string|email|unique:users|max:255',
-            'password'              => 'nullable|string|min:8|confirmed',
+            'password'              => [
+                'nullable',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/[A-Z]/', // must contain at least one uppercase letter
+                'regex:/[@$!%*?&#]/' // must contain at least one special character
+            ],
             'password_confirmation' => 'nullable|same:password',
             'display_name'          => 'sometimes|string|unique:users|max:255',
             'name'                  => 'nullable|string|max:255',
