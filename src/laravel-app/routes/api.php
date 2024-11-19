@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SearchController;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\BoughtProductsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LocationController;
@@ -15,10 +15,8 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SelectedProductController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Middleware\AdminMiddleware;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,11 +34,10 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/breeds/{id}', [CatBreedController::class, 'show']);
 Route::get('/reviews/{product_id}', [ReviewController::class, 'show']);
 
+Route::get('pdf', [ReportController::class, 'generate_check']);
+
 // Guests only
 Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum');
-
-
-
 Route::post('/v1/products', [ProductController::class, 'importProducts']); // use at your own risk
 
 // Route::get('/checkout', [UserController::class, 'basketPayment'])->name('checkout');
