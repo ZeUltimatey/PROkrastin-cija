@@ -85,6 +85,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::delete('/user', [UserController::class, 'destroy']);
     Route::put('/user', [UserController::class, 'update']);
+    Route::put('/change_password', [UserController::class, 'change_password']);
 
     Route::get('/bought_products/{transaction_id}', [BoughtProductsController::class, 'index']);
 

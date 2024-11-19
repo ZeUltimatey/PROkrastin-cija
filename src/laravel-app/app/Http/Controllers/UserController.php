@@ -189,6 +189,18 @@ class UserController extends Controller
         return response()->json(['message' => "User successfully updated"], 202);
     }
 
+    public function change_password(ChangePasswordRequest $request)
+    {
+        $user_model = Auth::user();
+        $user = new UserResource($user_model);
+        if (!Hash::check($request->old_password, $user->password))
+            return response()->json(['error' => 'Old password is wrong.'], 422);
+        if (Hash::check($request->new_password, $user->password))
+            return response()->json(['error' => 'New password is the same as the old password.'], 422);
+        $user->update(['password' => $request->new_password]);
+        return response()->json(null, 202); // Request accepted
+    }
+
     /**
      * Get own user.
      */
