@@ -1,7 +1,6 @@
 import { ProfileInfo } from "./profile-page/ProfileInfo";
 import { OrderHistory } from "./profile-page/OrderHistory";
 import { SavedAddresses } from "./profile-page/SavedAddresses";
-import { PaymentMethods } from "./profile-page/PaymentMethods";
 import { ProfileSettings } from "./profile-page/ProfileSettings";
 import { useEffect, useState } from "react";
 import { Constants } from "../universal/Constants";
@@ -43,7 +42,6 @@ export const Profile = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
             <OrderHistory />
             <SavedAddresses />
-            <PaymentMethods />
             <ProfileSettings user={user} />
           </div>
         </div>

@@ -7,7 +7,7 @@ export const ItemCard = (props: IProduct) => {
   const { addToCart } = useCart();
 
   const token = localStorage.getItem(Constants.LOCAL_STORAGE.TOKEN);
-
+  console.log(props);
   return (
     <div className="h-[316px] group mx-auto bg-light-gray shadow-sm my-4 brightness-95 flex flex-col w-60 rounded-md  hover:shadow-md transition-all">
       {token && (

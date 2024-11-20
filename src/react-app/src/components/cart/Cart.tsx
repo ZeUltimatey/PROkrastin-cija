@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CartProduct from "../cart/cart-page/CartProduct";
 import { useCart } from "../universal/Cart";
-import { PaymentMethods } from "./cart-page/PaymentMethods";
+import { ShippingMethod } from "./cart-page/ShippingMethod";
 import { IUser } from "../universal/interfaces/IUser";
 import { useNavigate } from "react-router-dom";
 import { Constants } from "../universal/Constants";
@@ -115,7 +115,7 @@ export const Cart = () => {
 
       <div className=" bg-content-white p-6 border-l border-medium-brown w-1/4">
         <h3 className="text-xl font-bold text-dark-brown mb-4">Apmaksāt</h3>
-        <PaymentMethods setPaymentReady={setPaymentReady} />
+        <ShippingMethod setPaymentReady={setPaymentReady} />
         <button
           disabled={cartItems.length == 0 || !paymentReady}
           onClick={() => payForBasket()}
