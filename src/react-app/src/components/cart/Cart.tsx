@@ -5,6 +5,7 @@ import { ShippingMethod } from "./cart-page/ShippingMethod";
 import { IUser } from "../universal/interfaces/IUser";
 import { useNavigate } from "react-router-dom";
 import { Constants } from "../universal/Constants";
+import { useConfirmation } from "../universal/Confirmation";
 
 export const Cart = () => {
   const { cartItems, removeFromCart, addToCart, fetchCart, payForBasket } =
@@ -43,6 +44,8 @@ export const Cart = () => {
     fetchCart();
     getUser();
   }, []);
+
+  const confirm = useConfirmation();
 
   return (
     <div className="flex min-h-screen  font-poppins">
@@ -118,7 +121,9 @@ export const Cart = () => {
         <ShippingMethod setPaymentReady={setPaymentReady} />
         <button
           disabled={cartItems.length == 0 || !paymentReady}
-          onClick={() => payForBasket()}
+          onClick={async () => {
+            if (await confirm("Veikt apmaksu?")) payForBasket();
+          }}
           className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown font-poppins mt-4 disabled:bg-opacity-10 disabled:text-dark-brown disabled:cursor-not-allowed"
         >
           <i className="fa-regular fa-credit-card mr-2"></i>

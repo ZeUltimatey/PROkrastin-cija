@@ -75,9 +75,6 @@ export const SearchSort = (props: IProps) => {
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
-    const newQuery: IQuery = { ...query, keyword: value };
-    updateQueryAndStorage(newQuery);
-    props.onSearch(value);
   };
 
   const getQuery = () => {
@@ -121,13 +118,21 @@ export const SearchSort = (props: IProps) => {
     }
   };
 
+  const searchItems = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    const newQuery: IQuery = { ...query, keyword: search };
+    updateQueryAndStorage(newQuery);
+    props.onSearch(search);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div>
         <div className="mx-8 mb-4">{getQuery()}</div>
         <div className="hidden mx-8 md:flex text-lg lg:text-xl font-semibold place-items-center border-[1.5px] rounded-full border-gray-300 focus-within:border-gray-600">
-          <div className="flex grow">
+          <form className="flex grow">
             <input
+              onSubmit={searchItems}
               placeholder="Meklēt preces..."
               type="text"
               value={search}
@@ -135,12 +140,12 @@ export const SearchSort = (props: IProps) => {
               className="text-xl max-h-12 px-6 w-[600px] font-semibold grow bg-[#f4f1e9] rounded-s-full focus:outline-none font-poppins"
             />
             <button
-              onClick={() => props.onSearch(search)}
+              onClick={searchItems}
               className="bg-[#f4f1e9] text-2xl px-10 rounded-e-full h-12 flex place-items-center hover:bg-opacity-60"
             >
               <i className="fa-solid fa-magnifying-glass"></i>
             </button>
-          </div>
+          </form>
         </div>
       </div>
       <div className="justify-between mx-8 flex place-items-center">

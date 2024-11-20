@@ -3,6 +3,7 @@ import { CategoryNames } from "../../universal/CategoryNames";
 import { CategoryItem } from "./CategoryItem";
 import { Constants } from "../../universal/Constants";
 import { IQuery } from "../../universal/IQuery";
+import useDebounce from "../../universal/useDebounce";
 
 const initialFilterCriteria = {
   category: {
@@ -27,6 +28,11 @@ export const Filter = ({
   filterUpdateTrigger: number;
 }) => {
   const [filter, setFilter] = useState(initialFilterCriteria);
+  const [priceMin, setPriceMin] = useState(filter.price.from);
+  const [priceMax, setPriceMax] = useState(filter.price.to);
+
+  const debounceMinPrice = useDebounce(priceMin, 800);
+  const debounceMaxPrice = useDebounce(priceMax, 800);
 
   useEffect(() => {
     const savedFilter: IQuery = JSON.parse(
@@ -74,6 +80,8 @@ export const Filter = ({
       min_price: newFilter.price.from || 0,
       max_price: newFilter.price.to || 0,
     };
+    setPriceMin(newFilter.price.from);
+    setPriceMax(newFilter.price.to);
     localStorage.setItem(
       Constants.LOCAL_STORAGE.QUERY_CATALOG,
       JSON.stringify(updatedFilter)
@@ -93,14 +101,26 @@ export const Filter = ({
     setupFilter(updatedFilter);
   };
 
-  const handlePriceChange = (value: number | null, type: "from" | "to") => {
-    const updatedFilter = {
+  useEffect(() => {
+    setupFilter({
       ...filter,
-      price: { ...filter.price, [type]: value },
-    };
-    setFilter(updatedFilter);
-    setupFilter(updatedFilter);
-  };
+      price: { from: debounceMinPrice, to: debounceMaxPrice },
+    });
+  }, [debounceMinPrice, debounceMaxPrice]);
+
+  useEffect(() => {
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      price: { ...prevFilter.price, from: debounceMinPrice },
+    }));
+  }, [debounceMinPrice]);
+
+  useEffect(() => {
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      price: { ...prevFilter.price, to: debounceMaxPrice },
+    }));
+  }, [debounceMaxPrice]);
 
   return (
     <div className="flex flex-col gap-2 bg-content-white p-6 rounded-md shadow-md w-full lg:w-64 min-h-80">
@@ -132,12 +152,9 @@ export const Filter = ({
         <div className="flex justify-between">
           <input
             type="number"
-            value={filter.price.from || ""}
+            value={priceMin || ""}
             onChange={(e) =>
-              handlePriceChange(
-                e.target.value ? parseInt(e.target.value) : null,
-                "from"
-              )
+              setPriceMin(e.target.value ? parseInt(e.target.value) : null)
             }
             id="price"
             placeholder="No"
@@ -148,12 +165,9 @@ export const Filter = ({
           </span>
           <input
             type="number"
-            value={filter.price.to == 9999999 ? "" : filter.price.to || ""}
+            value={priceMax == 9999999 ? "" : priceMax || ""}
             onChange={(e) =>
-              handlePriceChange(
-                e.target.value ? parseInt(e.target.value) : null,
-                "to"
-              )
+              setPriceMax(e.target.value ? parseInt(e.target.value) : null)
             }
             id="price"
             max={9999999}

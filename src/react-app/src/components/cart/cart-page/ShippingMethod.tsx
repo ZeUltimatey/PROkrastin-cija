@@ -25,9 +25,7 @@ export const ShippingMethod = ({
   setPaymentReady: (paymentReady: boolean) => void;
 }) => {
   const [addresses, setAddresses] = useState<SavedAddress[]>(null);
-  const [paymentOpen, setPaymentOpen] = useState(false);
   const [addressOpen, setAddressOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -66,15 +64,12 @@ export const ShippingMethod = ({
 
   const closeModal = () => {
     setAddressOpen(false);
-    setPaymentOpen(false);
     setIsEditing(false);
     setSelectedAddress(null);
   };
 
   return (
     <div className="flex flex-col gap-2">
-      <p className="font-semibold">Maksājuma kartes</p>
-
       {addressOpen && (
         <AddressModal onClose={closeModal} isEditing={isEditing} />
       )}
