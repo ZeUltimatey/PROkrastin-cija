@@ -80,11 +80,11 @@ export const SearchSort = (props: IProps) => {
   const getQuery = () => {
     if (query) {
       return (
-        <div className="flex gap-2 font-poppins">
+        <div className="flex lg:flex-row flex-col gap-2 font-poppins">
           {query.product_type &&
             query.product_type.split(",").map((type) => (
               <div
-                className="bg-medium-brown bg-opacity-40 shadow-sm flex gap-2 py-2 px-4 rounded-md place-items-center justify-center"
+                className="bg-medium-brown bg-opacity-40 shadow-sm lg:text-base text-sm flex gap-2 py-2 px-4 rounded-md place-items-center justify-center"
                 key={type}
               >
                 {type}
@@ -94,7 +94,7 @@ export const SearchSort = (props: IProps) => {
               </div>
             ))}
           {(query.min_price > 0 || query.max_price > 0) && (
-            <div className="bg-medium-brown bg-opacity-40 shadow-sm flex gap-2 py-2 px-4 rounded-md place-items-center justify-center">
+            <div className="bg-medium-brown bg-opacity-40 shadow-sm lg:text-base text-sm flex gap-2 py-2 px-4 rounded-md place-items-center justify-center">
               Cena: {query.min_price ?? 0}&euro; -{" "}
               {query.max_price == 9999999 || query.max_price == 0
                 ? " max "
@@ -106,7 +106,7 @@ export const SearchSort = (props: IProps) => {
             </div>
           )}
           {query.keyword && (
-            <div className="bg-medium-brown bg-opacity-40 shadow-sm flex gap-2 py-2 px-4 rounded-md place-items-center justify-center">
+            <div className="bg-medium-brown bg-opacity-40 shadow-sm lg:text-base text-sm flex gap-2 py-2 px-4 rounded-md place-items-center justify-center">
               Atslēgvards: {query.keyword}{" "}
               <button onClick={removeKeywordFilter}>
                 <i className="fa-solid fa-xmark text-sm"></i>
@@ -128,28 +128,28 @@ export const SearchSort = (props: IProps) => {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <div className="mx-8 mb-4">{getQuery()}</div>
-        <div className="hidden mx-8 md:flex text-lg lg:text-xl font-semibold place-items-center border-[1.5px] rounded-full border-gray-300 focus-within:border-gray-600">
-          <form className="flex grow">
+        <div className="lg:mx-8 mb-4">{getQuery()}</div>
+        <div className="lg:mx-8 lg:flex text-sm lg:text-xl font-semibold place-items-center border-[1.5px] rounded-full border-gray-300 focus-within:border-gray-600">
+          <form className="flex lg:grow">
             <input
               onSubmit={searchItems}
               placeholder="Meklēt preces..."
               type="text"
               value={search}
               onChange={handleSearchInputChange}
-              className="text-xl max-h-12 px-6 w-[600px] font-semibold grow bg-[#f4f1e9] rounded-s-full focus:outline-none font-poppins"
+              className="lg:text-xl lg:h-12 h-10 lg:px-6 px-3 lg:w-[600px] w-full font-semibold lg:grow bg-[#f4f1e9] rounded-s-full focus:outline-none font-poppins"
             />
             <button
               onClick={searchItems}
-              className="bg-[#f4f1e9] text-2xl px-10 rounded-e-full h-12 flex place-items-center hover:bg-opacity-60"
+              className="bg-[#f4f1e9] lg:text-2xl text-lg lg:px-10 px-4 rounded-e-full lg:h-12 h-10 flex place-items-center hover:bg-opacity-60"
             >
               <i className="fa-solid fa-magnifying-glass"></i>
             </button>
           </form>
         </div>
       </div>
-      <div className="justify-between mx-8 flex place-items-center">
-        <span className="font-poppins text-gray-600 font-semibold">
+      <div className="lg:justify-between mx-8 flex place-items-center lg:flex-row flex-col gap-2">
+        <span className="font-poppins text-gray-600 font-semibold lg:text-base text-sm">
           Atrastas {props.filteredItemAmount ?? 0} lietas
         </span>
         {props?.sortValues && (

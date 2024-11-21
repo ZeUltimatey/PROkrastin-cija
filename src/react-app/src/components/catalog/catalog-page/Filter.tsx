@@ -30,6 +30,7 @@ export const Filter = ({
   const [filter, setFilter] = useState(initialFilterCriteria);
   const [priceMin, setPriceMin] = useState(filter.price.from);
   const [priceMax, setPriceMax] = useState(filter.price.to);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const debounceMinPrice = useDebounce(priceMin, 800);
   const debounceMaxPrice = useDebounce(priceMax, 800);
@@ -87,6 +88,7 @@ export const Filter = ({
       JSON.stringify(updatedFilter)
     );
     onFilterUpdate();
+    setIsLoaded(true);
   };
 
   const handleCategoryChange = (category: string) => {
@@ -102,10 +104,12 @@ export const Filter = ({
   };
 
   useEffect(() => {
-    setupFilter({
-      ...filter,
-      price: { from: debounceMinPrice, to: debounceMaxPrice },
-    });
+    if (isLoaded) {
+      setupFilter({
+        ...filter,
+        price: { from: debounceMinPrice, to: debounceMaxPrice },
+      });
+    }
   }, [debounceMinPrice, debounceMaxPrice]);
 
   useEffect(() => {

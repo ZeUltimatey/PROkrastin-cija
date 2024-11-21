@@ -48,9 +48,9 @@ export const Cart = () => {
   const confirm = useConfirmation();
 
   return (
-    <div className="flex min-h-screen  font-poppins">
-      <div className="flex-1 bg-content-white p-8">
-        <h2 className="text-4xl font-bold text-dark-brown mb-6">
+    <div className="flex flex-col lg:flex-row lg:min-h-screen  font-poppins">
+      <div className="flex-1 bg-content-white lg:p-8 p-4">
+        <h2 className="lg:text-4xl text-xl font-bold text-dark-brown mb-6">
           Iepirkumu grozs
         </h2>
 
@@ -58,17 +58,17 @@ export const Cart = () => {
           <p className="text-lg text-dark-brown">Jūsu grozs ir tukšs.</p>
         ) : (
           <div className="mt-6">
-            <table className="w-full border-collapse">
+            <table className="w-full border-collapse text-center">
               <thead>
-                <tr className="border-b border-gray-300">
-                  <th className="text-left text-dark-brown font-semibold py-4 w-1/2">
+                <tr className="border-b border-gray-300 text-center">
+                  <th className="text-left lg:text-base text-sm text-dark-brown font-semibold py-4 w-1/2">
                     Produkts
                   </th>
-                  <th className="text-center text-dark-brown font-semibold py-4 w-1/4">
+                  <th className="text-center lg:text-base text-sm text-dark-brown font-semibold py-4 w-1/4">
                     Daudzums
                   </th>
-                  <th className="text-right text-dark-brown font-semibold py-4 w-1/5 pr-6">
-                    Kopējā cena
+                  <th className="text-right lg:text-base text-sm text-dark-brown font-semibold py-4 w-1/5 lg:pr-6">
+                    Cena
                   </th>
                   <th className="text-right py-4"></th>
                 </tr>
@@ -87,28 +87,28 @@ export const Cart = () => {
                 })}
               </tbody>
             </table>
-            <div className="flex justify-between items-center mt-6">
-              <span className="font-bold text-lg text-dark-brown">
+            <div className="flex justify-between items-center mt-6 ">
+              <span className="font-bold lg:text-lg text-sm text-dark-brown">
                 Kopējā summa:
               </span>
-              <span className="font-bold text-lg text-dark-brown">
+              <span className="font-bold lg:text-lg text-sm text-dark-brown">
                 {getTotalPrice().toFixed(2)}&euro;
               </span>
             </div>
             <div className="flex justify-between items-center mt-4">
-              <span className="font-bold text-lg text-dark-brown">
+              <span className="font-bold lg:text-lg text-sm text-dark-brown">
                 Piegāde:
               </span>
-              <span className="font-bold text-lg flex items-center text-dark-brown">
+              <span className="font-bold lg:text-lg text-sm flex items-center text-dark-brown">
                 <i className="fa-duotone fa-solid fa-truck-fast mr-2 text-dark-brown"></i>
                 {"0.00"}&euro;
               </span>
             </div>
             <div className="flex justify-between items-center mt-4 border-t pt-4">
-              <span className="font-bold text-lg text-dark-brown">
+              <span className="font-bold lg:text-lg text-sm text-dark-brown">
                 Kopā apmaksai:
               </span>
-              <span className="font-bold text-lg text-dark-brown">
+              <span className="font-bold lg:text-lg text-sm text-dark-brown">
                 {getTotalPrice().toFixed(2)}&euro;
               </span>
             </div>
@@ -116,7 +116,7 @@ export const Cart = () => {
         )}
       </div>
 
-      <div className=" bg-content-white p-6 border-l border-medium-brown w-1/4">
+      <div className=" bg-content-white p-6 lg:border-l border-medium-brown lg:w-1/4">
         <h3 className="text-xl font-bold text-dark-brown mb-4">Apmaksāt</h3>
         <ShippingMethod setPaymentReady={setPaymentReady} />
         <button

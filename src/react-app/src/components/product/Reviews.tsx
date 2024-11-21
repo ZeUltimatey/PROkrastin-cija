@@ -173,46 +173,49 @@ export const Reviews = () => {
       <div className="mb-6 w-full">
         {user &&
           reviews &&
-          reviews.map((review: IReview) => (
-            <div key={review.id} className="mb-4 w-full">
-              <div className="flex items-center gap-4 w-full">
-                <img
-                  src={`${
-                    review.reviewer.image_url
-                      ? Constants.BASE_URL + review.reviewer.image_url
-                      : "https://t3.ftcdn.net/jpg/01/79/88/20/360_F_179882080_Zga46fOuCNnZlF9o2IC6gYgHVQFDVKMv.jpg"
-                  }`}
-                  className="w-16 h-16 rounded-full"
-                ></img>
-                <div className="w-full me-4">
-                  <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-lg">
-                        {review.is_anonymous
-                          ? "Anonīms"
-                          : review.reviewer.display_name}
-                      </span>
-                      <StarRating stars={review.rating} />
+          reviews.map((review: IReview) => {
+            if (!review.reviewer) return null;
+            return (
+              <div key={review.id} className="mb-4 w-full">
+                <div className="flex items-center gap-4 w-full">
+                  <img
+                    src={`${
+                      review.reviewer.image_url
+                        ? Constants.BASE_URL + review.reviewer.image_url
+                        : "https://t3.ftcdn.net/jpg/01/79/88/20/360_F_179882080_Zga46fOuCNnZlF9o2IC6gYgHVQFDVKMv.jpg"
+                    }`}
+                    className="w-16 h-16 rounded-full"
+                  ></img>
+                  <div className="w-full me-4">
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-lg">
+                          {review.is_anonymous
+                            ? "Anonīms"
+                            : review.reviewer.display_name}
+                        </span>
+                        <StarRating stars={review.rating} />
+                      </div>
+                      {(user.user_role === "Admin" ||
+                        review.reviewer.id === user.id) && (
+                        <button onClick={() => deleteReview(review.id)}>
+                          <i className="fa-solid fa-trash text-red-500"></i>
+                        </button>
+                      )}
                     </div>
-                    {(user.user_role === "Admin" ||
-                      review.reviewer.id === user.id) && (
-                      <button onClick={() => deleteReview(review.id)}>
-                        <i className="fa-solid fa-trash text-red-500"></i>
-                      </button>
-                    )}
+                    <p className="text-dark-brown mt-1">{review.content}</p>
+                    <p className="mt-2 opacity-40 text-sm">
+                      {review.created_at.slice(0, 10)}
+                    </p>
                   </div>
-                  <p className="text-dark-brown mt-1">{review.content}</p>
-                  <p className="mt-2 opacity-40 text-sm">
-                    {review.created_at.slice(0, 10)}
-                  </p>
                 </div>
+                <hr className="my-4 border-t border-dark-brown" />
               </div>
-              <hr className="my-4 border-t border-dark-brown" />
-            </div>
-          ))}
+            );
+          })}
       </div>
 
-      {user && !reviews?.find((review) => review.reviewer.id == user.id) && (
+      {user && !reviews?.find((review) => review?.reviewer.id == user.id) && (
         <form onSubmit={postReview} className="flex flex-col gap-4">
           <textarea
             value={comment}

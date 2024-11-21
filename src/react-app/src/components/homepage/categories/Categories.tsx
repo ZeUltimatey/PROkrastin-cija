@@ -20,7 +20,7 @@ export const Categories = () => {
           <div className="grow h-[1px] bg-dark-brown" />
         </div>
         <div className="h-auto mb-4">
-          <div className="grid lg:grid-cols-3 gap-y-16 place-items-center">
+          <div className="grid lg:grid-cols-3 gap-y-8 lg:gap-y-16 place-items-center">
             {CategoryList.map((category, idx) => (
               <Category
                 key={idx}

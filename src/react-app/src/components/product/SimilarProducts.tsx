@@ -47,11 +47,11 @@ export const SimilarProducts = ({
     },
   };
   return (
-    <div className="p-12 bg-content-white h-auto">
+    <div className="lg:p-12 bg-content-white h-auto">
       <div className="flex flex-col bg-light-gray p-8 rounded-md">
         <div className="flex place-items-center gap-6">
           <div className="grow h-[1px] bg-dark-brown" />
-          <span className="text-3xl font-poppins font-bold text-dark-brown">
+          <span className="lg:text-3xl text-xl font-poppins font-bold text-dark-brown">
             Līdzīgi produkti
           </span>
           <div className="grow h-[1px] bg-dark-brown" />

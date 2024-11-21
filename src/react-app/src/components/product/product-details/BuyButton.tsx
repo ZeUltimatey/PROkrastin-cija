@@ -19,7 +19,7 @@ export const BuyButton = ({ product }: { product: IProduct }) => {
   };
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex lg:flex-row flex-col items-center justify-between gap-2">
       {product.product_type !== "CATS" && (
         <div className="flex items-center">
           <button

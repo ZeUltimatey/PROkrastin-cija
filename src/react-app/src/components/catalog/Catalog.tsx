@@ -75,6 +75,7 @@ export const Catalog = () => {
   };
 
   const formatQueryParams = (url?: string) => {
+    console.log(url);
     const query: IQuery = JSON.parse(
       localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_CATALOG)
     );
@@ -99,6 +100,7 @@ export const Catalog = () => {
         }`
       );
     }
+    return url;
   };
 
   const onFilterUpdate = () => {
@@ -110,13 +112,11 @@ export const Catalog = () => {
     <div className="bg-light-gray">
       <div className="">
         <div className="w-full h-80 object-cover bg-temp-bg-image bg-cover p-12 flex flex-col gap-2">
-          <span className="text-6xl font-baloo text-dark-brown font-bold">
+          <span className="lg:text-6xl text-4xl font-baloo text-dark-brown font-bold">
             Preču katalogs
           </span>
-          <p className="text-xl font-hind text-dark-brown font-medium brightness-150 w-1/2">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia quos
-            suscipit adipisci aperiam soluta. Laborum fugit eveniet corrupti
-            commodi quas.
+          <p className="lg:text-xl text-lg font-hind text-dark-brown font-medium brightness-150 lg:w-1/2">
+            Atrodiet savam mīlulim visu nepieciešamo vienuviet!
           </p>
         </div>
       </div>
@@ -132,7 +132,7 @@ export const Catalog = () => {
             queryConstant={Constants.LOCAL_STORAGE.QUERY_CATALOG}
           />
           <div className="mx-8 h-auto mb-6 flex flex-col place-items-center justify-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 place-items-center gap-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 place-items-center lg:gap-12">
               {products &&
                 products?.map((product) => (
                   <ItemCard
