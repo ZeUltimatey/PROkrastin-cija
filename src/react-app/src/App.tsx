@@ -37,6 +37,7 @@ import { BrowseInfo } from "./components/instruction/BrowseInfo";
 import { BasketInfo } from "./components/instruction/BasketInfo";
 import { PaymentSuccessful } from "./components/universal/PaymentSuccessful";
 import { ForgotPassword } from "./components/login/login-page/ForgotPassword";
+import { EmailConfirmation } from "./components/register/register-page/EmailConfirmation";
 
 function App() {
   return (
@@ -114,6 +115,14 @@ function App() {
                 <Route path="login" element={<Login />} />
                 <Route path="forgotpassword" element={<ForgotPassword />} />
                 <Route path="register" element={<Register />} />
+                <Route
+                  path="verification-successful"
+                  element={<EmailConfirmation />}
+                />
+                <Route
+                  path="already-verified"
+                  element={<EmailConfirmation />}
+                />
               </Route>
             </Routes>
           </CartProvider>
