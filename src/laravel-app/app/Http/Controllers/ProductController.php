@@ -106,7 +106,25 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         // Create product if everything is correct
-        Product::create($request->all());
+        $product = Product::create($request->all());
+
+        $stripe = new \Stripe\StripeClient('sk_test_51QJH6GG6wIBbt2iyQVg6IQJayaNghHn2TdAkBwM6IIH7oUsVwzxUJLXAZmzhce8frnKbvXY2Dp7HsLCqVIqGA5AE00PBU1G7Jp');
+        // Add product to Stripe
+        $timeStampedID = $product->id . "_" . $product->created_at->timestamp;
+            $stripe->products->create([
+                'id' => $timeStampedID,
+                'name' => $product->display_name,
+                'description' => $product->description,
+            ]);
+            $prices = $stripe->prices->create([
+                'currency' => 'eur',
+                'unit_amount' => ($product->discount_pricing ?? $product->pricing) * 100,
+                'product' => $timeStampedID,
+            ]);
+            $product->update([
+               'price_id' => $prices->id,
+               'stripe_product_id' => $timeStampedID
+            ]);
         return response()->json(null, 201); // Content created
     }
 
