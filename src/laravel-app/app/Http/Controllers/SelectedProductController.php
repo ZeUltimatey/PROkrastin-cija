@@ -27,11 +27,11 @@ class SelectedProductController extends Controller
             if ($product->stock == 0) {
                 $selectedProduct->delete();
                 // message for the user that the product was deleted from his basket
-                $message[] = "Product {$product->display_name} was deleted from your basket, due to having no stock.";
+                $message[] = "Produkts: {$product->display_name} tika dzēsts no jūsu groza, dēļ preces nepieejamības noliktavā.";
             } elseif ($selectedProduct->amount > $product->stock) {
                 $selectedProduct->update(['amount' => $product->stock]);
                 // message for the user that the amount of the product was changed in his basket
-                $message[] = "Amount of product {$product->display_name} was changed to {$product->stock} due to less stock.";
+                $message[] = "Produkta: {$product->display_name} izvelētais skaits tika nomainīts uz {$product->stock} noliktavā pieejamā preces daudzuma dēļ.";
             }
         }
 

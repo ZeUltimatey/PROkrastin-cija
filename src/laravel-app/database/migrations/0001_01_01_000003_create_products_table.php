@@ -16,8 +16,9 @@ return new class extends Migration
             $table->enum('product_type', ['UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE']);
             $table->string('display_name');
             $table->text('description');
-            $table->float('pricing');
-            $table->float('discount_pricing')->nullable();
+            $table->float('pricing', precision: 2);
+            $table->float('discount_pricing',precision: 2)->nullable();
+            $table->string('stripe_product_id')->nullable();
             $table->string('price_id')->nullable();
             $table->unsignedInteger('stock');
             $table->timestamps();

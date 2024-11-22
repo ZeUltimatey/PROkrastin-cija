@@ -23,7 +23,15 @@ class RegisterUserRequest extends ValidatedRequest
     {
         return [
             'email'                 => 'required|string|email|max:255|unique:users',
-            'password'              => 'required|string|min:8|confirmed',
+            'password'              => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/[0-9]/', // must contain at least one number
+                'regex:/[A-Z]/', // must contain at least one uppercase letter
+                'regex:/[@$!%*?&#]/' // must contain at least one special character
+            ],
             'password_confirmation' => 'required|same:password',
             'display_name'          => 'required|string|max:255',
             'name'                  => 'required|string|max:255',
