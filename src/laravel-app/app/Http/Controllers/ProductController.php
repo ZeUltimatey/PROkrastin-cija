@@ -123,6 +123,20 @@ class ProductController extends Controller
         if ($product_model == null) { return response()->json(null, 404); } // Not found
 
         // Update the product
+        if ($request->pricing !== $product_model->pricing || $request->discount_pricing !== $product_model->discount_pricing) {
+            $stripe = new \Stripe\StripeClient('sk_test_51QJH6GG6wIBbt2iyQVg6IQJayaNghHn2TdAkBwM6IIH7oUsVwzxUJLXAZmzhce8frnKbvXY2Dp7HsLCqVIqGA5AE00PBU1G7Jp');
+
+            $prices = $stripe->prices->create([
+                'currency' => 'eur',
+                'unit_amount' => ($request->discount_pricing ?? $request->pricing) * 100,
+                'product' => $product_model->stripe_product_id,
+                
+            ]);
+            $product_model->update([
+                'price_id' => $prices->id,
+             ]);
+        }
+        
         $product_model->update($request->all());
         return response()->json(null, 202); // Request accepted
     }
@@ -192,21 +206,25 @@ class ProductController extends Controller
     public function importProducts() {
         $stripe = new \Stripe\StripeClient('sk_test_51QJH6GG6wIBbt2iyQVg6IQJayaNghHn2TdAkBwM6IIH7oUsVwzxUJLXAZmzhce8frnKbvXY2Dp7HsLCqVIqGA5AE00PBU1G7Jp');
 
-        $products = Product::all();
-        // works when there are no products in the STRIPE system
+        // imports products that don't have Stripe ID
+        $products = Product::where('stripe_product_id', null)->get();
+        
+        
         foreach ($products as $product) {
+            $timeStampedID = $product->id . "_" . $product->created_at->timestamp;
             $stripe->products->create([
-                'id' => $product->id,
+                'id' => $timeStampedID,
                 'name' => $product->display_name,
                 'description' => $product->description,
             ]);
             $prices = $stripe->prices->create([
                 'currency' => 'eur',
-                'unit_amount' => $product->pricing*100,
-                'product' => $product->id,
+                'unit_amount' => ($product->discount_pricing ?? $product->pricing) * 100,
+                'product' => $timeStampedID,
             ]);
             $product->update([
                'price_id' => $prices->id,
+               'stripe_product_id' => $timeStampedID
             ]);
         }
 

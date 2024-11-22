@@ -21,7 +21,13 @@ class Product extends Model
         'pricing',
         'discount_pricing',
         'price_id',
+        'stripe_product_id',
         'stock',
+    ]; 
+
+    protected $casts = [
+        'discount_pricing' => 'float',
+        'pricing' => 'float',
     ];
 
     public function cat()
