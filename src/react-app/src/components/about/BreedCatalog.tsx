@@ -144,11 +144,11 @@ export const BreedCatalog = () => {
   return (
     <div className="bg-content-white">
       <div className="w-full h-80 object-cover bg-temp-bg-image bg-cover p-12 flex flex-col gap-2">
-        <span className="text-6xl font-baloo text-dark-brown font-bold">
+        <span className="lg:text-6xl text-4xl font-baloo text-dark-brown font-bold">
           Kaķu šķirņu enciklopēdija
         </span>
-        <p className="text-xl font-hind text-dark-brown font-medium">
-          Uzziniet par dažādām kaķu šķirnēm un to īpatnībām.
+        <p className="lg:text-xl text-base font-hind text-dark-brown font-medium brightness-150 lg:w-1/2">
+          Uzziniet par dažādām kaķu šķirnēm un to īpatnībām!
         </p>
       </div>
 
@@ -162,7 +162,7 @@ export const BreedCatalog = () => {
             queryConstant={Constants.LOCAL_STORAGE.QUERY_BREED}
           />
 
-          <div className="mx-8 h-auto mb-6 font-poppins">
+          <div className="lg:mx-8 h-auto mb-6 font-poppins">
             <div className="flex flex-col gap-6 place-items-center justify-center">
               {!breeds && <Spinner />}
               {breeds && breeds?.length === 0 && (
@@ -177,12 +177,12 @@ export const BreedCatalog = () => {
                     key={breed.id}
                     className="rounded-md hover:shadow-md transition-all flex border h-24 border-slate-300 w-full"
                   >
-                    <div className="bg-gradient-to-r from-purple-400 to-pink-400 rounded-s-md w-48"></div>
+                    <div className="bg-gradient-to-r from-purple-400 to-pink-400 rounded-s-md w-48 lg:block hidden"></div>
                     <div className="px-4 grow flex text-left justify-center flex-col">
-                      <h3 className="text-xl font-semibold text-dark-brown">
+                      <h3 className="lg:text-xl font-semibold text-dark-brown">
                         {breed.display_name}
                       </h3>
-                      <p className="">
+                      <p className="lg:text-base text-xs">
                         {breed.personality_info?.length > 100
                           ? `${breed.personality_info?.slice(1, 300)}...`
                           : breed.personality_info}

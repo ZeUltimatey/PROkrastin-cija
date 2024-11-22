@@ -16,13 +16,13 @@ export const ProductInfo = ({
   const token = localStorage.getItem(Constants.LOCAL_STORAGE.TOKEN);
 
   return (
-    <div className="w-full flex flex-col justify-between font-poppins">
+    <div className="w-full flex flex-col gap-2 justify-between font-poppins">
       <div className="flex flex-col gap-2">
         <div>
           <p className="">
             {CategoryNames[product.product_type as keyof typeof CategoryNames]}
           </p>
-          <div className="text-2xl lg:text-4xl text-[#3e2a19] font-bold ">
+          <div className="text-xl lg:text-4xl text-[#3e2a19] font-bold ">
             {product.display_name}
           </div>
         </div>
@@ -60,7 +60,7 @@ export const ProductInfo = ({
           </div>
         )}
       </div>
-      <div className="text-xl text-[#3e2a19] font-hind">
+      <div className="lg:text-xl text-[#3e2a19] font-hind">
         {product.description}
       </div>
       <div className="flex flex-col gap-1">

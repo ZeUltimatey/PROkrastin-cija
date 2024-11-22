@@ -62,7 +62,7 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
 
     $user->markEmailAsVerified();
 
-    return redirect()->to(env('FRONTEND_URL'). '/auth?token=' . $user->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken);
+    return redirect()->to(env('FRONTEND_URL'). '/auth/verification-successful');
 })->name('verification.verify');
 Route::get('/checkout/success', [UserController::class, 'successPaid'])->name('checkout-success')->middleware('api');
 Route::get('/checkout/cancel', [UserController::class, 'successPaid'])->name('checkout-cancel');

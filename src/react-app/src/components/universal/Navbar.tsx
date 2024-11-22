@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavbarCart } from "./NavbarCart";
 import { CategoryList } from "../homepage/categories/CategoryList";
 import { Constants } from "./Constants";
@@ -7,12 +7,25 @@ import { useCart } from "./Cart";
 import { IQuery } from "./IQuery";
 import { IUser } from "./interfaces/IUser";
 import { useToast } from "./Toast";
+import { NavbarSearch } from "./NavbarSearch";
+
+export interface ISearchResult {
+  id: number;
+  display_name: string;
+  description?: string;
+  product_type?: string;
+  images?: any[];
+  personality_info?: string;
+}
 
 export const Navbar = () => {
   const [navbarToggle, setNavbarToggle] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [user, setUser] = useState<IUser>(null);
+  const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState<ISearchResult[]>(null);
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
   const { fetchCart } = useCart();
 
@@ -63,6 +76,8 @@ export const Navbar = () => {
     navigate("/auth/login");
   };
 
+  const inputRef = useRef(null);
+
   const fetchUser = async () => {
     await fetch(`${Constants.API_URL}/user`, {
       method: "GET",
@@ -107,6 +122,24 @@ export const Navbar = () => {
       }
     });
   };
+
+  const onSearch = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    inputRef.current.focus();
+    if (search.length < 3) {
+      showToast(false, "Lūdzu, ievadiet vismaz 3 rakstzīmes!");
+      return;
+    }
+    await fetch(`${Constants.API_URL}/search?keyword=${search}&per_page=8`, {
+      method: "GET",
+    }).then(async (response) => {
+      if (response.ok) {
+        const data = await response.json();
+        setSearchResults(data.data);
+      }
+    });
+  };
+
   return (
     <nav className="bg-content-white lg:rounded-t-md">
       <div className="flex items-center justify-between h-12 lg:h-20 gap-2 lg:px-6 px-4">
@@ -116,16 +149,31 @@ export const Navbar = () => {
           </a>
         </div>
         <div className="hidden md:flex text-lg lg:text-xl font-semibold place-items-center grow border-[1.5px] rounded-full border-gray-300 has-[:focus]:border-gray-600">
-          <div className="flex grow">
+          <form onSubmit={onSearch} className="flex grow">
             <input
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+              min={3}
+              ref={inputRef}
               placeholder="Meklēt visā Murrātavā..."
               type="text"
               className="text-xl h-12 px-6 w-[500px] font-semibold grow bg-[#f4f1e9] rounded-s-full focus:outline-none font-poppins"
+              onSelect={() => setShowSearchResults(true)}
+              onBlur={() => setTimeout(() => setShowSearchResults(false), 100)}
             />
-            <button className="bg-[#f4f1e9] text-2xl px-10 rounded-e-full h-12 flex place-items-center hover:bg-opacity-60">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onSearch(e);
+              }}
+              className="bg-[#f4f1e9] text-2xl px-10 rounded-e-full h-12 flex place-items-center hover:bg-opacity-60"
+            >
               <i className="fa-solid fa-magnifying-glass "></i>
             </button>
-          </div>
+          </form>
+          {showSearchResults && searchResults?.length > 0 && (
+            <NavbarSearch searchResults={searchResults} />
+          )}
         </div>
 
         <div
