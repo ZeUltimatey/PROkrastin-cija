@@ -8,6 +8,7 @@ import { IQuery } from "./IQuery";
 import { IUser } from "./interfaces/IUser";
 import { useToast } from "./Toast";
 import { NavbarSearch } from "./NavbarSearch";
+import { useConfirmation } from "./Confirmation";
 
 export interface ISearchResult {
   id: number;
@@ -98,29 +99,33 @@ export const Navbar = () => {
     fetchUser();
   }, []);
 
+  const confirm = useConfirmation();
+
   const handleCartHover = async () => {
     fetchCart();
     setShowCart(!showCart);
   };
 
   const handleLogout = async () => {
-    await fetch(`${Constants.API_URL}/logout`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem(
-          Constants.LOCAL_STORAGE.TOKEN
-        )}`,
-      },
-    }).then((response) => {
-      if (response.ok) {
-        localStorage.removeItem(Constants.LOCAL_STORAGE.TOKEN);
-        localStorage.removeItem(Constants.LOCAL_STORAGE.CART);
-        showToast(true, "Iziešana veiksmīga.");
-        window.location.assign("/");
-      } else {
-        showToast(false, "error");
-      }
-    });
+    if (await confirm("Iziet no konta?")) {
+      await fetch(`${Constants.API_URL}/logout`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            Constants.LOCAL_STORAGE.TOKEN
+          )}`,
+        },
+      }).then((response) => {
+        if (response.ok) {
+          localStorage.removeItem(Constants.LOCAL_STORAGE.TOKEN);
+          localStorage.removeItem(Constants.LOCAL_STORAGE.CART);
+          showToast(true, "Iziešana veiksmīga.");
+          window.location.assign("/");
+        } else {
+          showToast(false, "error");
+        }
+      });
+    }
   };
 
   const onSearch = async (e: { preventDefault: () => void }) => {
@@ -139,6 +144,10 @@ export const Navbar = () => {
       }
     });
   };
+
+  const showCartNotification = localStorage.getItem(
+    Constants.LOCAL_STORAGE.CART
+  );
 
   return (
     <nav className="bg-content-white lg:rounded-t-md">
@@ -220,6 +229,9 @@ export const Navbar = () => {
                   showCart ? "border-b-4" : "border-b-0"
                 } transition-all`}
               >
+                {showCartNotification?.length > 2 && (
+                  <div className="rounded-full bg-red-500 h-2 w-2 shadow-md absolute mt-6"></div>
+                )}
                 <i className="text-xl fa-solid fa-basket-shopping lg:text-2xl"></i>
               </button>
               {showCart && <NavbarCart />}
@@ -287,6 +299,9 @@ export const Navbar = () => {
                 onClick={() => navigate("/cart")}
                 className="flex items-center gap-2"
               >
+                {showCartNotification?.length > 2 && (
+                  <div className="rounded-full bg-red-500 h-2 w-2 shadow-md absolute mt-6"></div>
+                )}
                 <i className="text-xl fa-solid fa-basket-shopping"></i>
                 Grozs
               </button>

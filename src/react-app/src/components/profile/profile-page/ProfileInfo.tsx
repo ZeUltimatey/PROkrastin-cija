@@ -106,12 +106,12 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
   };
 
   return (
-    <div className="bg-light-gray shadow-md rounded-md border-2 h-40 border-medium-brown">
+    <div className="bg-light-gray shadow-md rounded-md border-2 p-6 border-medium-brown">
       {user && (
-        <div className="flex items-center justify-between h-full px-6">
+        <div className="flex lg:flex-row flex-col items-center justify-between h-full px-6 gap-2">
           <div className="flex items-center gap-4">
             <img
-              className="w-24 h-24 rounded-full object-cover border-4 border-medium-brown"
+              className="lg:w-24 lg:h-24 h-12 w-12 rounded-full object-cover border-4 border-medium-brown"
               src={
                 user.image_url
                   ? Constants.BASE_URL + user.image_url
@@ -120,38 +120,38 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
               alt="Lietotāja attēls"
             />
             <div>
-              <h2 className="text-3xl font-bold text-dark-brown font-poppins">
+              <h2 className="lg:text-3xl text-lg font-bold text-dark-brown font-poppins">
                 {user.name} {user.surname}
               </h2>
-              <h2 className="font-bold text-dark-brown font-poppins">
+              <h2 className="font-bold text-dark-brown lg:text-base text-sm font-poppins">
                 @{user.display_name}
               </h2>
-              <p className="text-sm text-dark-brown font-poppins">
+              <p className="lg:text-sm text-xs text-dark-brown font-poppins">
                 {user.email}
               </p>
-              <p className="text-sm text-dark-brown font-poppins">
+              <p className="lg:text-sm text-xs text-dark-brown font-poppins">
                 Pircējs kopš: {user.created_at.slice(0, 10)}
               </p>
             </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex flex-col lg:flex-row lg:gap-4 gap-2">
             {user.user_role == "Admin" && (
               <button
                 onClick={() => navigate("/panel")}
-                className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
+                className="hidden lg:block bg-light-brown text-white lg:px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
               >
                 <i className="fa-solid fa-screwdriver-wrench"></i>
               </button>
             )}
             <button
               onClick={handleLogoutClick}
-              className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
+              className="bg-light-brown text-white lg:px-6 lg:py-2.5 px-4 py-1 lg:text-lg text-sm rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
             >
               <i className="fa-solid fa-right-from-bracket"></i> Iziet
             </button>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-light-brown text-white px-6 py-2.5 text-lg rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
+              className="bg-light-brown text-white px-6 py-2.5 lg:text-lg text-sm rounded-md shadow hover:bg-medium-brown transition-all font-poppins"
             >
               <i className="fa-solid fa-pen-to-square"></i> Rediģēt profilu
             </button>
@@ -167,7 +167,7 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-1/3 relative">
+          <div className="bg-white p-8 rounded-lg shadow-lg lg:w-1/3 relative">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold text-dark-brown font-poppins">
                 Rediģēt profila informāciju
@@ -230,6 +230,14 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
                     setFormData({ ...formData, email: e.target.value })
                   }
                 />
+                {!user.email_verified_at && (
+                  <p className="text-red-400 text-sm font-poppins">
+                    Lūdzu, apstipriniet e-pastu!{" "}
+                    <span className="underline hover:cursor-pointer text-dark-brown">
+                      Nosūtīt vēlreiz?
+                    </span>
+                  </p>
+                )}
               </div>
               <div>
                 <label className="text-sm text-dark-brown font-poppins mb-1 font-semibold">

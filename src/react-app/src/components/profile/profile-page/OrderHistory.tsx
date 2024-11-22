@@ -83,7 +83,7 @@ export const OrderHistory = () => {
 
       {isOrderDetailsModalOpen && selectedOrder && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-1/3">
+          <div className="bg-white p-8 rounded-lg shadow-lg lg:w-1/3">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold text-dark-brown font-poppins">
                 Pasūtījuma detaļas
@@ -123,7 +123,7 @@ export const OrderHistory = () => {
 
       {isAllOrdersModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-2/3 h-2/3 overflow-y-auto">
+          <div className="bg-white p-8 rounded-lg shadow-lg lg:w-2/3 h-2/3 overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold text-dark-brown font-poppins">
                 Visu pasūtījumu vēsture

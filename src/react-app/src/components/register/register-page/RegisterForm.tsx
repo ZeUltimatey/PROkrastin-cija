@@ -83,7 +83,9 @@ export const RegisterForm = () => {
     <div>
       {waitingForConfirmation ? (
         <div className="text-center font-poppins">
-          <p>Lūdzu, apstipriniet savu e-pastu, lai turpinātu!</p>
+          <p>
+            Lūdzu, 30 minūšu laikā, apstipriniet savu e-pastu, lai turpinātu!
+          </p>
           <button
             onClick={() => navigate("/auth/login")}
             className="text-dark-brown hover:underline font-semibold mt-4"

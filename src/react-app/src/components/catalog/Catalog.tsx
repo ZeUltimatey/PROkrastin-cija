@@ -147,15 +147,16 @@ export const Catalog = () => {
                   />
                 ))}
             </div>
+            {products?.length === 0 && (
+              <div className="place-self-center my-8 flex flex-col place-items-center gap-6 text-dark-brown font-semibold text-2xl font-poppins">
+                Nekas netika atrasts :(
+              </div>
+            )}
             {pagination && (
               <Pagination pagination={pagination} onNavigate={fetchItems} />
             )}
           </div>
-          {products?.length === 0 && (
-            <div className="place-self-center flex flex-col place-items-center gap-6 text-dark-brown font-semibold text-2xl font-poppins">
-              Nekas netika atrasts :(
-            </div>
-          )}
+
           <div className="mx-auto">{products === null && <Spinner />}</div>
         </div>
         <Filter

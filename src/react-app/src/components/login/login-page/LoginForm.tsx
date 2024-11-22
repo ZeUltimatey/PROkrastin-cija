@@ -49,6 +49,12 @@ export const LoginForm = () => {
             case "Invalid credentials":
               showToast(false, "Nepareizs e-pasts vai parole.");
               break;
+            case "E-pasts nav verificēts, lūdzu verificējiet savu e-pastu, tad mēģiniet vēlreiz!":
+              showToast(
+                false,
+                "E-pasts nav verificēts, lūdzu verificējiet savu e-pastu, tad mēģiniet vēlreiz!"
+              );
+              break;
             case "Jūsu profils ir bloķēts, ja uzskatāt, ka tā ir kļūda, sazinieties ar administratoru!":
               showToast(
                 false,

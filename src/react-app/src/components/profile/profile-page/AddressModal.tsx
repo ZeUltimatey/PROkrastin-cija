@@ -79,7 +79,7 @@ export const AddressModal = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="relative w-1/3 p-6 bg-white rounded-lg shadow-lg">
+      <div className="relative lg:w-1/3 p-6 bg-white rounded-lg shadow-lg">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold text-dark-brown font-poppins">
             {isEditing ? "Rediģēt adresi" : "Pievienot jaunu adresi"}
