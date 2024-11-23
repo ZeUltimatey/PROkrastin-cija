@@ -6,6 +6,7 @@ use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Resources\UserResource;
+use App\Services\PaginateService;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\SelectedProductController;
 use App\Models\SelectedProduct;
@@ -56,17 +57,16 @@ class UserController extends Controller
             });
         }
 
-        // Set the default number of records per page to 12 if not provided
-        $perPage = $request->get('per_page', 12);  // Default to 12 records per page
+        $user_models = $query->get();
+        $users = UserResource::collection($user_models)->each(function ($user) {
+            $user->with_extra_information();
+        });
 
-        // Get paginated results
-        $products = $query->paginate($perPage);
+        $paginate = new PaginateService($request, [$users]);
+        $per_page = $request->get('per_page', 12);
+        $page = $request->get('page', 1);
 
-        // Append current request parameters to pagination links
-        $products->appends($request->except('page'));
-
-        // Return paginated products as a resource collection
-        return UserResource::collection($products);
+        return $paginate->get_page($page, $per_page);
     }
 
     /**
