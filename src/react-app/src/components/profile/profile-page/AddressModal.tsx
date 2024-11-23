@@ -160,7 +160,7 @@ export const AddressModal = ({
           </div>
           <div>
             <label className="block mb-1 text-sm text-dark-brown font-poppins">
-              Pasta indekss
+              Pasta indekss (LV-XXXX)
             </label>
             <FormInput
               value={formData.zip_code}

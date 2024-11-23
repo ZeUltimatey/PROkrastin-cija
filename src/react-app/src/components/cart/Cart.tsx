@@ -13,6 +13,7 @@ export const Cart = () => {
   const [user, setUser] = useState<IUser>(null);
   const [paymentReady, setPaymentReady] = useState(false);
   const navigate = useNavigate();
+  const [showMessage, setShowMessage] = useState(false);
 
   const getTotalPrice = () => {
     return cartItems.reduce((acc, item) => {
@@ -119,8 +120,15 @@ export const Cart = () => {
       <div className=" bg-content-white p-6 lg:border-l border-medium-brown lg:w-1/4">
         <h3 className="text-xl font-bold text-dark-brown mb-4">Apmaksāt</h3>
         <ShippingMethod setPaymentReady={setPaymentReady} />
+
         <button
           disabled={cartItems.length == 0 || !paymentReady}
+          onPointerEnter={() =>
+            cartItems.length == 0 || !paymentReady
+              ? setShowMessage(true)
+              : setShowMessage(false)
+          }
+          onPointerLeave={() => setShowMessage(false)}
           onClick={async () => {
             if (await confirm("Veikt apmaksu?")) payForBasket();
           }}
@@ -129,6 +137,11 @@ export const Cart = () => {
           <i className="fa-regular fa-credit-card mr-2"></i>
           Apmaksāt
         </button>
+        {showMessage && (
+          <p className="mt-2">
+            Lūdzu, ievietojiet grozā preces un izvēlieties piegādes adresi!
+          </p>
+        )}
       </div>
     </div>
   );

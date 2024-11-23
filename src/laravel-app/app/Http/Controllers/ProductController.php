@@ -125,7 +125,7 @@ class ProductController extends Controller
                'price_id' => $prices->id,
                'stripe_product_id' => $timeStampedID
             ]);
-        return response()->json(null, 201); // Content created
+        return response()->json($product->id, 201); // Content created
     }
 
     /**

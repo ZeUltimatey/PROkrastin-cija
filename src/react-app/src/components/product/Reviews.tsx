@@ -100,7 +100,7 @@ export const Reviews = () => {
       body: JSON.stringify({
         rating,
         content: comment,
-        is_anonymous: isAnonymous,
+        isAnonymous: isAnonymous,
       }),
     }).then(async (response) => {
       if (response.ok) {

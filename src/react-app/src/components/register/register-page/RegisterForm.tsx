@@ -64,6 +64,12 @@ export const RegisterForm = () => {
             case "Username already exists":
               showToast(false, "Šis lietotājvārds jau ir aizņemts!");
               break;
+            case "The password field format is invalid.":
+              showToast(
+                false,
+                "Lūdzu, parolē iekļaujiet vismaz 1 lielo burtu un speciālo simbolu!"
+              );
+              break;
             default:
               showToast(
                 false,

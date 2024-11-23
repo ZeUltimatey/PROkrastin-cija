@@ -49,7 +49,7 @@ function App() {
               <Route path="/" element={<GeneralLayout />}>
                 <Route index element={<Homepage />} />
                 <Route
-                  path="/paymentsuccessful"
+                  path="/payment-successful"
                   element={<PaymentSuccessful />}
                 />
                 <Route path="/product/:productId" element={<ProductView />} />

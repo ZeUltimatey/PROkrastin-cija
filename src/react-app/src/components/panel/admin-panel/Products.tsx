@@ -98,7 +98,14 @@ export const Products = () => {
       }),
       columnHelper.accessor("display_name", {
         header: "Nosaukums",
-        cell: (info) => info.getValue(),
+        cell: (info) => (
+          <a
+            href={`/product/${info.row.original.id}`}
+            className="hover:underline"
+          >
+            {info.getValue()}
+          </a>
+        ),
       }),
       columnHelper.accessor("product_type", {
         header: "Produkta tips",
@@ -137,9 +144,6 @@ export const Products = () => {
   const onFormSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsLoading(true);
-    if (formData.image_url) {
-      await handlePictureAdd();
-    }
     await fetch(`${Constants.API_URL}/products`, {
       method: "POST",
       headers: {
@@ -149,9 +153,11 @@ export const Products = () => {
         )}`,
       },
       body: JSON.stringify(formData),
-    }).then((response) => {
+    }).then(async (response) => {
       if (response.ok) {
+        const data = await response.json();
         showToast(true, "Produkts veiksmīgi pievienots!");
+        await handlePictureAdd(data);
         setIsModalOpen(false);
         setTimeout(() => window.location.reload(), 1000);
       } else {
@@ -161,32 +167,21 @@ export const Products = () => {
     setIsLoading(false);
   };
 
-  const handlePictureAdd = async () => {
+  const handlePictureAdd = async (id: number) => {
+    console.log(id);
     const imageData = new FormData();
     Array.from(formData.image_url).forEach((image: any, index: number) => {
       imageData.append(`images[${index}]`, image);
     });
     console.log(formData.image_url);
-    await fetch(
-      `${Constants.API_URL}/products/${
-        formData.id == 0 ? products.length + 1 : formData.id
-      }/images/add`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(
-            Constants.LOCAL_STORAGE.TOKEN
-          )}`,
-        },
-        body: imageData,
-      }
-    ).then(async (response) => {
-      if (response.ok) {
-        showToast(true, "Profila bilde pievienota.");
-        setTimeout(() => window.location.reload(), 1000);
-      } else {
-        showToast(false, "Kļūda profila bildes pievienošanā.");
-      }
+    await fetch(`${Constants.API_URL}/products/${id}/images/add`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+      body: imageData,
     });
   };
 
@@ -195,7 +190,7 @@ export const Products = () => {
     setIsEditing(false);
     setIsLoading(true);
     if (formData.image_url) {
-      await handlePictureAdd();
+      await handlePictureAdd(formData.id);
     }
     await fetch(`${Constants.API_URL}/products/${formData.id}`, {
       method: "PUT",
