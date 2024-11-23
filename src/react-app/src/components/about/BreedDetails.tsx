@@ -77,35 +77,35 @@ export const BreedDetails = () => {
         {breed && (
           <div className="flex flex-col grow gap-8 font-poppins">
             <div className="bg-light-gray p-6 rounded-md shadow-lg">
-              <h3 className="text-2xl font-semibold text-accent-brown mb-4">
+              <h3 className="lg:text-2xl text-lg font-semibold text-accent-brown mb-4">
                 Barošana
               </h3>
-              <p className="text-dark-brown text-lg">{breed.feeding_info}</p>
+              <p className="text-dark-brown lg:text-lg">{breed.feeding_info}</p>
             </div>
 
             <div className="bg-light-gray p-6 rounded-md shadow-lg">
-              <h3 className="text-2xl font-semibold text-accent-brown mb-4">
+              <h3 className="lg:text-2xl text-lg font-semibold text-accent-brown mb-4">
                 Personība
               </h3>
-              <p className="text-dark-brown text-lg">
+              <p className="text-dark-brown lg:text-lg">
                 {breed.personality_info}
               </p>
             </div>
 
             <div className="bg-light-gray p-6 rounded-md shadow-lg">
-              <h3 className="text-2xl font-semibold text-accent-brown mb-4">
+              <h3 className="lg:text-2xl text-lg font-semibold text-accent-brown mb-4">
                 Dzīves apstākļi
               </h3>
-              <p className="text-dark-brown text-lg">
+              <p className="text-dark-brown lg:text-lg">
                 {breed.environment_info}
               </p>
             </div>
 
             <div className="bg-light-gray p-6 rounded-md shadow-lg">
-              <h3 className="text-2xl font-semibold text-accent-brown mb-4">
+              <h3 className="lg:text-2xl text-lg font-semibold text-accent-brown mb-4">
                 Noderīgi padomi
               </h3>
-              <p className="text-dark-brown text-lg">{breed.tips_info}</p>
+              <p className="text-dark-brown lg:text-lg">{breed.tips_info}</p>
             </div>
           </div>
         )}

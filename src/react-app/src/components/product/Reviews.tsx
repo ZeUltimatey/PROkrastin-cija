@@ -5,6 +5,7 @@ import { IProduct } from "../universal/interfaces/IProduct";
 import { StarRating } from "./product-details/StarRating";
 import { useToast } from "../universal/Toast";
 import { IUser } from "../universal/interfaces/IUser";
+import { useConfirmation } from "../universal/Confirmation";
 
 export interface IReview {
   id: number;
@@ -108,6 +109,25 @@ export const Reviews = () => {
     });
   };
 
+  const confirm = useConfirmation();
+
+  const deleteReview = async (reviewId: number) => {
+    if (await confirm("Dzēst atsauksmi?")) {
+      await fetch(`${Constants.API_URL}/reviews/${reviewId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            Constants.LOCAL_STORAGE.TOKEN
+          )}`,
+        },
+      }).then(async (response) => {
+        if (response.ok) {
+          fetchReviews();
+        }
+      });
+    }
+  };
+
   useEffect(() => {
     fetchUser();
     fetchReviews();
@@ -115,7 +135,7 @@ export const Reviews = () => {
   }, []);
 
   return (
-    <div className="bg-content-white py-4 font-poppins px-12">
+    <div className="bg-content-white py-4 font-poppins px-12 h-screen">
       <div className="absolute top-4 left-4 cursor-pointer"></div>
 
       <div className="flex justify-between mb-6">
@@ -150,28 +170,52 @@ export const Reviews = () => {
         />
       </div>
 
-      <div className="mb-6">
-        {reviews &&
-          reviews.map((review: IReview) => (
-            <div key={review.id} className="mb-4">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-lg">
-                  {review.is_anonymous
-                    ? "Anonīms"
-                    : review.reviewer.display_name}
-                </span>
-                <StarRating stars={review.rating} />
+      <div className="mb-6 w-full">
+        {user &&
+          reviews &&
+          reviews.map((review: IReview) => {
+            if (!review.reviewer) return null;
+            return (
+              <div key={review.id} className="mb-4 w-full">
+                <div className="flex items-center gap-4 w-full">
+                  <img
+                    src={`${
+                      review.reviewer.image_url
+                        ? Constants.BASE_URL + review.reviewer.image_url
+                        : "https://t3.ftcdn.net/jpg/01/79/88/20/360_F_179882080_Zga46fOuCNnZlF9o2IC6gYgHVQFDVKMv.jpg"
+                    }`}
+                    className="w-16 h-16 rounded-full"
+                  ></img>
+                  <div className="w-full me-4">
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-lg">
+                          {review.is_anonymous
+                            ? "Anonīms"
+                            : review.reviewer.display_name}
+                        </span>
+                        <StarRating stars={review.rating} />
+                      </div>
+                      {(user.user_role === "Admin" ||
+                        review.reviewer.id === user.id) && (
+                        <button onClick={() => deleteReview(review.id)}>
+                          <i className="fa-solid fa-trash text-red-500"></i>
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-dark-brown mt-1">{review.content}</p>
+                    <p className="mt-2 opacity-40 text-sm">
+                      {review.created_at.slice(0, 10)}
+                    </p>
+                  </div>
+                </div>
+                <hr className="my-4 border-t border-dark-brown" />
               </div>
-              <p className="text-dark-brown mt-1">{review.content}</p>
-              <p className="mt-2 opacity-40 text-sm">
-                {review.created_at.slice(0, 10)}
-              </p>
-              <hr className="my-4 border-t border-dark-brown" />
-            </div>
-          ))}
+            );
+          })}
       </div>
 
-      {user && !reviews?.find((review) => review.reviewer.id == user.id) && (
+      {user && !reviews?.find((review) => review?.reviewer.id == user.id) && (
         <form onSubmit={postReview} className="flex flex-col gap-4">
           <textarea
             value={comment}

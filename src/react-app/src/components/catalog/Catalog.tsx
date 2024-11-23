@@ -75,12 +75,13 @@ export const Catalog = () => {
   };
 
   const formatQueryParams = (url?: string) => {
+    console.log(url);
     const query: IQuery = JSON.parse(
       localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_CATALOG)
     );
     if (query) {
       const categories = query.product_type
-        .split(",")
+        ?.split(",")
         .map((type) => {
           const categoryKey = Object.keys(CategoryNames).find(
             (key) => CategoryNames[key as keyof typeof CategoryNames] === type
@@ -90,13 +91,16 @@ export const Catalog = () => {
         .join(",");
       return (
         url ??
-        `keyword=${query.keyword ?? ""}&min_price=${
-          query.min_price
-        }&product_type=${categories}&max_price=${
-          query.max_price == 0 ? 9999999 : query.max_price
+        `${query.keyword ? `keyword=${query.keyword}&` : ""}${
+          query.min_price ? `min_price=${query.min_price}&` : ""
+        }${categories ? `product_type=${categories}&` : ""}${
+          query.max_price
+            ? `max_price=${query.max_price == 0 ? 9999999 : query.max_price}`
+            : ""
         }`
       );
     }
+    return url;
   };
 
   const onFilterUpdate = () => {
@@ -108,13 +112,11 @@ export const Catalog = () => {
     <div className="bg-light-gray">
       <div className="">
         <div className="w-full h-80 object-cover bg-temp-bg-image bg-cover p-12 flex flex-col gap-2">
-          <span className="text-6xl font-baloo text-dark-brown font-bold">
+          <span className="lg:text-6xl text-4xl font-baloo text-dark-brown font-bold">
             Preču katalogs
           </span>
-          <p className="text-xl font-hind text-dark-brown font-medium brightness-150 w-1/2">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia quos
-            suscipit adipisci aperiam soluta. Laborum fugit eveniet corrupti
-            commodi quas.
+          <p className="lg:text-xl text-lg font-hind text-dark-brown font-medium brightness-150 lg:w-1/2">
+            Atrodiet savam mīlulim visu nepieciešamo vienuviet!
           </p>
         </div>
       </div>
@@ -130,7 +132,7 @@ export const Catalog = () => {
             queryConstant={Constants.LOCAL_STORAGE.QUERY_CATALOG}
           />
           <div className="mx-8 h-auto mb-6 flex flex-col place-items-center justify-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 place-items-center gap-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 place-items-center lg:gap-12">
               {products &&
                 products?.map((product) => (
                   <ItemCard
@@ -145,15 +147,16 @@ export const Catalog = () => {
                   />
                 ))}
             </div>
+            {products?.length === 0 && (
+              <div className="place-self-center my-8 flex flex-col place-items-center gap-6 text-dark-brown font-semibold text-2xl font-poppins">
+                Nekas netika atrasts :(
+              </div>
+            )}
             {pagination && (
               <Pagination pagination={pagination} onNavigate={fetchItems} />
             )}
           </div>
-          {products?.length === 0 && (
-            <div className="place-self-center flex flex-col place-items-center gap-6 text-dark-brown font-semibold text-2xl font-poppins">
-              Nekas netika atrasts :(
-            </div>
-          )}
+
           <div className="mx-auto">{products === null && <Spinner />}</div>
         </div>
         <Filter

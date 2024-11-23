@@ -73,7 +73,7 @@ export const ProductView = () => {
   };
 
   return (
-    <div className="bg-content-white py-4 px-8 min-h-screen">
+    <div className="bg-content-white lg:py-4 py-1 lg:px-8 min-h-screen">
       <div className="bg-[#eaded2] mt-4 py-12 rounded-md">
         {product && reviews && (
           <div className="flex flex-col lg:flex-row gap-12 px-12">

@@ -195,6 +195,7 @@ class TestSeeder extends Seeder
             'user_role' => 'Admin',
             'created_at' => now(),
             'updated_at' => now(),
+            'email_verified_at' => now(),
         ]);
         User::create([
             'email' => 'vardsuzvards@gmail.com',
@@ -206,6 +207,7 @@ class TestSeeder extends Seeder
             'user_role' => 'User',
             'created_at' => now(),
             'updated_at' => now(),
+            'email_verified_at' => now(),
         ]);
 
         Review::create([

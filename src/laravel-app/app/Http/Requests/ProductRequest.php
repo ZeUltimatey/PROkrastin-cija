@@ -22,7 +22,7 @@ class ProductRequest extends ValidatedRequest
     public function rules(): array
     {
         return [
-            'product_type'     => 'required|in:UNLISTED,FOOD,CARE,TOYS,FURNITURE,ACCESSORIES',
+            'product_type'     => 'required|in:UNLISTED,CATS,FOOD,CARE,TOYS,FURNITURE,ACCESSORIES',
             'display_name'     => 'required|string|max:255',
             'description'      => 'required|string',
             'pricing'          => 'required|numeric|min:0',

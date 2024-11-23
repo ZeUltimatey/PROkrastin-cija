@@ -12,4 +12,5 @@ export interface IUser {
   updated_at: string;
   deactivated?: number;
   image_url?: any;
+  email_verified_at: string;
 }

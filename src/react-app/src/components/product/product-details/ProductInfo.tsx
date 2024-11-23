@@ -16,27 +16,51 @@ export const ProductInfo = ({
   const token = localStorage.getItem(Constants.LOCAL_STORAGE.TOKEN);
 
   return (
-    <div className="w-full flex flex-col justify-between font-poppins">
+    <div className="w-full flex flex-col gap-2 justify-between font-poppins">
       <div className="flex flex-col gap-2">
         <div>
           <p className="">
             {CategoryNames[product.product_type as keyof typeof CategoryNames]}
           </p>
-          <div className="text-2xl lg:text-4xl text-[#3e2a19] font-bold ">
+          <div className="text-xl lg:text-4xl text-[#3e2a19] font-bold ">
             {product.display_name}
           </div>
         </div>
-        <div
-          className="hover:cursor-pointer w-52 hover:opacity-70"
-          onClick={() => navigate(`/reviews/${product.id}`)}
-        >
-          <StarRating stars={reviews.data.length} />
-          <div className="text-sm ml-1 underline text-dark-brown">
-            {reviews.data.length} atsauksmes
+        {product.product_type !== "CATS" && (
+          <div
+            className="hover:cursor-pointer w-52 hover:opacity-70"
+            onClick={() => navigate(`/reviews/${product.id}`)}
+          >
+            <StarRating stars={reviews.data.length} />
+            <div className="text-sm ml-1 underline text-dark-brown">
+              {reviews.data.length} atsauksmes
+            </div>
           </div>
-        </div>
+        )}
+        {product.product_type === "CATS" && (
+          <div className="flex flex-col text-dark-brown">
+            <p>
+              <strong>Dz. datums: </strong>
+              {product.cat.birthdate}
+            </p>
+            <p>
+              <strong>Krāsa: </strong>
+              {product.cat.color}
+            </p>
+            <p>
+              <strong>Šķirne: </strong>
+              {product.cat.breed_name}{" "}
+              <button
+                onClick={() => navigate(`/breed/${product.cat.breed_id}`)}
+                title="Uzzināt vairāk par šo šķirni..."
+              >
+                <i className="fa-solid fa-circle-info hover:opacity-80"></i>
+              </button>
+            </p>
+          </div>
+        )}
       </div>
-      <div className="text-xl text-[#3e2a19] font-hind">
+      <div className="lg:text-xl text-[#3e2a19] font-hind">
         {product.description}
       </div>
       <div className="flex flex-col gap-1">
@@ -47,7 +71,9 @@ export const ProductInfo = ({
               : product.pricing.toFixed(2)}
           </span>
           &euro;
-          <span className="text-[#44392e] text-lg">/gab</span>
+          {product.product_type !== "CATS" && (
+            <span className="text-[#44392e] text-lg">/gab</span>
+          )}
         </div>
         {product.product_type !== "CATS" && (
           <p className="opacity-40">

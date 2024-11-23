@@ -7,7 +7,7 @@ export const Sidebar = () => {
 
   return (
     <div className="flex min-h-screen rounded-md ">
-      <aside className="w-64 text-white bg-light-gray">
+      <aside className="lg:w-64 w-full text-white bg-light-gray">
         <div className="m-8 mb-8 text-2xl font-bold text-center font-poppins text-dark-brown">
           Murrātavas instrukcija
         </div>

@@ -13,7 +13,7 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
   const [formData, setFormData] = useState({
     old_password: "",
     new_password: "",
-    confirm_password: "",
+    new_password_confirmation: "",
   });
 
   const navigate = useNavigate();
@@ -55,10 +55,83 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
     return;
   };
 
-  const handlePasswordChange = (e: { preventDefault: () => void }) => {
+  const handlePasswordChange = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    setIsLoading(true);
+    await fetch(`${Constants.API_URL}/change_password`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+      body: JSON.stringify({
+        old_password: formData.old_password,
+        new_password: formData.new_password,
+        new_password_confirmation: formData.new_password_confirmation,
+      }),
+    }).then(async (response) => {
+      if (response.ok) {
+        showToast(true, "Parole veiksmīgi mainīta.");
+        setIsPasswordModalOpen(false);
+        setIsLoading(false);
+        return;
+      } else {
+        const data = await response.json();
+        if (data.errors) {
+          const errorMessages = Object.values(data.errors).flat();
+          console.log("errormessages", errorMessages);
+          errorMessages.forEach((message) => {
+            switch (message) {
+              case "Old password is wrong.":
+                showToast(false, "Vecā parole nav pareiza.");
+                break;
+              case "The new password field must be at least 8 characters.":
+                showToast(false, "Jaunajai parolei jābūt vismaz 8 rakstzīmēm.");
+                break;
+              case "The new password confirmation field must be at least 8 characters.":
+                showToast(false, "Jaunajai parolei jābūt vismaz 8 rakstzīmēm.");
+                break;
+              case "The new password field confirmation does not match.":
+              case "The new password confirmation field must match new password.":
+                showToast(false, "Jaunās paroles nesakrīt.");
+                break;
+              case "New password is the same as the old password.":
+                showToast(false, "Jaunā parole nedrīkst būt vienāda ar veco.");
+                break;
+              default:
+                showToast(false, "Kļūda.");
+                break;
+            }
+          });
+        } else {
+          switch (data.error) {
+            case "Old password is wrong.":
+              showToast(false, "Vecā parole nav pareiza.");
+              break;
+            case "The new password field must be at least 8 characters.":
+              showToast(false, "Jaunajai parolei jābūt vismaz 8 rakstzīmēm.");
+              break;
+            case "The new password confirmation field must be at least 8 characters.":
+              showToast(false, "Jaunajai parolei jābūt vismaz 8 rakstzīmēm.");
+              break;
+            case "The new password field confirmation does not match.":
+            case "The new password confirmation field must match new password.":
+              showToast(false, "Jaunās paroles nesakrīt.");
+              break;
+            case "New password is the same as the old password.":
+              showToast(false, "Jaunā parole nedrīkst būt vienāda ar veco.");
+              break;
+            default:
+              showToast(false, "Kļūda.");
+              break;
+          }
+        }
+      }
+    });
 
-    //todo lol
+    setIsLoading(false);
   };
 
   return (
@@ -109,7 +182,7 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
 
       {isPreferencesModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+          <div className="bg-white p-6 rounded-lg shadow-lg lg:w-1/3">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold text-dark-brown font-poppins">
                 Lietotāja preferences
@@ -181,13 +254,13 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
 
       {isPasswordModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+          <div className="bg-white p-6 rounded-lg shadow-lg lg:w-1/3">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold text-dark-brown font-poppins">
                 Mainīt paroli
               </h2>
               <button
-                onClick={handleCloseModal}
+                onClick={() => setIsPasswordModalOpen(false)}
                 className="text-dark-brown rounded-full w-7 h-7 flex items-center justify-center"
               >
                 <i className="fa-solid fa-x"></i>
@@ -226,23 +299,17 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
                 </label>
                 <FormInput
                   placeholder="Apstipriniet paroli"
-                  value={formData.confirm_password}
+                  value={formData.new_password_confirmation}
                   type="password"
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      confirm_password: e.target.value,
+                      new_password_confirmation: e.target.value,
                     })
                   }
                 />
               </div>
               <div className="flex justify-end space-x-4 mt-6">
-                <button
-                  onClick={() => setIsPasswordModalOpen(false)}
-                  className="bg-light-gray text-dark-brown hover:bg-opacity-70 px-4 py-2 rounded-md shadow font-poppins"
-                >
-                  Atcelt
-                </button>
                 <input
                   type="submit"
                   value="Saglabāt"

@@ -2,9 +2,9 @@ import { Sidebar } from "../instruction/Sidebar";
 
 export const BrowseInfo = () => {
   return (
-    <div className="flex min-h-screen bg-content-white bg-opacity-95">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-content-white bg-opacity-95">
       <Sidebar />
-      <div className="w-3/4 p-6">
+      <div className="lg:w-3/4 p-6">
         <section className="mb-6">
           <h3 className="mb-3 text-2xl font-bold text-dark-brown font-poppins">
             Preču izvēle

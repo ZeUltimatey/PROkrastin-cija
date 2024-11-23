@@ -1,13 +1,18 @@
 import { useState } from "react";
-import { Sidebar } from "./Sidebar";
+import { IUser } from "../../universal/interfaces/IUser";
 
 export interface IOrder {
-  id: string;
-  customerName: string;
-  email: string;
-  date: string;
-  status: string;
-  total: string;
+  id: number;
+  created_at: string;
+  total_pricing: number;
+  check_content: string;
+  transactor: IUser;
+  location: {
+    city: string;
+    street: string;
+    apartment_number: string;
+    zip_code: string;
+  };
 }
 
 export const Orders = () => {
@@ -31,32 +36,32 @@ export const Orders = () => {
     }
   };
 
-  const orders: IOrder[] = [
-    {
-      id: "#5001",
-      customerName: "Anna Vītola",
-      email: "anna@epasts.com",
-      date: "2024-01-15",
-      status: "Veiksmīgs",
-      total: "$120.00",
-    },
-    {
-      id: "#5002",
-      customerName: "Jānis Bērziņš",
-      email: "janis@epasts.com",
-      date: "2024-02-20",
-      status: "Sūtīšans procesā",
-      total: "$85.00",
-    },
-    {
-      id: "#5003",
-      customerName: "Laura Kalniņa",
-      email: "laura@epasts.com",
-      date: "2024-03-12",
-      status: "Atcelts",
-      total: "$0.00",
-    },
-  ];
+  // const orders: IOrder[] = [
+  //   {
+  //     id: "#5001",
+  //     customerName: "Anna Vītola",
+  //     email: "anna@epasts.com",
+  //     date: "2024-01-15",
+  //     status: "Veiksmīgs",
+  //     total: "$120.00",
+  //   },
+  //   {
+  //     id: "#5002",
+  //     customerName: "Jānis Bērziņš",
+  //     email: "janis@epasts.com",
+  //     date: "2024-02-20",
+  //     status: "Sūtīšans procesā",
+  //     total: "$85.00",
+  //   },
+  //   {
+  //     id: "#5003",
+  //     customerName: "Laura Kalniņa",
+  //     email: "laura@epasts.com",
+  //     date: "2024-03-12",
+  //     status: "Atcelts",
+  //     total: "$0.00",
+  //   },
+  // ];
 
   return (
     <div className="min-h-screen flex bg-content-white w-full">
@@ -104,7 +109,7 @@ export const Orders = () => {
                 </tr>
               </thead>
               <tbody>
-                {orders.map((order) => (
+                {/* {orders.map((order) => (
                   <tr className="border-b border-medium-brown" key={order.id}>
                     <td className="py-4 px-6 text-dark-brown">{order.id}</td>
                     <td className="py-4 px-6 text-dark-brown">
@@ -125,7 +130,7 @@ export const Orders = () => {
                       </button>
                     </td>
                   </tr>
-                ))}
+                ))} */}
               </tbody>
             </table>
           </div>
@@ -138,36 +143,7 @@ export const Orders = () => {
             <h2 className="text-2xl font-bold text-dark-brown mb-4 font-poppins">
               Pasūtījuma detaļas
             </h2>
-            <div>
-              <p className="mb-4">
-                <span className="font-bold text-dark-brown">
-                  Pasūtījuma ID:
-                </span>
-                {selectedOrder.id}
-              </p>
-              <p className="mb-4">
-                <span className="font-bold text-dark-brown">
-                  Klienta vārds:
-                </span>
-                {selectedOrder.customerName}
-              </p>
-              <p className="mb-4">
-                <span className="font-bold text-dark-brown">E-pasts:</span>
-                {selectedOrder.email}
-              </p>
-              <p className="mb-4">
-                <span className="font-bold text-dark-brown">Datums:</span>
-                {selectedOrder.date}
-              </p>
-              <p className="mb-4">
-                <span className="font-bold text-dark-brown">Statuss:</span>
-                {selectedOrder.status}
-              </p>
-              <p className="mb-4">
-                <span className="font-bold text-dark-brown">Kopā:</span>
-                {selectedOrder.total}
-              </p>
-            </div>
+
             <div className="flex justify-end space-x-4">
               <button
                 className="bg-light-gray text-dark-brown px-4 py-2 rounded-md shadow font-poppins"
@@ -175,14 +151,14 @@ export const Orders = () => {
               >
                 Aizvērt
               </button>
-              {selectedOrder.status !== "Cancelled" && (
+              {/* {selectedOrder.status !== "Cancelled" && (
                 <button
                   className="bg-red-600 text-white px-4 py-2 rounded-lg font-poppins"
                   onClick={handleCancelOrder}
                 >
                   Atcelt pasūtījumu
                 </button>
-              )}
+              )} */}
             </div>
           </div>
         </div>

@@ -2,9 +2,9 @@ import { Sidebar } from "../instruction/Sidebar";
 
 export const EncyclopediaUse = () => {
   return (
-    <div className="flex min-h-screen bg-content-white bg-opacity-95">
+    <div className="flex flex-col lg:flex-row  min-h-screen bg-content-white bg-opacity-95">
       <Sidebar />
-      <div className="w-3/4 p-6">
+      <div className="lg:w-3/4 w-full p-6">
         <h2 className="mb-6 text-3xl font-bold text-dark-brown font-poppins">
           Kaķu šķirņu enciklopēdijas lietošanas pamācība
         </h2>
@@ -24,8 +24,8 @@ export const EncyclopediaUse = () => {
           </p>
           <p className="mb-2 text-dark-brown font-poppins">
             <strong>Šķirņu izvēlne:</strong> ekrāna labajā pusē ir izvēlne, kur
-            iespējams atzīmēt šķirnes, kuras vēlaties, lai parāda. Veikt
-            izvēli var, ar peles klikšķi atzīmējot šķirnes, kuras vēlaties redzēt.
+            iespējams atzīmēt šķirnes, kuras vēlaties, lai parāda. Veikt izvēli
+            var, ar peles klikšķi atzīmējot šķirnes, kuras vēlaties redzēt.
           </p>
         </section>
 
@@ -36,8 +36,8 @@ export const EncyclopediaUse = () => {
           <p className="mb-2 text-dark-brown font-poppins">
             Apskatīt šķirni var, ar peles klikšķi uzspiežot uz attiecīgās
             šķirnes raksta konteinera, kur redzams šķirnes attēls, nosaukums un
-            īss apraksts. Kad tiek atvērts konkrētais raksts, Jums ir
-            iespēja iepazīties ar sekojošu informāciju par kaķa šķirni:
+            īss apraksts. Kad tiek atvērts konkrētais raksts, Jums ir iespēja
+            iepazīties ar sekojošu informāciju par kaķa šķirni:
           </p>
           <ul className="space-y-2 list-disc list-inside text-dark-brown font-poppins">
             <li>
@@ -63,11 +63,10 @@ export const EncyclopediaUse = () => {
             Piekļuve enciklopēdijai
           </h3>
           <p className="mb-2 text-dark-brown font-poppins">
-            <strong>Pirkšanas lapā:</strong> ja esat atvēris kaķa
-            pirkšanas lapu un vēlaties uzzināt vairāk par konkrēto šķirni pirms
-            iegādes, jums ir iespēja uzspiest uz pogas "Lasīt par šķirni". Šī
-            poga aizvedīs uz šķirnes enciklopēdijas rakstu tieši par izvēlēto
-            šķirni.
+            <strong>Pirkšanas lapā:</strong> ja esat atvēris kaķa pirkšanas lapu
+            un vēlaties uzzināt vairāk par konkrēto šķirni pirms iegādes, jums
+            ir iespēja uzspiest uz pogas "Lasīt par šķirni". Šī poga aizvedīs uz
+            šķirnes enciklopēdijas rakstu tieši par izvēlēto šķirni.
           </p>
           <p className="mb-2 text-dark-brown font-poppins">
             <strong>Navigācijas josla:</strong> ja Jūs vēlaties lasīt šķirņu
@@ -77,8 +76,8 @@ export const EncyclopediaUse = () => {
         </section>
 
         <p className="mt-8 text-dark-brown font-poppins">
-          Ja jums ir papildus jautājumi par enciklopēdijas lietošanu, lūdzu, sazinieties
-          ar mums.
+          Ja jums ir papildus jautājumi par enciklopēdijas lietošanu, lūdzu,
+          sazinieties ar mums.
         </p>
       </div>
     </div>

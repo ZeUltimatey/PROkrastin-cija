@@ -42,6 +42,7 @@ class UserResource extends JsonResource
             $user['surname'] = $this->surname;
             $user['phone_number'] = $this->phone_number;
             $user['created_at'] = $this->created_at;
+            $user['email_verified_at'] = $this->email_verified_at;
         }
 
         // Return user

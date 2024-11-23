@@ -118,8 +118,15 @@ class UserController extends Controller
         // Check if the user is banned
         $user_model = Auth::user();
         $user = new UserResource($user_model);
-        if ($user['deleted']) { return response()->json(['error' => 'Dzēsts profils'], 403); } // Forbidden
-        if ($user['deactivated']) { return response()->json(['error' => 'Jūsu profils ir bloķēts, ja uzskatāt, ka tā ir kļūda, sazinieties ar administratoru!'], 403); } // Forbidden
+        if ($user['email_verified_at'] === null) {
+            return response()->json(['error' => 'E-pasts nav verificēts, lūdzu verificējiet savu e-pastu, tad mēģiniet vēlreiz!'], 403); 
+            } // Forbidden
+        if ($user['deleted']) {
+            return response()->json(['error' => 'Dzēsts profils'], 403); 
+            } // Forbidden
+        if ($user['deactivated']) { 
+            return response()->json(['error' => 'Jūsu profils ir bloķēts, ja uzskatāt, ka tā ir kļūda, sazinieties ar administratoru!'], 403); 
+            } // Forbidden
 
         // Create token on successful login
         $token = $user_model->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken;
@@ -160,15 +167,23 @@ class UserController extends Controller
             $request->request->remove('email');
         }
         $validator = Validator::make($request->all(), [
-            'email'                     => 'sometimes|string|email|unique:users|max:255',
-            'password'                  => 'nullable|string|min:8|confirmed',
-            'password_confirmation'     => 'nullable|same:password',
-            'display_name'              => 'sometimes|string|unique:users|max:255',
-            'name'                      => 'nullable|string|max:255',
-            'surname'                   => 'nullable|string|max:255',
-            'phone_number'              => 'nullable|string|max:15',
-            'user_role'                 => 'nullable|in:User,Admin',
-            'deactivated'               => 'nullable|boolean',
+            'email'                 => 'sometimes|string|email|unique:users|max:255',
+            'password'              => [
+                'nullable',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/[0-9]/', // must contain at least one number
+                'regex:/[A-Z]/', // must contain at least one uppercase letter
+                'regex:/[@$!%*?&#]/' // must contain at least one special character
+            ],
+            'password_confirmation' => 'nullable|same:password',
+            'display_name'          => 'sometimes|string|unique:users|max:255',
+            'name'                  => 'nullable|string|max:255',
+            'surname'               => 'nullable|string|max:255',
+            'phone_number'          => 'nullable|string|max:15',
+            'user_role'             => 'nullable|in:User,Admin',
+            'deactivated'           => 'nullable|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -177,9 +192,33 @@ class UserController extends Controller
             ], 422);
         }
 
-        $user->update($validator->validated());
+         // verify email if changed
+        if ($request->input('email') != $user->email) {
+            // Email verification
+            $user->update($validator->validated());
+            $user->update(['email_verified_at' => null]);
+            dispatch(new SendEmailVerification($user));
+            return response()->json(['message' => "Lietotājs veiksmīgi atjaunots, lūdzu verificējiet savu e-pastu!"], 202);
+        } else {
+            $user->update($validator->validated());
+        }
 
-        return response()->json(['message' => "User successfully updated"], 202);
+  
+       
+
+        return response()->json(['message' => "Lietotājs veiksmīgi atjaunots!"], 202);
+    }
+
+    public function change_password(ChangePasswordRequest $request)
+    {
+        $user_model = Auth::user();
+        $user = new UserResource($user_model);
+        if (!Hash::check($request->old_password, $user->password))
+            return response()->json(['error' => 'Old password is wrong.'], 422);
+        if (Hash::check($request->new_password, $user->password))
+            return response()->json(['error' => 'New password is the same as the old password.'], 422);
+        $user->update(['password' => $request->new_password]);
+        return response()->json(null, 202); // Request accepted
     }
 
     /**
@@ -245,26 +284,26 @@ class UserController extends Controller
         $user = Auth::user();
         // $stripePriceId = 'price_1QJk5qG6wIBbt2iyeYY9aBEV';
         // $quantity = 1;
-        $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
+            $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
 
-        $order = array();
-        foreach ($basketProducts as $basketProduct) {
-            $order[$basketProduct->product->price_id] = $basketProduct->amount;
-        }
-
+            $order = array();
+            
+            foreach ($basketProducts as $basketProduct) {
+                $order[$basketProduct->product->price_id] = $basketProduct->amount;
+            }
         $session = $user->checkout($order, [
-            'success_url' => route('checkout-success'),
+            'success_url' => route('checkout-success') . '?session_id={CHECKOUT_SESSION_ID}' . '&user_id=' . $user->id,
             'cancel_url' => route('checkout-cancel'),
             'metadata' => ['user_id' => $user->id],
         ]);
-        $user = Auth::user();
-        $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
-    foreach ($basketProducts as $basketProduct) {
-        $basketProduct->product->stock -= $basketProduct->amount;
-        $basketProduct->product->save(); //TODO add this to transaction history before deleting
-        $basketProduct->delete();
-    }
-
+    //     $user = Auth::user();
+    //     $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
+    // foreach ($basketProducts as $basketProduct) {
+    //     $basketProduct->product->stock -= $basketProduct->amount;
+    //     $basketProduct->product->save(); //TODO add this to transaction history before deleting
+    //     $basketProduct->delete();
+    // }
+        
         return  response()->json(['url' => $session->url], 200);
     }
 
@@ -283,15 +322,9 @@ class UserController extends Controller
     }
     public function successPaid (Request $request) {
         $sessionId = $request->get('session_id');
+        $user = User::find($request->get('user_id'));
         if ($sessionId === null) {
-        //     $user = Auth::user();
-        //     $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
-        // foreach ($basketProducts as $basketProduct) {
-        //     $basketProduct->product->stock -= $basketProduct->amount;
-        //     $basketProduct->product->save(); //TODO add this to transaction history before deleting
-        //     $basketProduct->delete();
-        // }
-        //return redirect()->to(env('FRONTEND_URL'))->with('run_route', 'clear-basket-after-payment');
+
             return redirect()->to(env('FRONTEND_URL'));
         }
 
@@ -301,13 +334,6 @@ class UserController extends Controller
 
             return redirect()->to(env('FRONTEND_URL'));
         }
-
-        $orderId = $session['metadata']['order_id'] ?? null;
-
-        $order = Order::findOrFail($orderId);
-
-        $order->update(['status' => 'completed']);
-
         $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
         foreach ($basketProducts as $basketProduct) {
             $basketProduct->product->stock -= $basketProduct->amount;

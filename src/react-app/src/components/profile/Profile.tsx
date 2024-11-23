@@ -1,7 +1,6 @@
 import { ProfileInfo } from "./profile-page/ProfileInfo";
 import { OrderHistory } from "./profile-page/OrderHistory";
 import { SavedAddresses } from "./profile-page/SavedAddresses";
-import { PaymentMethods } from "./profile-page/PaymentMethods";
 import { ProfileSettings } from "./profile-page/ProfileSettings";
 import { useEffect, useState } from "react";
 import { Constants } from "../universal/Constants";
@@ -38,12 +37,11 @@ export const Profile = () => {
   return (
     <div className="min-h-screen bg-content-white bg-opacity-95 p-6">
       {user && (
-        <div className="container mx-auto lg:px-32">
+        <div className="mx-auto lg:px-32">
           <ProfileInfo user={user} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
             <OrderHistory />
             <SavedAddresses />
-            <PaymentMethods />
             <ProfileSettings user={user} />
           </div>
         </div>

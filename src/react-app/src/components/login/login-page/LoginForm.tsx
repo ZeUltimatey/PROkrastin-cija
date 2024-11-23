@@ -39,6 +39,7 @@ export const LoginForm = () => {
       .then(async (response) => {
         if (response.ok) {
           const data = await response.json();
+
           localStorage.setItem(Constants.LOCAL_STORAGE.TOKEN, data.token);
           showToast(true, "Autentifikācija veiksmīga!");
           setTimeout(() => navigate("/"), 1000);
@@ -47,6 +48,18 @@ export const LoginForm = () => {
           switch (data.error) {
             case "Invalid credentials":
               showToast(false, "Nepareizs e-pasts vai parole.");
+              break;
+            case "E-pasts nav verificēts, lūdzu verificējiet savu e-pastu, tad mēģiniet vēlreiz!":
+              showToast(
+                false,
+                "E-pasts nav verificēts, lūdzu verificējiet savu e-pastu, tad mēģiniet vēlreiz!"
+              );
+              break;
+            case "Jūsu profils ir bloķēts, ja uzskatāt, ka tā ir kļūda, sazinieties ar administratoru!":
+              showToast(
+                false,
+                "Jūsu profils ir bloķēts, ja uzskatāt, ka tā ir kļūda, sazinieties ar administratoru!"
+              );
               break;
             default:
               showToast(false, "Kļūda autentifikācijā.");
@@ -100,7 +113,7 @@ export const LoginForm = () => {
         className="w-full bg-light-brown text-white font-semibold py-2 px-4 rounded-md hover:bg-medium-brown transition-all"
       ></input>
       {isLoading && (
-        <div className="mx-auto w-full">
+        <div className="flex place-items-center justify-center">
           <Spinner />
         </div>
       )}

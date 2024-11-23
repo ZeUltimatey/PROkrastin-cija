@@ -1,9 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 
-// Define the type for the showToast function
 type ToastContextType = (success: boolean, text: string) => void;
 
-// Create the context with the correct type
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export const useToast = () => {

@@ -17,10 +17,10 @@ class TransactionResource extends JsonResource
         $transaction = [
             'id'            => $this->id,
             'total_pricing' => $this->total_pricing,
+            'created_at'    => $this->created_at,
             'check_content' => $this->check_content,
         ];
 
-        if (isset($this->show_transactor)) {
             // Check if transactor is associated
             $transactor = null;
             if ($this->transactor) {
@@ -34,7 +34,7 @@ class TransactionResource extends JsonResource
                 ];
             }
             $transaction['transactor'] = $transactor;
-        }
+        
 
         // Check if location is associated
         $location = null;

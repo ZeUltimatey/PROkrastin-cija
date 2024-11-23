@@ -47,7 +47,7 @@ export const Cats = () => {
   const confirm = useConfirmation();
 
   const fetchCats = async (link?: string) => {
-    await fetch(link ?? `${Constants.API_URL}/cats`, {
+    await fetch(link ?? `${Constants.API_URL}/products?product_type=CATS`, {
       method: "GET",
     }).then(async (response) => {
       if (response.ok) {
@@ -70,7 +70,7 @@ export const Cats = () => {
           setFormData({ ...formData, breed_id: data.data[0].id });
         setBreeds(data.data);
       } else {
-        showToast(false, "Kļūda iegūstot produktus.");
+        showToast(false, "Kļūda iegūstot šķirnes.");
       }
     });
   };

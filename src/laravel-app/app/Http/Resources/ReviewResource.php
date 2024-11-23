@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Carbon\Carbon;
 
 class ReviewResource extends JsonResource
 {
@@ -19,7 +20,7 @@ class ReviewResource extends JsonResource
             "content"    => $this->content,
             "rating"     => $this->rating,
             "is_anonymous" => $this->is_anonymous,
-            "created_at" => $this->created_at,
+            "created_at" => Carbon::parse($this->created_at)->format('d/m/Y H:i'),
         ];
 
         if (isset($this->show_product)) {
