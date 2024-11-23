@@ -31,7 +31,7 @@ export const Users = () => {
   };
 
   const getAllUsers = async () => {
-    await fetch(`${Constants.API_URL}/all_users`, {
+    await fetch(`${Constants.API_URL}/all_users?show_extra_information`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${localStorage.getItem(
@@ -41,7 +41,7 @@ export const Users = () => {
     }).then(async (response) => {
       if (response.ok) {
         const data = await response.json();
-        setUsers(data);
+        setUsers(data.data);
       }
     });
   };
@@ -80,12 +80,8 @@ export const Users = () => {
         header: "ID",
         cell: (info) => info.getValue(),
       }),
-      columnHelper.accessor("name", {
-        header: "Vārds",
-        cell: (info) => info.getValue(),
-      }),
-      columnHelper.accessor("surname", {
-        header: "Uzvārds",
+      columnHelper.accessor("display_name", {
+        header: "Lietotājvārds",
         cell: (info) => info.getValue(),
       }),
       columnHelper.accessor("email", {

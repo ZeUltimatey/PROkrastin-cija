@@ -1,9 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { Constants } from "../../universal/Constants";
-import { createColumnHelper } from "@tanstack/react-table";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { IOrder } from "./Orders";
 
 export const Statistics = () => {
   const [statistics, setStatistics] = useState(null);
+  const [transactions, setTransactions] = useState<IOrder[]>();
   const getStatistics = async () => {
     await fetch(`${Constants.API_URL}/dashboard`, {
       method: "GET",
@@ -20,43 +28,78 @@ export const Statistics = () => {
     });
   };
 
+  //horrendous; I am sorry, cba
+  const getTransactions = async () => {
+    await fetch(`${Constants.API_URL}/all_transactions?per_page=10&`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+    }).then(async (response) => {
+      if (response.ok) {
+        const data = await response.json();
+        await fetch(`${data.links.last}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(
+              Constants.LOCAL_STORAGE.TOKEN
+            )}`,
+          },
+        }).then(async (response) => {
+          if (response.ok) {
+            const data = await response.json();
+            setTransactions(data.data);
+          }
+        });
+      }
+    });
+  };
+
   useEffect(() => {
     getStatistics();
+    getTransactions();
   }, []);
 
-  // const columnHelper = createColumnHelper();
+  const columnHelper = createColumnHelper<IOrder>();
 
-  // const columns = useMemo(
-  //   () => [
-  //     columnHelper.accessor("id", {
-  //       header: "ID",
-  //       cell: (info) => info.getValue(),
-  //     }),
-  //     columnHelper.accessor("display_name", {
-  //       header: "Nosaukums",
-  //       cell: (info) => info.getValue(),
-  //     }),
-  //     columnHelper.accessor("product_type", {
-  //       header: "Produkta tips",
-  //       cell: (info) =>
-  //         ,
-  //     }),
-  //     columnHelper.accessor("pricing", {
-  //       header: "Cena",
-  //       cell: (info) => <div></div>,
-  //     }),
-  //     columnHelper.accessor("discount_pricing", {
-  //       header: "Atlaide",
-  //       cell: (info) => <div></div>,
-  //     }),
-  //     columnHelper.accessor("stock", {
-  //       header: "Daudzums",
-  //       cell: (info) => info.getValue(),
-  //     }),
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("id", {
+        header: "ID",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor(
+        (row) => `${row.transactor.name} ${row.transactor.surname}`,
+        {
+          id: "transactorFullName",
+          header: "Vārds, uzvārds",
+          cell: (info) => info.getValue(),
+        }
+      ),
+      columnHelper.accessor("created_at", {
+        header: "Pasūtīts",
+        cell: (info) =>
+          info.getValue().split("T")[0] +
+          " " +
+          info.getValue().split("T")[1].split(".")[0],
+      }),
+      columnHelper.accessor("total_pricing", {
+        header: "Summa",
+        cell: (info) => info.getValue().toFixed(2) + "€",
+      }),
+    ],
+    []
+  );
 
-  //   ],
-  //   []
-  // );
+  const table = useReactTable({
+    columns,
+    data: transactions,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    enableSortingRemoval: false,
+  });
 
   return (
     <div className="flex-1 bg-content-white">
@@ -66,7 +109,7 @@ export const Statistics = () => {
             Statistika
           </h1>
           <button className="bg-medium-brown text-white px-4 min-w-48 hover:bg-opacity-85 transition-all py-2 rounded-lg font-poppins">
-            <i className="fa-solid fa-print" /> Izdrukāt
+            <i className="fa-solid fa-download" /> Lejupielādēt excel
           </button>
         </div>
       </header>
@@ -111,38 +154,79 @@ export const Statistics = () => {
               Nesenie pirkumi
             </h2>
           </div>
-          <table className="w-full text-left ">
-            <thead>
-              <tr className="border-b border-medium-brown">
-                <th className="py-4 px-6 font-poppins text-dark-brown">
-                  Pasūtījuma ID
-                </th>
-                <th className="py-4 px-6 font-poppins text-dark-brown">
-                  Klients
-                </th>
-                <th className="py-4 px-6 font-poppins text-dark-brown">
-                  Summa
-                </th>
-                <th className="py-4 px-6 font-poppins text-dark-brown">
-                  Statuss
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b border-medium-brown">
-                <td className="py-4 px-6 text-dark-brown">#12345</td>
-                <td className="py-4 px-6 text-dark-brown">Jānis Bērziņš</td>
-                <td className="py-4 px-6 text-dark-brown">120.00 €</td>
-                <td className="py-4 px-6 text-dark-brown">Apmaksāts</td>
-              </tr>
-              <tr className="border-b border-medium-brown">
-                <td className="py-4 px-6 text-dark-brown">#12346</td>
-                <td className="py-4 px-6 text-dark-brown">Krūms Zariņš</td>
-                <td className="py-4 px-6 text-dark-brown">340.00 €</td>
-                <td className="py-4 px-6 text-dark-brown">Apmaksāts</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="flex place-items-center justify-center flex-col gap-4">
+            {transactions && (
+              <table className="text-center font-poppins w-full">
+                <thead>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <tr key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => (
+                        <th
+                          className="h-12 bg-light-gray border-b border-light-brown text-dark-brown font-semibold"
+                          key={header.id}
+                          colSpan={header.colSpan}
+                        >
+                          {header.isPlaceholder ? null : (
+                            <div
+                              className={
+                                header.column.getCanSort()
+                                  ? "cursor-pointer select-none"
+                                  : ""
+                              }
+                              onClick={header.column.getToggleSortingHandler()}
+                              title={
+                                header.column.getCanSort()
+                                  ? header.column.getNextSortingOrder() ===
+                                    "asc"
+                                    ? "Sort ascending"
+                                    : header.column.getNextSortingOrder() ===
+                                      "desc"
+                                    ? "Sort descending"
+                                    : "Clear sort"
+                                  : undefined
+                              }
+                            >
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                              {{
+                                asc: (
+                                  <i className="fa-solid fa-chevron-up ml-2"></i>
+                                ),
+                                desc: (
+                                  <i className="fa-solid fa-chevron-down ml-2"></i>
+                                ),
+                              }[header.column.getIsSorted() as string] ?? null}
+                            </div>
+                          )}
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
+                <tbody>
+                  {table.getRowModel().rows.map((row) => {
+                    return (
+                      <tr key={row.id}>
+                        {row.getVisibleCells().map((cell) => (
+                          <td
+                            className="h-8 border-b border-light-brown bg-light-gray text-dark-brown font-semibold"
+                            key={cell.id}
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
       </main>
     </div>

@@ -113,7 +113,7 @@ export const LoginForm = () => {
         className="w-full bg-light-brown text-white font-semibold py-2 px-4 rounded-md hover:bg-medium-brown transition-all"
       ></input>
       {isLoading && (
-        <div className="mx-auto w-full">
+        <div className="flex place-items-center justify-center">
           <Spinner />
         </div>
       )}

@@ -47,7 +47,10 @@ export const AddressModal = ({
         onClose();
         setTimeout(() => window.location.reload(), 1000);
       } else {
-        showToast(false, "Kļūda adreses izveidē.");
+        showToast(
+          false,
+          "Kļūda adreses izveidē, lūdzu, pārbaudiet vai visi lauki ir aizpildīti!"
+        );
       }
     });
     setIsLoading(false);
@@ -71,7 +74,10 @@ export const AddressModal = ({
         onClose();
         setTimeout(() => window.location.reload(), 1000);
       } else {
-        showToast(false, "Kļūda adreses atjaunināšanā.");
+        showToast(
+          false,
+          "Kļūda adreses atjaunināšanā, lūdzu, pārbaudiet vai visi lauki ir aizpildīti!"
+        );
       }
     });
     setIsLoading(false);
