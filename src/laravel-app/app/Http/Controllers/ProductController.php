@@ -244,8 +244,9 @@ class ProductController extends Controller
                'price_id' => $prices->id,
                'stripe_product_id' => $timeStampedID
             ]);
+            
         }
-
+        return Product::all();
     }
 
 }

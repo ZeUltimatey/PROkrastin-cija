@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('surname');
             $table->string('phone_number')->nullable(); // temp nullable because frontend
             $table->enum('user_role', ['User', 'Admin'])->default('User');
+            $table->boolean('display_lowest_price')->nullable();
+            $table->boolean('display_only_available')->nullable();
+            $table->boolean('recieve_notifications')->nullable();
             $table->boolean('deactivated')->default(false);
             $table->boolean('deleted')->default(false);
             $table->timestamps();

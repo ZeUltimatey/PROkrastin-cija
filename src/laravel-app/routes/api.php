@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Http\Controllers\BoughtProductsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LocationController;
-use App\Http\Controllers\CardsController;
 use App\Http\Controllers\CatBreedController;
 use App\Http\Controllers\CatController;
 use App\Http\Controllers\ProductController;
@@ -82,15 +81,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::delete('/user', [UserController::class, 'destroy']);
     Route::put('/user', [UserController::class, 'update']);
+    Route::get('/user/resend_verification', [UserController::class, 'resend_verification']);
     Route::put('/change_password', [UserController::class, 'change_password']);
 
     Route::get('/bought_products/{transaction_id}', [BoughtProductsController::class, 'index']);
-
-    Route::get('/cards', [CardsController::class, 'index']);
-    Route::post('/cards', [CardsController::class, 'store']);
-    Route::put('/cards/{id}', [CardsController::class, 'update']);
-    Route::get('/cards/{id}', [CardsController::class, 'show']);
-    Route::delete('/cards/{id}', [CardsController::class, 'destroy']);
 
     Route::get('/locations', [LocationController::class, 'index']);
     Route::post('/locations', [LocationController::class, 'store']);
@@ -113,7 +107,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::get('/all_users', [UserController::class, 'index']);
     Route::get('/all_bought_products', [BoughtProductsController::class, 'index_all']);
-    Route::get('/all_cards', [CardsController::class, 'index_all']);
     Route::get('/all_locations', [LocationController::class, 'index_all']);
     Route::get('/all_transactions', [TransactionController::class, 'index_all']);
     Route::get('/all_reviews', [ReviewController::class, 'index_all']);

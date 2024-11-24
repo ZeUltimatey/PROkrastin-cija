@@ -8,7 +8,6 @@ localhost/
     ├── dashboard/ GET (get project statistics) ✅
     ├── all_users/ GET (getting all users) ✅
     ├── all_bought_products/ GET (getting all bought products) ✅
-    ├── all_cards/ GET (getting all user card information) ✅
     ├── all_locations/ GET (getting all user locations) ✅
     ├── all_transactions/ GET (getting all user transactions) ✅
     ├── all_reviews/ GET (getting all reviews) ✅
@@ -47,12 +46,6 @@ localhost/
     │   ├── {id} GET (getting the specfified cat breed) ✅
     │   ├── {id} PUT (updating the specified cat breed) ✅
     │   └── {id} DELETE (deleting the specified cat breed) ✅
-    ├── cards/
-    │   ├── GET (getting all card information) ✅
-    │   ├── POST (adding new card information) ✅
-    │   ├── {id} GET (getting specific card information) ✅
-    │   ├── {id} PUT (updating specific card information) ✅
-    │   └── {id} DELETE (deleting specific card information) ✅
     ├── locations/
     │   ├── GET (getting all locations) ✅
     │   ├── POST (adding new location) ✅
@@ -306,19 +299,6 @@ return {
 --
 ```
 ---
-`localhost/api/cards GET` *authenticated user*
-```php
-return [
-    {
-        "id": int,
-        "card_name": string(255),
-        "created_at": timestamp,
-        "updated_at": timestamp
-    },
-    other card information..
-]
-```
----
 `localhost/api/locations GET` *authenticated user*
 ```php
 return {
@@ -336,21 +316,6 @@ return {
 }
 ```
 ---
-`localhost/api/cards/{id} GET` *authenticated user*
-```php
-return {
-    "id": int,
-    "card_name": string(255),
-    "created_at": timestamp,
-    "updated_at": timestamp
-}
-
-or
-
-{} - code 422 - invalid card information id
-{} - code 403 - forbidden
-```
----
 `localhost/api/locations/{id} GET` *authenticated user*
 ```php
 {
@@ -366,16 +331,6 @@ or
 
 {} - code 404 - invalid location id
 {} - code 403 - forbidden
-```
----
-`localhost/api/cards/{id} DELETE` *authenticated user* \
-`localhost/api/locations/{id} DELETE` *authenticated user*
-```php
-return true
-
-or 
-
-{} - code 404 - invalid location id
 ```
 ---
 `localhost/api/dashboard GET` ***authenticated admin***
@@ -483,19 +438,6 @@ return [
 ]
 ```
 ---
-`localhost/api/all_cards GET` ***authenticated admin***
-```php
-return [
-    {
-        "id": int,
-        "cardholder_id": int,
-        "card_name": string(255),
-        "created_at": timestamp,
-        "updated_at": timestamp
-    },
-    other card information..
-]
-```
 ---
 `localhost/api/all_locations GET` ***authenticated admin***
 ```php
@@ -686,25 +628,6 @@ return {
     "amount"     : "nullable|int|min:0|max:10"
 }
 ```
----
-`localhost/api/cards POST` *authenticated user* \
-`localhost/api/cards/{id} POST` *authenticated user*
-```php
-{
-    "card_number"     : "required|string|digits:16",
-    "expiration_date" : "required|date_format:m/y|after:today",
-    "cvc_number"      : "nullable|string|digits:3",
-    "card_name"       : "required|string|max:255"
-}
-```
-```php
-return { "card_number": string(255), ... }
-
-or 
-
-{} - code 422 - invalid input data
-```
-
 ---
 `localhost/api/locations POST` *authenticated user* \
 `localhost/api/locations/{id} PUT` *authenticated user*
