@@ -19,6 +19,11 @@ class BoughtProducts extends Model
     public $incrementing = false;
     public $timestamps = true;
 
+    protected $casts = [
+        'price_per_product' => 'float',
+        'total_price' => 'float',
+    ];
+
     public function transaction()
     {
         return $this->belongsTo(Transaction::class, 'transaction_id', 'id');

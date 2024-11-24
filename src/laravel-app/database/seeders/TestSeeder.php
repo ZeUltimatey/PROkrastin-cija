@@ -4,7 +4,6 @@ namespace Database\Seeders;
 //namespace Database\Factories;
 
 use App\Models\BoughtProducts;
-use App\Models\CardInformation;
 use App\Models\Cat;
 use App\Models\CatBreed;
 use App\Models\Location;
@@ -33,6 +32,8 @@ class TestSeeder extends Seeder
             'pricing' => 45.00,
             'discount_pricing' => null,
             'stock' => 12,
+            'stripe_product_id' => '1_1732313873',
+            'price_id' => 'price_1QOlgZG6wIBbt2iyJtbebct3',
         ]);
         Product::create([
             'product_type' => 'CATS',
@@ -41,6 +42,8 @@ class TestSeeder extends Seeder
             'pricing' => 1200.00,
             'discount_pricing' => 69.99,
             'stock' => 1,
+            'stripe_product_id' => '2_1732313873',
+            'price_id' => 'price_1QOlgaG6wIBbt2iyV6eLF7LO',
         ]);
         Product::create([
             "product_type" => "FOOD",
@@ -49,6 +52,8 @@ class TestSeeder extends Seeder
             "pricing" => 0.01,
             "discount_pricing" => null,
             "stock" => 9999999,
+            'stripe_product_id' => '3_1732313873',
+            'price_id' => 'price_1QOlgbG6wIBbt2iycHiDulUK',
         ]);
 
         Product::create([
@@ -58,6 +63,8 @@ class TestSeeder extends Seeder
             "pricing" => 29.99,
             "discount_pricing" => null,
             "stock" => 5,
+            'stripe_product_id' => '4_1732313873',
+            'price_id' => 'price_1QOlgcG6wIBbt2iygjBOZ2Pj',
         ]);
         Product::create([
             "product_type" => "TOYS",
@@ -66,6 +73,8 @@ class TestSeeder extends Seeder
             "pricing" => 5.99,
             "discount_pricing" => null,
             "stock" => 6836,
+            'stripe_product_id' => '5_1732313873',
+            'price_id' => 'price_1QOlgcG6wIBbt2iyfDbRzLWn',
         ]);
         Product::create([
             "product_type" => "FOOD",
@@ -74,6 +83,8 @@ class TestSeeder extends Seeder
             "pricing" => 89.99,
             "discount_pricing" => null,
             "stock" => 4220,
+            'stripe_product_id' => '6_1732313873',
+            'price_id' => 'price_1QOlgdG6wIBbt2iyonTHpGcM',
         ]);
         Product::create([
             "product_type" => "FURNITURE",
@@ -82,6 +93,8 @@ class TestSeeder extends Seeder
             "pricing" => 45.99,
             "discount_pricing" => null,
             "stock" => 1485,
+            'stripe_product_id' => '7_1732313873',
+            'price_id' => 'price_1QOlgeG6wIBbt2iyxb9LADAL',
         ]);
         Product::create([
             "product_type" => "FURNITURE",
@@ -90,6 +103,8 @@ class TestSeeder extends Seeder
             "pricing" => 159.99,
             "discount_pricing" => null,
             "stock" => 4580,
+            'stripe_product_id' => '8_1732313873',
+            'price_id' => 'price_1QOlgeG6wIBbt2iy2yFL81Dl',
         ]);
         Product::create([
             "product_type" => "FURNITURE",
@@ -98,6 +113,8 @@ class TestSeeder extends Seeder
             "pricing" => 35.99,
             "discount_pricing" => null,
             "stock" => 7187,
+            'stripe_product_id' => '9_1732313873',
+            'price_id' => 'price_1QOlgfG6wIBbt2iyAFjaiQHV',
         ]);
         Product::create([
             "product_type" => "FOOD",
@@ -106,6 +123,8 @@ class TestSeeder extends Seeder
             "pricing" => 25.99,
             "discount_pricing" => null,
             "stock" => 550,
+            'stripe_product_id' => '10_1732313873',
+            'price_id' => 'price_1QOlggG6wIBbt2iyTyUZbdBY',
         ]);
         Product::create([
             "product_type" => "TOYS",
@@ -114,6 +133,8 @@ class TestSeeder extends Seeder
             "pricing" => 12.99,
             "discount_pricing" => null,
             "stock" => 4359,
+            'stripe_product_id' => '11_1732313873',
+            'price_id' => 'price_1QOlggG6wIBbt2iy8rfeGSgx',
         ]);
         Product::create([
             "product_type" => "FURNITURE",
@@ -122,6 +143,8 @@ class TestSeeder extends Seeder
             "pricing" => 49.99,
             "discount_pricing" => null,
             "stock" => 6774,
+            'stripe_product_id' => '12_1732313873',
+            'price_id' => 'price_1QOlghG6wIBbt2iyHerROEuy',
         ]);
         Product::create([
             "product_type" => "FURNITURE",
@@ -130,6 +153,8 @@ class TestSeeder extends Seeder
             "pricing" => 15.99,
             "discount_pricing" => null,
             "stock" => 8001,
+            'stripe_product_id' => '13_1732313873',
+            'price_id' => 'price_1QOlgiG6wIBbt2iystet0qB9',
         ]);
         Product::create([
             "product_type" => "FURNITURE",
@@ -138,6 +163,8 @@ class TestSeeder extends Seeder
             "pricing" => 110.99,
             "discount_pricing" => null,
             "stock" => 914,
+            'stripe_product_id' => '14_1732313873',
+            'price_id' => 'price_1QOlgiG6wIBbt2iy7cbJpPYy',
         ]);
         Product::create([
             "product_type" => "TOYS",
@@ -146,6 +173,8 @@ class TestSeeder extends Seeder
             "pricing" => 7.99,
             "discount_pricing" => null,
             "stock" => 7620,
+            'stripe_product_id' => '15_1732313873',
+            'price_id' => 'price_1QOlgjG6wIBbt2iyiUi44ILw',
         ]);
 //        Product::factory()->count(1000)->create();
 
@@ -230,15 +259,6 @@ class TestSeeder extends Seeder
             "content" => "I am anonymous",
             "is_anonymous" => true,
             "rating" => 5,
-        ]);
-
-        CardInformation::create([
-            "cardholder_id" => 2,
-            "card_number" => Crypt::encryptString('5550130966726224'),
-            "expiration_date" => Crypt::encryptString('12/24'),
-            "card_name" => "Visa",
-            "cardOwnerName" => "RYAN",
-            "cardOwnerSurname" => "GOSLING",
         ]);
 
         Location::create([

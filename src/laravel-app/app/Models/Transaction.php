@@ -17,6 +17,10 @@ class Transaction extends Model
     public $incrementing = true;
     public $timestamps = true;
 
+    protected $casts = [
+        'total_pricing' => 'float',
+    ];
+
     public function transactor()
     {
         return $this->hasOne(User::class, 'id', 'transactor_id');

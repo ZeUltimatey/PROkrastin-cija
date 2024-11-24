@@ -19,7 +19,15 @@ class ChangePasswordRequest extends ValidatedRequest
     {
         return [
             'old_password'              => 'required|string',
-            'new_password'              => 'required|string|min:8|confirmed',
+            'new_password'              => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/[0-9]/', // must contain at least one number
+                'regex:/[A-Z]/', // must contain at least one uppercase letter
+                'regex:/[@$!%*?&#]/' // must contain at least one special character
+            ],
             'new_password_confirmation' => 'required|string|min:8|same:new_password',
         ];
     }

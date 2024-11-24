@@ -115,10 +115,11 @@ class UserController extends Controller
         $success = Auth::attempt($login_credentials);
         if (!$success) { return response()->json(['error' => 'Invalid credentials'], 401); } // Unauthorized
 
-        // Check if the user is banned
+        // Check if the user has verified the email and is not deactivated or deleted
         $user_model = Auth::user();
         $user = new UserResource($user_model);
         if ($user['email_verified_at'] === null) {
+            dispatch(new SendEmailVerification($user_model));
             return response()->json(['error' => 'E-pasts nav verificēts, lūdzu verificējiet savu e-pastu, tad mēģiniet vēlreiz!'], 403); 
             } // Forbidden
         if ($user['deleted']) {
@@ -157,7 +158,7 @@ class UserController extends Controller
     /**
      * Update other user information.
      */
-    public function update(Request $request)
+    public function update(Request $request) // paroli te nevar mainīt, ja epastu maina parbaudīt paroli
     {
         $user = Auth::user();
         if ($request->input('display_name') === $user->display_name) {
@@ -168,16 +169,6 @@ class UserController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'email'                 => 'sometimes|string|email|unique:users|max:255',
-            'password'              => [
-                'nullable',
-                'string',
-                'min:8',
-                'confirmed',
-                'regex:/[0-9]/', // must contain at least one number
-                'regex:/[A-Z]/', // must contain at least one uppercase letter
-                'regex:/[@$!%*?&#]/' // must contain at least one special character
-            ],
-            'password_confirmation' => 'nullable|same:password',
             'display_name'          => 'sometimes|string|unique:users|max:255',
             'name'                  => 'nullable|string|max:255',
             'surname'               => 'nullable|string|max:255',
@@ -185,28 +176,35 @@ class UserController extends Controller
             'user_role'             => 'nullable|in:User,Admin',
             'deactivated'           => 'nullable|boolean',
         ]);
-
+        
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
             ], 422);
         }
 
-         // verify email if changed
-        if ($request->input('email') != $user->email) {
-            // Email verification
-            $user->update($validator->validated());
-            $user->update(['email_verified_at' => null]);
-            dispatch(new SendEmailVerification($user));
-            return response()->json(['message' => "Lietotājs veiksmīgi atjaunots, lūdzu verificējiet savu e-pastu!"], 202);
+        $validatedData = $validator->validated();
+         // send verify if email was changed
+        if (isset($validatedData['email'])) {
+            if (Hash::check($request->password, $user->password)) {
+                $user->update($validator->validated());
+                $user->update(['email_verified_at' => null]);
+                dispatch(new SendEmailVerification($user));
+                return response()->json(['message' => "Lietotājs veiksmīgi atjaunots, lūdzu verificējiet savu e-pastu!"], 202);
+            }else { // if password is wrong
+                return response()->json(['message' => 'Ievadītā parole nav pareiza'], 422);
+            }
         } else {
             $user->update($validator->validated());
         }
 
-  
-       
-
         return response()->json(['message' => "Lietotājs veiksmīgi atjaunots!"], 202);
+    }
+
+    public function resend_verification(Request $request) {
+        $user = Auth::user();
+        dispatch(new SendEmailVerification($user));
+        return response()->json(['message' => "Verifikācijas e-pasts nosūtīts!"], 202);
     }
 
     public function change_password(ChangePasswordRequest $request)
