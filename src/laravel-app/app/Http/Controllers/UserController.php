@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
+use App\Http\Requests\UserPreferencesRequest;
 use App\Http\Resources\UserResource;
 use App\Services\PaginateService;
 use Illuminate\Support\Facades\Storage;
@@ -120,13 +121,13 @@ class UserController extends Controller
         $user = new UserResource($user_model);
         if ($user['email_verified_at'] === null) {
             dispatch(new SendEmailVerification($user_model));
-            return response()->json(['error' => 'E-pasts nav verificēts, lūdzu verificējiet savu e-pastu, tad mēģiniet vēlreiz!'], 403); 
+            return response()->json(['error' => 'E-pasts nav verificēts, lūdzu verificējiet savu e-pastu, tad mēģiniet vēlreiz!'], 403);
             } // Forbidden
         if ($user['deleted']) {
-            return response()->json(['error' => 'Dzēsts profils'], 403); 
+            return response()->json(['error' => 'Dzēsts profils'], 403);
             } // Forbidden
-        if ($user['deactivated']) { 
-            return response()->json(['error' => 'Jūsu profils ir bloķēts, ja uzskatāt, ka tā ir kļūda, sazinieties ar administratoru!'], 403); 
+        if ($user['deactivated']) {
+            return response()->json(['error' => 'Jūsu profils ir bloķēts, ja uzskatāt, ka tā ir kļūda, sazinieties ar administratoru!'], 403);
             } // Forbidden
 
         // Create token on successful login
@@ -176,7 +177,7 @@ class UserController extends Controller
             'user_role'             => 'nullable|in:User,Admin',
             'deactivated'           => 'nullable|boolean',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
@@ -249,6 +250,30 @@ class UserController extends Controller
         return response()->json(null, 204); // No content
     }
 
+    public function preferences(UserPreferencesRequest $request)
+    {
+        $user_model = Auth::user();
+
+        $update_preferences = [];
+        $keys = ['display_lowest_price',
+            'display_only_available',
+            'recieve_notifications'];
+
+        foreach ($keys as $key)
+            if (array_key_exists($key, $request->all()) && $request[$key] !== null)
+                $update_preferences[$key] = $request[$key];
+
+        $user_model->update($update_preferences);
+        $user = new UserResource(Auth::user());
+        $user->with_extra_information();
+        $current_preferences = [
+            (bool)$user->display_lowest_price,
+            (bool)$user->display_only_available,
+            (bool)$user->recieve_notifications
+        ];
+        return response()->json($current_preferences, 200); // OK
+    }
+
     public function addProfilePicture(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -285,7 +310,7 @@ class UserController extends Controller
             $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
 
             $order = array();
-            
+
             foreach ($basketProducts as $basketProduct) {
                 $order[$basketProduct->product->price_id] = $basketProduct->amount;
             }
@@ -301,7 +326,7 @@ class UserController extends Controller
     //     $basketProduct->product->save(); //TODO add this to transaction history before deleting
     //     $basketProduct->delete();
     // }
-        
+
         return  response()->json(['url' => $session->url], 200);
     }
 

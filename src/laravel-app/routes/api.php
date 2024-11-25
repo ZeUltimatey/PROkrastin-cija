@@ -83,6 +83,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/user', [UserController::class, 'update']);
     Route::get('/user/resend_verification', [UserController::class, 'resend_verification']);
     Route::put('/change_password', [UserController::class, 'change_password']);
+    Route::put('/preferences', [UserController::class, 'preferences']);
 
     Route::get('/bought_products/{transaction_id}', [BoughtProductsController::class, 'index']);
 
