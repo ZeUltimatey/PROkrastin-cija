@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
+use App\Http\Resources\UserResource;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Psy\Util\Json;
 use Illuminate\Support\Facades\Storage;
@@ -60,6 +62,10 @@ class ProductController extends Controller
                     ->orWhereRaw("LOWER(REPLACE(REPLACE(products.description, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
                     ->orWhereRaw("LOWER(REPLACE(REPLACE(cat_breeds.display_name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"]);
             });
+        }
+
+        if ($request->has('available_only') && strtolower($request->available_only) === 'true') {
+            $query->where('stock', '>=', 1);
         }
 
         // Sort by price if 'price_sort' parameter is provided
@@ -148,13 +154,13 @@ class ProductController extends Controller
                 'currency' => 'eur',
                 'unit_amount' => ($request->discount_pricing ?? $request->pricing) * 100,
                 'product' => $product_model->stripe_product_id,
-                
+
             ]);
             $product_model->update([
                 'price_id' => $prices->id,
              ]);
         }
-        
+
         $product_model->update($request->all());
         return response()->json(null, 202); // Request accepted
     }
@@ -226,8 +232,8 @@ class ProductController extends Controller
 
         // imports products that don't have Stripe ID
         $products = Product::where('stripe_product_id', null)->get();
-        
-        
+
+
         foreach ($products as $product) {
             $timeStampedID = $product->id . "_" . $product->created_at->timestamp;
             $stripe->products->create([
@@ -244,7 +250,7 @@ class ProductController extends Controller
                'price_id' => $prices->id,
                'stripe_product_id' => $timeStampedID
             ]);
-            
+
         }
         return Product::all();
     }
