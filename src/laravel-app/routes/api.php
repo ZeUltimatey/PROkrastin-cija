@@ -3,7 +3,7 @@
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SearchController;
 use App\Models\User;
-use App\Http\Controllers\BoughtProductsController;
+use App\Http\Controllers\BoughtProductController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\CatBreedController;
@@ -85,7 +85,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/change_password', [UserController::class, 'change_password']);
     Route::put('/preferences', [UserController::class, 'preferences']);
 
-    Route::get('/bought_products/{transaction_id}', [BoughtProductsController::class, 'index']);
+    Route::get('/bought_products/{transaction_id}', [BoughtProductController::class, 'index']);
 
     Route::get('/locations', [LocationController::class, 'index']);
     Route::post('/locations', [LocationController::class, 'store']);
@@ -96,7 +96,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/reviews/{product_id}', [ReviewController::class, 'store']);
 
     Route::get('/transactions', [TransactionController::class, 'show']);
-    Route::post('/purchase', [TransactionController::class, 'purchase']);
 
     Route::get('/basket', [SelectedProductController::class, 'get_basket']);
     Route::post('/basket', [SelectedProductController::class, 'addToBasket']);
@@ -107,7 +106,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 // Admins only - some routes are for testing purposes
 Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
     Route::get('/all_users', [UserController::class, 'index']);
-    Route::get('/all_bought_products', [BoughtProductsController::class, 'index_all']);
+    Route::get('/all_bought_products', [BoughtProductController::class, 'index_all']);
     Route::get('/all_locations', [LocationController::class, 'index_all']);
     Route::get('/all_transactions', [TransactionController::class, 'index_all']);
     Route::get('/all_reviews', [ReviewController::class, 'index_all']);

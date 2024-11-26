@@ -13,14 +13,14 @@ class SelectedProducts extends Model
         'product_id',
         'amount',
     ];
-    public $incrementing = false;
+    public $incrementing = true;
     public $timestamps = true;
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
     public function product()    {
-        return $this->belongsTo(Product::class, 'product_id', 'id');
+        return $this->hasOne(Product::class, 'id', 'product_id');
     }
 }

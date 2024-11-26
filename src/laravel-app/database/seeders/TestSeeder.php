@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 //namespace Database\Factories;
 
-use App\Models\BoughtProducts;
+use App\Models\BoughtProduct;
 use App\Models\Cat;
 use App\Models\CatBreed;
 use App\Models\Location;
@@ -291,7 +291,7 @@ class TestSeeder extends Seeder
             "check_content" => "1x CAT HAMMOCK BED\t45.00 EUR\n------------------------------\nTOTAL:\t45.00 EUR\n\nTHANK YOU FOR SHOPPING AT MURRĀTAVA!",
         ]);
 
-        BoughtProducts::create([
+        BoughtProduct::create([
             "product_id" => 1,
             "transaction_id" => 1,
             "display_name" => 'Cat Hammock Bed',
@@ -299,7 +299,7 @@ class TestSeeder extends Seeder
             "price_per_product" => 45.00,
             "total_price" => 90.00,
         ]);
-        BoughtProducts::create([
+        BoughtProduct::create([
             "product_id" => 2,
             "transaction_id" => 1,
             "display_name" => 'Asteroid Destroyer',

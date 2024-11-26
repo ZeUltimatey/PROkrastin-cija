@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\RegisterUserRequest;
+use App\Http\Requests\TransactionRequest;
 use App\Http\Requests\UserPreferencesRequest;
 use App\Http\Resources\UserResource;
+use App\Models\BoughtProduct;
+use App\Models\Transaction;
 use App\Services\PaginateService;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\SelectedProductController;
@@ -50,7 +53,7 @@ class UserController extends Controller
         if ($request->has('keyword')) {
             $keyword = strtolower(str_replace(' ', '', $request->keyword)); // Convert keyword to lowercase and remove spaces
 
-            $query->where(function($q) use ($keyword) {
+            $query->where(function ($q) use ($keyword) {
                 $q->whereRaw("LOWER(REPLACE(REPLACE(display_name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
                     ->orWhereRaw("LOWER(REPLACE(REPLACE(name, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
                     ->orWhereRaw("LOWER(REPLACE(REPLACE(surname, ' ', ''), '.', '')) LIKE ?", ["%$keyword%"])
@@ -82,13 +85,13 @@ class UserController extends Controller
 
         // Create the new user  //TODO user request
         $new_user_model = User::create([
-            'email'             => $user_data['email'],
-            'password'          => Hash::make($user_data['password']),
-            'display_name'      => $user_data['display_name'],
-            'name'              => $user_data['name'],
-            'surname'           => $user_data['surname'],
-            'phone_number'      => $user_data['phone_number'] ?? null,
-            'user_role'         => $user_data['user_role'] ?? 'User'
+            'email' => $user_data['email'],
+            'password' => Hash::make($user_data['password']),
+            'display_name' => $user_data['display_name'],
+            'name' => $user_data['name'],
+            'surname' => $user_data['surname'],
+            'phone_number' => $user_data['phone_number'] ?? null,
+            'user_role' => $user_data['user_role'] ?? 'User'
         ]);
 
         // Return response with user data and token
@@ -114,7 +117,9 @@ class UserController extends Controller
 
         // Attempt to login
         $success = Auth::attempt($login_credentials);
-        if (!$success) { return response()->json(['error' => 'Invalid credentials'], 401); } // Unauthorized
+        if (!$success) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
+        } // Unauthorized
 
         // Check if the user has verified the email and is not deactivated or deleted
         $user_model = Auth::user();
@@ -122,16 +127,16 @@ class UserController extends Controller
         if ($user['email_verified_at'] === null) {
             dispatch(new SendEmailVerification($user_model));
             return response()->json(['error' => 'E-pasts nav verificēts, lūdzu verificējiet savu e-pastu, tad mēģiniet vēlreiz!'], 403);
-            } // Forbidden
+        } // Forbidden
         if ($user['deleted']) {
             return response()->json(['error' => 'Dzēsts profils'], 403);
-            } // Forbidden
+        } // Forbidden
         if ($user['deactivated']) {
             return response()->json(['error' => 'Jūsu profils ir bloķēts, ja uzskatāt, ka tā ir kļūda, sazinieties ar administratoru!'], 403);
-            } // Forbidden
+        } // Forbidden
 
         // Create token on successful login
-        $token = $user_model->createToken('auth_token', expiresAt:now()->addDay())->plainTextToken;
+        $token = $user_model->createToken('auth_token', expiresAt: now()->addDay())->plainTextToken;
 
         // Return user and token
         $user = new UserResource($user_model);
@@ -139,7 +144,8 @@ class UserController extends Controller
         return response()->json(['user' => $user, 'token' => $token], 200); // OK
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         $request->user()->currentAccessToken()->delete();
         return response()->json(null, 200); // OK
     }
@@ -147,10 +153,13 @@ class UserController extends Controller
     /**
      * Show a single user.
      */
-    public function show(int $id) {
+    public function show(int $id)
+    {
         // Find the user by id
         $user = UserResource::find($id, true);
-        if ($user->resource == null) { return response()->json(null, 404); } // Not found
+        if ($user->resource == null) {
+            return response()->json(null, 404);
+        } // Not found
 
         // Return the user
         return $user;
@@ -169,13 +178,13 @@ class UserController extends Controller
             $request->request->remove('email');
         }
         $validator = Validator::make($request->all(), [
-            'email'                 => 'sometimes|string|email|unique:users|max:255',
-            'display_name'          => 'sometimes|string|unique:users|max:255',
-            'name'                  => 'nullable|string|max:255',
-            'surname'               => 'nullable|string|max:255',
-            'phone_number'          => 'nullable|string|max:15',
-            'user_role'             => 'nullable|in:User,Admin',
-            'deactivated'           => 'nullable|boolean',
+            'email' => 'sometimes|string|email|unique:users|max:255',
+            'display_name' => 'sometimes|string|unique:users|max:255',
+            'name' => 'nullable|string|max:255',
+            'surname' => 'nullable|string|max:255',
+            'phone_number' => 'nullable|string|max:15',
+            'user_role' => 'nullable|in:User,Admin',
+            'deactivated' => 'nullable|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -185,14 +194,14 @@ class UserController extends Controller
         }
 
         $validatedData = $validator->validated();
-         // send verify if email was changed
+        // send verify if email was changed
         if (isset($validatedData['email'])) {
             if (Hash::check($request->password, $user->password)) {
                 $user->update($validator->validated());
                 $user->update(['email_verified_at' => null]);
                 dispatch(new SendEmailVerification($user));
                 return response()->json(['message' => "Lietotājs veiksmīgi atjaunots, lūdzu verificējiet savu e-pastu!"], 202);
-            }else { // if password is wrong
+            } else { // if password is wrong
                 return response()->json(['message' => 'Ievadītā parole nav pareiza'], 422);
             }
         } else {
@@ -202,7 +211,8 @@ class UserController extends Controller
         return response()->json(['message' => "Lietotājs veiksmīgi atjaunots!"], 202);
     }
 
-    public function resend_verification(Request $request) {
+    public function resend_verification(Request $request)
+    {
         $user = Auth::user();
         dispatch(new SendEmailVerification($user));
         return response()->json(['message' => "Verifikācijas e-pasts nosūtīts!"], 202);
@@ -240,7 +250,9 @@ class UserController extends Controller
     {
         // Check if we're logged in
         $user_model = Auth::user();
-        if ($user_model == null) { return response()->json(null, 401); } // Unauthorized
+        if ($user_model == null) {
+            return response()->json(null, 401);
+        } // Unauthorized
 
         // Delete the token on the way out
         Auth::user()->tokens()->delete();
@@ -291,7 +303,8 @@ class UserController extends Controller
 
     }
 
-    public function removeProfilePicture(){
+    public function removeProfilePicture()
+    {
         $user = Auth::user();
         $user->image_url = null;
         $user->save();
@@ -299,39 +312,31 @@ class UserController extends Controller
         Storage::disk('public')->delete($oldImagePath);
         $user->image_url = '';
         return response()->json(true, 204);
-
     }
 
-
-    public function basketPayment (Request $request) {
+    public function basketPayment(Request $request)
+    {
         $user = Auth::user();
         // $stripePriceId = 'price_1QJk5qG6wIBbt2iyeYY9aBEV';
         // $quantity = 1;
-            $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
+        $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
 
-            $order = array();
+        $order = array();
+        foreach ($basketProducts as $basketProduct)
+            $order[$basketProduct->product->price_id] = $basketProduct->amount;
 
-            foreach ($basketProducts as $basketProduct) {
-                $order[$basketProduct->product->price_id] = $basketProduct->amount;
-            }
         $session = $user->checkout($order, [
             'success_url' => route('checkout-success') . '?session_id={CHECKOUT_SESSION_ID}' . '&user_id=' . $user->id,
             'cancel_url' => route('checkout-cancel'),
             'metadata' => ['user_id' => $user->id],
         ]);
-    //     $user = Auth::user();
-    //     $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
-    // foreach ($basketProducts as $basketProduct) {
-    //     $basketProduct->product->stock -= $basketProduct->amount;
-    //     $basketProduct->product->save(); //TODO add this to transaction history before deleting
-    //     $basketProduct->delete();
-    // }
 
-        return  response()->json(['url' => $session->url], 200);
+        return response()->json(['url' => $session->url], 200);
     }
 
 
-    public function tt (Request $request) {
+    public function tt(Request $request)
+    {
         $user = Auth::user();
         $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
         foreach ($basketProducts as $basketProduct) {
@@ -343,31 +348,86 @@ class UserController extends Controller
         }
 
     }
-    public function successPaid (Request $request) {
+
+    public function successPaid(TransactionRequest $request)
+    { // TODO: ^ TransactionRequest ^ does not have complete validation for session id and user id
+        // Sense
+        $user_id = (int)$request->get('user_id');
+        $location_id = $request->get('location_id') !== null ?
+            (int)$request->get('location_id') : null;
+
+        // Get user
+        $user = User::find($user_id);
+
+        // Check for a valid session
         $sessionId = $request->get('session_id');
-        $user = User::find($request->get('user_id'));
-        if ($sessionId === null) {
-
+        if ($sessionId === null)
             return redirect()->to(env('FRONTEND_URL'));
-        }
 
+        // Check if the payment has been completed
         $session = Cashier::stripe()->checkout->sessions->retrieve($sessionId);
-
-        if ($session->payment_status !== 'paid') {
-
+        if ($session->payment_status !== 'paid')
             return redirect()->to(env('FRONTEND_URL'));
+
+        // Get transaction summary
+        $basket_item_models = SelectedProducts::with('product')
+            ->where('user_id', $user_id)
+            ->get();
+        $transaction_total_sum = 0;
+        $cache_basket_items = []; // id, item_price, total_for_current_item (required when creating BoughtProduct model)
+        foreach ($basket_item_models as $basket_item) {
+            // Sense the price to pay and total
+            $item_price = $basket_item->product->discount_pricing !== null ?
+                $basket_item->product->discount_pricing : $basket_item->product->pricing;
+            $total_price_for_current_item = $item_price * $basket_item->amount;
+
+            // Summarize
+            $transaction_total_sum += $total_price_for_current_item;
+            $cache_basket_items[$basket_item->id] = [
+                'item_price' => $item_price,
+                'total_for_current_item' => $total_price_for_current_item
+            ];
         }
-        $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
-        foreach ($basketProducts as $basketProduct) {
-            $basketProduct->product->stock -= $basketProduct->amount;
-            $basketProduct->product->save(); //TODO add this to transaction history before deleting
-            $basketProduct->delete();
+
+        // Create a transaction before proceeding with handout
+        $transaction_model = Transaction::create([
+            'transactor_id' => $user_id,
+            'location_id'   => $location_id,
+            'total_pricing' => $transaction_total_sum,
+            'check_content' => 'Thank you for shopping at Murrātava!' //
+        ]);
+        $transaction_id = $transaction_model->id;
+
+        // Update history and stock based on basket items
+        $basket_item_models = SelectedProducts::with('product')
+            ->where('user_id', $user->id)
+            ->get();
+        foreach ($basket_item_models as $basket_item) {
+            // Get the previously calculated prices for each basket item
+            $item_price =                   $cache_basket_items[$basket_item->id]['item_price'];
+            $total_price_for_current_item = $cache_basket_items[$basket_item->id]['total_for_current_item'];
+
+            // After transaction has been created we can finally save bought products to the database w/transaction_id
+            BoughtProduct::create([
+                'product_id'        => $basket_item->product_id,
+                'transaction_id'    => $transaction_id,
+                'display_name'      => $basket_item->product->display_name,
+                'amount'            => $basket_item->amount,
+                'price_per_product' => $item_price,
+                'total_price'       => $total_price_for_current_item
+            ]);
+
+            // Update stock and clear basket items
+            $basket_item->product->stock -= $basket_item->amount;
+            $basket_item->product->save();
+            $basket_item->delete();
         }
 
         return redirect()->to(env('FRONTEND_URL'));
     }
 
-    public function failedPaid (Request $request) {
+    public function failedPaid(Request $request)
+    {
         $sessionId = $request->get('session_id');
         if ($sessionId === null) {
             return redirect()->to(env('FRONTEND_URL'));
@@ -376,7 +436,8 @@ class UserController extends Controller
         $session = Cashier::stripe()->checkout->sessions->retrieve($sessionId);
 
         if ($session->payment_status !== 'paid') {
-            return redirect()->to(env('FRONTEND_URL'));        }
+            return redirect()->to(env('FRONTEND_URL'));
+        }
 
         $orderId = $session['metadata']['order_id'] ?? null;
 

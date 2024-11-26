@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\BoughtProductsResource;
-use App\Models\BoughtProducts;
+use App\Http\Resources\BoughtProductResource;
+use App\Models\BoughtProduct;
 use Illuminate\Http\Request;
 
-class BoughtProductsController extends Controller
+class BoughtProductController extends Controller
 {
     /**
      * Show all bought products.
@@ -14,7 +14,7 @@ class BoughtProductsController extends Controller
     public function index_all()
     {
         // Fetch all bought products with transaction associated
-        return BoughtProductsResource::collection(BoughtProducts::all())->each(function ($bought_product) {
+        return BoughtProductResource::collection(BoughtProduct::all())->each(function ($bought_product) {
             $bought_product->with_info();
         });
     }
@@ -25,7 +25,7 @@ class BoughtProductsController extends Controller
     public function index(int $transaction_id)
     {
         // Fetch all bought products
-        $bought_products = BoughtProducts::where('transaction_id', $transaction_id)->get();
-        return BoughtProductsResource::collection($bought_products);
+        $bought_products = BoughtProduct::where('transaction_id', $transaction_id)->get();
+        return BoughtProductResource::collection($bought_products);
     }
 }
