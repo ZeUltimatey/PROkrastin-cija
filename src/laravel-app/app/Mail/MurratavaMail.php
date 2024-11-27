@@ -17,9 +17,11 @@ class MurratavaMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(private $name, private $color)
+    public function __construct(private $sender_name, private $sender_email, private $contents)
     {
-        //
+        $this->sender_name = $sender_name;
+        $this->senderEmail = $sender_email;
+        $this->contents = $contents;
     }
 
     /**
@@ -28,7 +30,7 @@ class MurratavaMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Murratava Mail',
+            subject: 'Murrātava kontakti - ' . $this->sender_name,
         );
     }
 
@@ -38,8 +40,12 @@ class MurratavaMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.testmail',
-            with: ['name' => $this->name],
+            view: 'mail.contactsMail',
+            with: ['contents' => $this->contents,
+                    'sender_name' => $this->sender_name,
+                    'sender_email' => $this->sender_email
+                ],
+
         );
     }
 
