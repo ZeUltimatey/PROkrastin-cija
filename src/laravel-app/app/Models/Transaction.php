@@ -29,5 +29,8 @@ class Transaction extends Model
     {
         return $this->hasOne(Location::class, 'id', 'location_id');
     }
-
+    public function bought_products()
+    {
+        return $this->hasMany(BoughtProduct::class, 'transaction_id', 'id');
+    }
 }

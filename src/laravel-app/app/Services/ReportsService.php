@@ -2,19 +2,27 @@
 
 namespace App\Services;
 
+use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportsService
 {
-    static public function download_check()
+    static public function download_check(int $transaction_id)
     {
-        $data = [
-            'title' => 'Laravel PDF Example',
+        // Fetch the transaction with related models
+        $transaction_model = Transaction::with('bought_products', 'location', 'transactor')->find($transaction_id);
+
+        // Ensure proper encoding and font that supports Latvian characters
+        $pdf = PDF::loadView('myPDF', [
+            'transaction' => $transaction_model,
             'date' => date('m/d/Y'),
-        ];
+        ]);
 
-        $pdf = Pdf::loadView('myPDF', $data);
+        // Set options for the PDF (optional but can help with character encoding)
+        $pdf->set_option('isHtml5ParserEnabled', true);
+        $pdf->set_option('isPhpEnabled', true); // Enable PHP if you need it for custom calculations
 
-        return $pdf->download('document.pdf');
+        // Return the PDF as a downloadable file
+        return $pdf->download('transaction_report.pdf');
     }
 }

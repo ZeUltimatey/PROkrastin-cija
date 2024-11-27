@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
-    public function generate_check()
+    public function generate_check(Request $request)
     {
-        return ReportsService::download_check();
+        $transaction_id = (int)$request->get('transaction_id');
+        return ReportsService::download_check($transaction_id);
     }
 }
