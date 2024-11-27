@@ -27,6 +27,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use App\Mail\MurratavaMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 use Laravel\Sanctum\Http\Controllers\AuthenticatedSessionController;
 
@@ -228,6 +232,59 @@ class UserController extends Controller
             return response()->json(['error' => 'New password is the same as the old password.'], 422);
         $user->update(['password' => $request->new_password]);
         return response()->json(null, 202); // Request accepted
+    }
+
+    public function forgot_password(Request $request) {
+        $request->validate(['email' => 'required|email']);
+ 
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+        //dd($status);
+     
+        return $status === Password::RESET_LINK_SENT
+                    ? back()->with(['status' => __($status)])
+                    : back()->withErrors(['email' => __($status)]);
+    }
+
+
+    public function reset_password(string $token) {
+        //dd($token);
+        //return redirect()->to(env('FRONTEND_URL'), ['token' => $token]);
+    }
+
+
+    public function update_reset_password(Request $request) {
+        
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password'              => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/[0-9]/', // must contain at least one number
+                'regex:/[A-Z]/', // must contain at least one uppercase letter
+                'regex:/[@$!%*?&#]/' // must contain at least one special character
+            ],
+            'password_confirmation' => 'required|string|min:8|same:password',
+        ]);
+        // dd($request->all());
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ]);
+     
+                $user->save();
+     
+                event(new PasswordReset($user));
+            }
+        );
+     
+        return redirect()->to(env('FRONTEND_URL'));
     }
 
     /**
@@ -446,5 +503,27 @@ class UserController extends Controller
         $order->update(['status' => 'cancelled']);
 
         return redirect()->to(env('FRONTEND_URL'));    // redirect uz failed
+    }
+
+
+    public function send_contact_email (Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'sender_name' => 'required|max:255',
+            'sender_email' => 'required|string|email|max:255',
+            'contents' => 'required|string|max:4096',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+        $sender_name = $request->sender_name;
+        $sender_email = $request->sender_email;
+        $contents = $request->contents;
+
+    Mail::to("Monta@Murratava.lv")->send(new MurratavaMail($sender_name, $sender_email, $contents));
+    return response()->json(['message' => "Jūsu ziņojums tika veiksmīgi nosūtīts!"], 202);
     }
 }
