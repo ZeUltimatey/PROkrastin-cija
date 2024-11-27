@@ -1,13 +1,23 @@
 import { useState } from "react";
+import { useLocation } from "react-router"
 import { FormInput } from "../../universal/FormInput";
 import { Constants } from "../../universal/Constants";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../universal/Toast";
 import { Spinner } from "../../universal/Spinner";
 
-export const ForgotPassword = () => {
+export const ResetPassword = () => {
+  const location = useLocation();
+  const token = new URLSearchParams(location.search).get('token');
+
+  // Use the token variable as needed
+  //console.log(token);
+
   const [formData, setFormData] = useState({
+    token: token,
     email: "",
+    password: "",
+    password_confirmation: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
@@ -24,7 +34,12 @@ export const ForgotPassword = () => {
       setIsLoading(false);
       return;
     }
-    await fetch(`${Constants.API_URL}/forgot_password`, {
+    if (!formData.password) {
+      showToast(false, "Lūdzu, ievadiet paroli!");
+      setIsLoading(false);
+      return;
+    }
+    await fetch(`${Constants.API_URL}/reset-password`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -62,7 +77,7 @@ export const ForgotPassword = () => {
           <i className="fa-solid fa-arrow-left text-2xl hover:cursor-pointer"></i>
         </p>
         <span className="text-2xl font-bold text-center mb-4 text-dark-brown grow">
-          Aizmirsi paroli?
+          Paroles atjaunošana
         </span>
       </div>
       <form onSubmit={onSubmit} className="space-y-4 font-poppins">
@@ -81,6 +96,34 @@ export const ForgotPassword = () => {
             />
           </div>
         )}
+
+        <div>
+            <label htmlFor="password" className="text-dark-brown">
+              Jaunā parole
+            </label>
+            <FormInput
+              id="password"
+              placeholder="Ievadi jauno paroli"
+              value={formData.password}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password_confirmation" className="text-dark-brown">
+              Atkārtota jaunā parole
+            </label>
+            <FormInput
+              id="password_confirmation"
+              placeholder="Ievadi atkārtotu jauno paroli"
+              value={formData.password_confirmation}
+              onChange={(e) =>
+                setFormData({ ...formData, password_confirmation: e.target.value })
+              }
+            />
+          </div>
 
         <input
           disabled={isLoading}

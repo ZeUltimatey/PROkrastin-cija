@@ -37,6 +37,7 @@ import { BrowseInfo } from "./components/instruction/BrowseInfo";
 import { BasketInfo } from "./components/instruction/BasketInfo";
 import { PaymentSuccessful } from "./components/universal/PaymentSuccessful";
 import { ForgotPassword } from "./components/login/login-page/ForgotPassword";
+import { ResetPassword } from "./components/login/login-page/ResetPassword";
 import { EmailConfirmation } from "./components/register/register-page/EmailConfirmation";
 
 function App() {
@@ -114,6 +115,7 @@ function App() {
               <Route path="/auth" element={<AuthLayout />}>
                 <Route path="login" element={<Login />} />
                 <Route path="forgotpassword" element={<ForgotPassword />} />
+                <Route path="resetpassword" element={<ResetPassword />} />
                 <Route path="register" element={<Register />} />
                 <Route
                   path="verification-successful"
