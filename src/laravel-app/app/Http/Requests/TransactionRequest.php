@@ -11,7 +11,7 @@ class TransactionRequest extends ValidatedRequest
      */
     public function authorize(): bool
     {
-        return auth('sanctum')->check();
+        return true;
     }
 
     /**
