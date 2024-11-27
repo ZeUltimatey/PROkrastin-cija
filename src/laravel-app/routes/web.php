@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Mail;
 
 Route::get('/testroute', function() {
 
-    $filePath = public_path('favicon.ico');
 
     $name = "Tester";
 

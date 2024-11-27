@@ -48,6 +48,12 @@ Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->name('verification.notice');
 
+Route::post('/forgot_password', [UserController::class, 'forgot_password']);
+Route::get('/reset-password/{token}', [UserController::class, 'reset_password'])->middleware('guest')->name('password.reset');
+Route::post('/reset-password', [UserController::class, 'update_reset_password'])->middleware('guest')->name('password.update');
+
+Route::get('/send_contact_email', [UserController::class, 'send_contact_email']);
+
 Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
     if (!$request->hasValidSignature()) {
         return redirect()->to(env('FRONTEND_URL'). '/auth/invalid-token');
@@ -69,7 +75,6 @@ Route::get('/checkout/cancel', [UserController::class, 'successPaid'])->name('ch
 // Users only
 Route::middleware(['auth:sanctum'])->group(function () {
 
-    Route::get('/tt', [UserController::class, 'tt']);
     Route::get('/checkout', [UserController::class, 'basketPayment'])->name('checkout');
     Route::delete('/purchaseSuccesfull', [UserController::class, 'clear_basket_after_payment'])->name('clear-basket-after-payment');
 
