@@ -21,20 +21,20 @@ class TransactionResource extends JsonResource
             'check_content' => $this->check_content,
         ];
 
-            // Check if transactor is associated
-            $transactor = null;
-            if ($this->transactor) {
-                $transactor = $this->transactor;
-                $transactor = [
-                    "id"          => $transactor->id,
-                    "name"        => $transactor->name,
-                    "surname"     => $transactor->surname,
-                    "image_url"   => $transactor->image_url,
-                    "deactivated" => $transactor->deactivated,
-                ];
-            }
-            $transaction['transactor'] = $transactor;
-        
+        // Check if transactor is associated
+        $transactor = null;
+        if ($this->transactor) {
+            $transactor = $this->transactor;
+            $transactor = [
+                "id"          => $transactor->id,
+                "name"        => $transactor->name,
+                "surname"     => $transactor->surname,
+                "image_url"   => $transactor->image_url,
+                "deactivated" => $transactor->deactivated,
+            ];
+        }
+        $transaction['transactor'] = $transactor;
+
 
         // Check if location is associated
         $location = null;
@@ -52,10 +52,5 @@ class TransactionResource extends JsonResource
 
         // Return transaction
         return $transaction;
-    }
-
-    public function with_transactor() {
-        $this->show_transactor = true;
-        return $this;
     }
 }

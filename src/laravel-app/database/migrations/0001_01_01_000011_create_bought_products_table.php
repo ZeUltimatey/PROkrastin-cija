@@ -24,6 +24,7 @@ return new class extends Migration
                 ->onDelete('cascade');
 
             $table->string('display_name');
+            $table->enum('product_type', ['UNLISTED', 'CATS', 'ACCESSORIES', 'FOOD', 'CARE', 'TOYS', 'FURNITURE']);
             $table->unsignedInteger('amount');
             $table->float('price_per_product');
             $table->float('total_price');

@@ -33,8 +33,6 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/breeds/{id}', [CatBreedController::class, 'show']);
 Route::get('/reviews/{product_id}', [ReviewController::class, 'show']);
 
-Route::get('pdf', [ReportController::class, 'generate_check']);
-
 // Guests only
 Route::post('/login', [UserController::class, 'login'])->middleware('guest:sanctum');
 Route::post('/v1/products', [ProductController::class, 'importProducts']); // use at your own risk
@@ -101,6 +99,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/reviews/{product_id}', [ReviewController::class, 'store']);
 
     Route::get('/transactions', [TransactionController::class, 'show']);
+    Route::get('/transaction_pdf', [ReportController::class, 'generate_check']);
 
     Route::get('/basket', [SelectedProductController::class, 'get_basket']);
     Route::post('/basket', [SelectedProductController::class, 'addToBasket']);

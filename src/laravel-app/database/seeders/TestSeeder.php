@@ -281,28 +281,39 @@ class TestSeeder extends Seeder
         Transaction::create([
             "transactor_id" => 1,
             "location_id" => 1,
-            "total_pricing" => 159.99,
-            "check_content" => "2x CAT HAMMOCK BED\t90.00 EUR\n1x ASTEROID DESTROYER\t69.99 EUR\n------------------------------\nTOTAL:\t159.99 EUR\n\nTHANK YOU FOR SHOPPING AT MURRĀTAVA!",
+            "total_pricing" => 339.69,
+            "check_content" => "no content",
         ]);
         Transaction::create([
             "transactor_id" => 2,
             "location_id" => 1,
             "total_pricing" => 45.00,
-            "check_content" => "1x CAT HAMMOCK BED\t45.00 EUR\n------------------------------\nTOTAL:\t45.00 EUR\n\nTHANK YOU FOR SHOPPING AT MURRĀTAVA!",
+            "check_content" => "no content",
         ]);
 
         BoughtProduct::create([
             "product_id" => 1,
             "transaction_id" => 1,
             "display_name" => 'Cat Hammock Bed',
+            "product_type" => 'FURNITURE',
             "amount" => 2,
             "price_per_product" => 45.00,
             "total_price" => 90.00,
         ]);
         BoughtProduct::create([
+            "product_id" => 5,
+            "transaction_id" => 1,
+            "display_name" => 'Catnip Mouse Toy',
+            "product_type" => 'TOYS',
+            "amount" => 30,
+            "price_per_product" => 5.99,
+            "total_price" => 179.70,
+        ]);
+        BoughtProduct::create([
             "product_id" => 2,
             "transaction_id" => 1,
             "display_name" => 'Asteroid Destroyer',
+            "product_type" => 'CATS',
             "amount" => 1,
             "price_per_product" => 69.99,
             "total_price" => 69.99,

@@ -236,12 +236,12 @@ class UserController extends Controller
 
     public function forgot_password(Request $request) {
         $request->validate(['email' => 'required|email']);
- 
+
         $status = Password::sendResetLink(
             $request->only('email')
         );
         //dd($status);
-     
+
         return $status === Password::RESET_LINK_SENT
                     ? back()->with(['status' => __($status)])
                     : back()->withErrors(['email' => __($status)]);
@@ -255,7 +255,7 @@ class UserController extends Controller
 
 
     public function update_reset_password(Request $request) {
-        
+
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
@@ -277,13 +277,13 @@ class UserController extends Controller
                 $user->forceFill([
                     'password' => Hash::make($password)
                 ]);
-     
+
                 $user->save();
-     
+
                 event(new PasswordReset($user));
             }
         );
-     
+
         return redirect()->to(env('FRONTEND_URL'));
     }
 
@@ -469,6 +469,7 @@ class UserController extends Controller
                 'product_id'        => $basket_item->product_id,
                 'transaction_id'    => $transaction_id,
                 'display_name'      => $basket_item->product->display_name,
+                'product_type'      => $basket_item->product->product_type,
                 'amount'            => $basket_item->amount,
                 'price_per_product' => $item_price,
                 'total_price'       => $total_price_for_current_item
