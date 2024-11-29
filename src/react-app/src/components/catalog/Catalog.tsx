@@ -18,12 +18,15 @@ export const Catalog = () => {
   const fetchItems = async (url?: string) => {
     await fetch(
       `${Constants.API_URL}/products?price_sort=${sort.price}&${
-        formatQueryParams(url) ?? ""
+        url ? formatQueryParams(url) : ""
       }`,
       {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: localStorage.getItem(Constants.LOCAL_STORAGE.TOKEN)
+            ? `Bearer ${localStorage.getItem(Constants.LOCAL_STORAGE.TOKEN)}`
+            : "",
         },
       }
     )
@@ -75,7 +78,6 @@ export const Catalog = () => {
   };
 
   const formatQueryParams = (url?: string) => {
-    console.log(url);
     const query: IQuery = JSON.parse(
       localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_CATALOG)
     );

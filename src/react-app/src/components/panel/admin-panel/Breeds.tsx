@@ -30,6 +30,7 @@ export const Breeds = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [pagination, setPagination] = useState(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const showToast = useToast();
 
@@ -87,6 +88,18 @@ export const Breeds = () => {
     return;
   };
 
+  const onProductView = (id: number) => {
+    fetch(`${Constants.API_URL}/breeds/${id}`, {
+      method: "GET",
+    }).then(async (response) => {
+      if (response.ok) {
+        const data = await response.json();
+        setFormData(data.data[0]);
+        setIsPreviewOpen(true);
+      }
+    });
+  };
+
   const columnHelper = createColumnHelper<typeof Breed>();
 
   const columns = useMemo(
@@ -103,6 +116,9 @@ export const Breeds = () => {
         header: "Darbības",
         cell: (info) => (
           <div className="flex gap-2 place-items-center justify-center">
+            <button onClick={() => onProductView(info.row.original.id)}>
+              <i className="fa-eye fa-solid"></i>
+            </button>
             <button onClick={() => onProductEdit(info.row.original.id)}>
               <i className="fa-edit fa-solid"></i>
             </button>
@@ -197,6 +213,7 @@ export const Breeds = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setIsEditing(false);
+    setIsPreviewOpen(false);
     setFormData(Breed);
   };
 
@@ -426,6 +443,63 @@ export const Breeds = () => {
                   />
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+        {isPreviewOpen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-poppins">
+            <div className="bg-white p-8 rounded-lg shadow-lg h-full w-full relative overflow-auto ">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-dark-brown font-poppins">
+                  Šķirnes informācijas priekšskats
+                </h2>
+                <button
+                  onClick={closeModal}
+                  className="text-dark-brown rounded-full w-7 h-7 flex items-center justify-center"
+                >
+                  <i className="fa-solid fa-x"></i>
+                </button>
+              </div>
+              <div className="flex gap-8">
+                <div>{}</div>
+                <div className="flex flex-col grow gap-8 font-poppins">
+                  <div className="bg-light-gray p-6 rounded-md shadow-lg">
+                    <h3 className="lg:text-2xl text-lg font-semibold text-accent-brown mb-4">
+                      Barošana
+                    </h3>
+                    <p className="text-dark-brown lg:text-lg">
+                      {formData.feeding_info}
+                    </p>
+                  </div>
+
+                  <div className="bg-light-gray p-6 rounded-md shadow-lg">
+                    <h3 className="lg:text-2xl text-lg font-semibold text-accent-brown mb-4">
+                      Personība
+                    </h3>
+                    <p className="text-dark-brown lg:text-lg">
+                      {formData.personality_info}
+                    </p>
+                  </div>
+
+                  <div className="bg-light-gray p-6 rounded-md shadow-lg">
+                    <h3 className="lg:text-2xl text-lg font-semibold text-accent-brown mb-4">
+                      Dzīves apstākļi
+                    </h3>
+                    <p className="text-dark-brown lg:text-lg">
+                      {formData.environment_info}
+                    </p>
+                  </div>
+
+                  <div className="bg-light-gray p-6 rounded-md shadow-lg">
+                    <h3 className="lg:text-2xl text-lg font-semibold text-accent-brown mb-4">
+                      Noderīgi padomi
+                    </h3>
+                    <p className="text-dark-brown lg:text-lg">
+                      {formData.tips_info}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}

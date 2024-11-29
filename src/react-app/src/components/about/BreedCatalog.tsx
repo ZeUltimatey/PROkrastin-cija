@@ -86,18 +86,6 @@ export const BreedCatalog = () => {
     getBreeds();
   };
 
-  const handleCategoryChange = (category: string) => {
-    const updatedFilter = {
-      ...filter,
-      category: {
-        ...filter.category,
-        [category]: !filter.category[category],
-      },
-    };
-    setFilter(updatedFilter);
-    setupFilter(updatedFilter);
-  };
-
   const setupFilter = (newFilter: any) => {
     const selectedCategories = Object.keys(newFilter.category)
       .filter((key) => newFilter.category[key])
@@ -114,23 +102,6 @@ export const BreedCatalog = () => {
     );
     onFilterUpdate();
   };
-
-  // useEffect(() => {
-  //   if (breeds) {
-  //     const savedFilter: IQuery = JSON.parse(
-  //       localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_BREED)
-  //     );
-
-  //     setFilter({
-  //       category: breeds.reduce((acc: { [key: string]: boolean }, breed) => {
-  //         acc[breed.display_name] =
-  //           savedFilter?.product_type?.includes(breed.display_name) || false;
-  //         return acc;
-  //       }, {}),
-  //       keyword: savedFilter?.keyword || "",
-  //     });
-  //   }
-  // }, [filterUpdateTrigger]);
 
   const formatQueryParams = (url?: string) => {
     const query: IQuery = JSON.parse(
@@ -155,6 +126,7 @@ export const BreedCatalog = () => {
       <div className="flex flex-col lg:flex-row-reverse gap-6 p-8">
         <div className="flex flex-col grow gap-4">
           <SearchSort
+            placeholder={"Meklēt šķirnes..."}
             filteredItemAmount={breeds?.length}
             onSearch={onSearch}
             onFilterUpdate={onFilterUpdate}
@@ -184,7 +156,7 @@ export const BreedCatalog = () => {
                       </h3>
                       <p className="lg:text-base text-xs">
                         {breed.personality_info?.length > 100
-                          ? `${breed.personality_info?.slice(1, 300)}...`
+                          ? `${breed.personality_info?.slice(0, 300)}...`
                           : breed.personality_info}
                       </p>
                     </div>

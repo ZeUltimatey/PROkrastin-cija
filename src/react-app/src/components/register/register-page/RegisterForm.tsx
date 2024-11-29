@@ -70,6 +70,18 @@ export const RegisterForm = () => {
                 "Lūdzu, parolē iekļaujiet vismaz 1 lielo burtu un speciālo simbolu!"
               );
               break;
+            case "The display name field must not be greater than 255 characters.":
+              showToast(false, "Lietotājvārds ir pārāk garš.");
+              break;
+            case "The name field must not be greater than 255 characters.":
+              showToast(false, "Vārds ir pārāk garš.");
+              break;
+            case "The surname field must not be greater than 255 characters.":
+              showToast(false, "Uzvārds ir pārāk garš.");
+              break;
+            case "The email field must not be greater than 255 characters.":
+              showToast(false, "E-pasts ir pārāk garš.");
+              break;
             default:
               showToast(
                 false,
@@ -110,9 +122,11 @@ export const RegisterForm = () => {
                 id="name"
                 placeholder="Ievadi savu vārdu"
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+                onChange={(e) => {
+                  if (/^[a-zA-Z\s]*$/.test(e.target.value)) {
+                    setFormData({ ...formData, name: e.target.value });
+                  }
+                }}
               />
             </div>
 
@@ -124,9 +138,11 @@ export const RegisterForm = () => {
                 id="surname"
                 placeholder="Ievadi savu uzvārdu"
                 value={formData.surname}
-                onChange={(e) =>
-                  setFormData({ ...formData, surname: e.target.value })
-                }
+                onChange={(e) => {
+                  if (/^[a-zA-Z]*$/.test(e.target.value)) {
+                    setFormData({ ...formData, surname: e.target.value });
+                  }
+                }}
               />
             </div>
           </div>

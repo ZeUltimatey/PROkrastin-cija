@@ -57,7 +57,11 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
         window.location.reload();
         setIsModalOpen(false);
       } else {
-        showToast(false, "Kļūda lieotāja informācijas saglabāšanā.");
+        const data = await response.json();
+        showToast(
+          false,
+          data?.message ?? "Kļūda lieotāja informācijas saglabāšanā."
+        );
       }
     });
     setIsLoading(false);
@@ -103,6 +107,23 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
       });
     }
     return;
+  };
+
+  const resendConfirmationEmail = async () => {
+    await fetch(`${Constants.API_URL}/user/resend_verification`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+    }).then(async (response) => {
+      if (response.ok) {
+        showToast(true, "Apstiprinājuma e-pasts nosūtīts.");
+      } else {
+        showToast(false, "Kļūda e-pasta apstiprinājuma nosūtīšanā.");
+      }
+    });
   };
 
   return (
@@ -188,9 +209,11 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
                   <FormInput
                     placeholder="Ievadiet vārdu"
                     value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
+                    onChange={(e) => {
+                      if (/^[a-zA-Z]*$/.test(e.target.value)) {
+                        setFormData({ ...formData, name: e.target.value });
+                      }
+                    }}
                   />
                 </div>
                 <div>
@@ -200,9 +223,11 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
                   <FormInput
                     placeholder="Ievadiet uzvārdu"
                     value={formData.surname}
-                    onChange={(e) =>
-                      setFormData({ ...formData, surname: e.target.value })
-                    }
+                    onChange={(e) => {
+                      if (/^[a-zA-Z]*$/.test(e.target.value)) {
+                        setFormData({ ...formData, surname: e.target.value });
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -233,7 +258,10 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
                 {!user.email_verified_at && (
                   <p className="text-red-400 text-sm font-poppins">
                     Lūdzu, apstipriniet e-pastu!{" "}
-                    <span className="underline hover:cursor-pointer text-dark-brown">
+                    <span
+                      onClick={resendConfirmationEmail}
+                      className="underline hover:cursor-pointer text-dark-brown"
+                    >
                       Nosūtīt vēlreiz?
                     </span>
                   </p>
@@ -269,7 +297,7 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
               <div className="flex gap-2">
                 <div className="w-full">
                   <label className="text-sm text-dark-brown font-semibold font-poppins mb-1">
-                    Parole
+                    Apstipriniet paroli
                   </label>
                   <FormInput
                     placeholder="Ievadiet savu paroli"

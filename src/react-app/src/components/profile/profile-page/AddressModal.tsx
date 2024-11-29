@@ -24,7 +24,7 @@ export const AddressModal = ({
   data,
   isEditing,
 }: IAddressModalProps) => {
-  const [formData, setFormData] = useState(data ?? ({} as typeof SavedAddress));
+  const [formData, setFormData] = useState(data ?? SavedAddress);
   const [isLoading, setIsLoading] = useState(false);
 
   const showToast = useToast();

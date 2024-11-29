@@ -18,6 +18,7 @@ const Cat = {
   breed_name: "",
   birthdate: "",
   color: "",
+  breed_id: 0,
 };
 
 export const Product = {
@@ -88,6 +89,7 @@ export const Cats = () => {
       if (response.ok) {
         const data = await response.json();
         setFormData(data.data);
+        console.log(data.data.data);
         setIsModalOpen(true);
       }
     });
@@ -171,9 +173,15 @@ export const Cats = () => {
         )}`,
       },
       body: JSON.stringify({
-        ...formData,
+        breed_id: formData.breed_id,
+        display_name: formData.display_name,
+        pricing: formData.pricing,
+        discount_pricing: formData.discount_pricing,
+        description: formData.description,
+        image_url: formData.image_url,
         birthdate: formData.cat.birthdate,
         color: formData.cat.color,
+        stock: 1,
       }),
     }).then((response) => {
       if (response.ok) {
@@ -199,7 +207,17 @@ export const Cats = () => {
           Constants.LOCAL_STORAGE.TOKEN
         )}`,
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({
+        breed_id: formData.breed_id,
+        display_name: formData.display_name,
+        pricing: formData.pricing,
+        discount_pricing: formData.discount_pricing,
+        description: formData.description,
+        image_url: formData.image_url,
+        birthdate: formData.cat.birthdate,
+        color: formData.cat.color,
+        stock: 1,
+      }),
     }).then((response) => {
       if (response.ok) {
         showToast(true, "Produkts veiksmīgi atjaunināts!");

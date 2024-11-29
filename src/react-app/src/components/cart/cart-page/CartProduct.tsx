@@ -60,7 +60,10 @@ export const CartProduct = (props: ICartProductProps) => {
           alt={product.display_name}
           className="h-24 w-24 hidden lg:block object-cover mr-4 shadow-md"
         />
-        <span className="text-dark-brown font-semibold lg:text-base text-sm">
+        <span
+          onClick={() => window.location.assign(`/product/${product.id}`)}
+          className="text-dark-brown hover:underline hover:cursor-pointer font-semibold lg:text-base text-sm"
+        >
           {product.display_name}
         </span>
       </td>

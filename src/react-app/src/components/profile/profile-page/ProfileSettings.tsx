@@ -6,6 +6,12 @@ import { useConfirmation } from "../../universal/Confirmation";
 import { IUser } from "../../universal/interfaces/IUser";
 import { FormInput } from "../../universal/FormInput";
 
+interface IPrefences {
+  display_lowest_price: boolean;
+  display_only_available: boolean;
+  recieve_noficiations: boolean;
+}
+
 export const ProfileSettings = ({ user }: { user: IUser }) => {
   const [isPreferencesModalOpen, setIsPreferencesModalOpen] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
@@ -14,6 +20,11 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
     old_password: "",
     new_password: "",
     new_password_confirmation: "",
+  });
+  const [preferences, setPerferences] = useState<IPrefences>({
+    display_lowest_price: user.display_lowest_price === 1 ?? false,
+    display_only_available: user.display_only_available === 1 ?? false,
+    recieve_noficiations: user.recieve_noficiations === 1 ?? false,
   });
 
   const navigate = useNavigate();
@@ -134,24 +145,30 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
     setIsLoading(false);
   };
 
+  const savePreferences = () => {
+    fetch(`${Constants.API_URL}/preferences`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+      body: JSON.stringify(preferences),
+    }).then((response) => {
+      if (response.ok) {
+        showToast(true, "Preferences saglabātas!");
+        setIsPreferencesModalOpen(false);
+      }
+    });
+  };
+
   return (
     <div className="bg-light-gray shadow-md rounded-md p-8 border-2 border-medium-brown">
       <h3 className="text-2xl font-bold text-dark-brown font-poppins mb-4">
         Profila iestatījumi
       </h3>
       <ul className="space-y-4">
-        <li>
-          <p className="text-dark-brown font-poppins">E-pasta paziņojumi</p>
-          <label className="inline-flex items-center mt-1">
-            <input
-              type="checkbox"
-              className="form-checkbox text-medium-brown"
-            />
-            <span className="ml-2 text-dark-brown font-poppins">
-              Saņemt e-pasta paziņojumus
-            </span>
-          </label>
-        </li>
         <li>
           <p className="text-dark-brown font-poppins">Lietotāja preferences</p>
           <button
@@ -197,40 +214,65 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
             <form className="space-y-4">
               <div className="flex items-center">
                 <input
+                  id="email"
                   type="checkbox"
                   className="form-checkbox text-medium-brown mr-2"
+                  checked={preferences?.recieve_noficiations}
+                  onChange={(e) => {
+                    setPerferences({
+                      ...preferences,
+                      recieve_noficiations: e.target.checked,
+                    });
+                  }}
                 />
-                <label className="text-sm text-dark-brown font-poppins">
+                <label
+                  htmlFor="email"
+                  className="text-sm text-dark-brown font-poppins"
+                >
+                  E-pasta paziņojumi
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  id="cheapest"
+                  type="checkbox"
+                  className="form-checkbox text-medium-brown mr-2"
+                  checked={preferences?.display_lowest_price}
+                  onChange={(e) => {
+                    setPerferences({
+                      ...preferences,
+                      display_lowest_price: e.target.checked,
+                    });
+                  }}
+                />
+                <label
+                  htmlFor="cheapest"
+                  className="text-sm text-dark-brown font-poppins"
+                >
                   Vienmēr rādīt lētākos piedāvājumus
                 </label>
               </div>
               <div className="flex items-center">
                 <input
+                  id="available"
                   type="checkbox"
                   className="form-checkbox text-medium-brown mr-2"
+                  checked={preferences?.display_only_available}
+                  onChange={(e) => {
+                    setPerferences({
+                      ...preferences,
+                      display_only_available: e.target.checked,
+                    });
+                  }}
                 />
-                <label className="text-sm text-dark-brown font-poppins">
-                  Rādīt tikai bezmaksas piegādes piedāvājumus
-                </label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="form-checkbox text-medium-brown mr-2"
-                />
-                <label className="text-sm text-dark-brown font-poppins">
+                <label
+                  htmlFor="available"
+                  className="text-sm text-dark-brown font-poppins"
+                >
                   Rādīt tikai uzreiz pieejamos produktus
                 </label>
               </div>
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="form-checkbox text-medium-brown mr-2"
-                />
-                <label className="text-sm text-dark-brown font-poppins">
-                  Rādīt tikai vietējos ražotājus
-                </label>
-              </div>
+
               <div className="flex justify-end space-x-4 mt-4">
                 <button
                   type="button"
@@ -241,7 +283,7 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
                 </button>
                 <button
                   type="button"
-                  onClick={handleCloseModal}
+                  onClick={savePreferences}
                   className="bg-medium-brown text-white px-6 py-2 rounded-md shadow font-poppins"
                 >
                   Saglabāt

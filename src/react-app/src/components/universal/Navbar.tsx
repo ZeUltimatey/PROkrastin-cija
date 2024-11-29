@@ -240,7 +240,7 @@ export const Navbar = () => {
           {user?.user_role === "Admin" && (
             <button
               onClick={() => navigate("/panel")}
-              className={`h-full px-6 hover:border-b-4 border-accent-brown ${
+              className={`h-full px-6 hidden lg:block hover:border-b-4 border-accent-brown ${
                 showCart ? "border-b-4" : "border-b-0"
               } transition-all`}
             >

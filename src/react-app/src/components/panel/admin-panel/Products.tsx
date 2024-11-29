@@ -37,7 +37,7 @@ export const Products = () => {
   const confirm = useConfirmation();
 
   const fetchProducts = async (link?: string) => {
-    await fetch(link ?? `${Constants.API_URL}/products`, {
+    await fetch(link?.length > 0 ? link : `${Constants.API_URL}/products`, {
       method: "GET",
     }).then(async (response) => {
       if (response.ok) {
@@ -157,7 +157,9 @@ export const Products = () => {
       if (response.ok) {
         const data = await response.json();
         showToast(true, "Produkts veiksmīgi pievienots!");
-        await handlePictureAdd(data);
+        if (formData.image_url) {
+          await handlePictureAdd(data);
+        }
         setIsModalOpen(false);
         setTimeout(() => window.location.reload(), 1000);
       } else {
@@ -168,7 +170,6 @@ export const Products = () => {
   };
 
   const handlePictureAdd = async (id: number) => {
-    console.log(id);
     const imageData = new FormData();
     Array.from(formData.image_url).forEach((image: any, index: number) => {
       imageData.append(`images[${index}]`, image);

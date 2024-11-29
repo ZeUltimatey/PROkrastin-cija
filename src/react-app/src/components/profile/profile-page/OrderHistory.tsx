@@ -28,31 +28,6 @@ export const OrderHistory = () => {
     fetchOrders();
   }, []);
 
-  // const orders: IOrder[] = [
-  //   {
-  //     id: 12345,
-  //     status: "Sūtīšans procesā",
-  //     date: "26.09.2024.",
-  //     items: [
-  //       "Kaķu gulta",
-  //       "Slapjā barība (1kg)",
-  //       "Kaķu kārumi ar vistas garšu",
-  //     ],
-  //   },
-  //   {
-  //     id: 12344,
-  //     status: "Saņemts",
-  //     date: "21.08.2024.",
-  //     items: ["Kaķu rotaļlieta - pele", "Sausā barība (10kg)", "Kaķu smiltis"],
-  //   },
-  //   {
-  //     id: 12343,
-  //     status: "Saņemts",
-  //     date: "10.08.2024.",
-  //     items: ["Siksniņa rozā krāsā", "Kaķu kārumi ar laša garšu"],
-  //   },
-  // ];
-
   const handleOpenOrderDetails = (order: IOrder) => {
     setSelectedOrder(order);
     setIsOrderDetailsModalOpen(true);
@@ -60,6 +35,28 @@ export const OrderHistory = () => {
 
   const handleCloseModal = () => {
     setIsOrderDetailsModalOpen(false);
+  };
+
+  const downloadPdf = (transactionId: number) => {
+    fetch(
+      `${Constants.API_URL}/transaction_pdf?transaction_id=${transactionId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            Constants.LOCAL_STORAGE.TOKEN
+          )}`,
+        },
+      }
+    ).then((response) => {
+      response.blob().then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `Pasutijums_${transactionId}.pdf`;
+        a.click();
+      });
+    });
   };
 
   return (
@@ -70,9 +67,17 @@ export const OrderHistory = () => {
       <ul className="space-y-4 max-h-[400px] overflow-y-scroll">
         {orders.slice(0, 2).map((order) => (
           <li key={order.id} className="border-b border-dark-brown pb-4">
-            <p className="text-dark-brown font-poppins">
-              Pasūtijums #{order.id} - <strong>IZPILDĒ</strong>
-            </p>
+            <div className="flex justify-between place-items-center">
+              <p className="text-dark-brown font-poppins">
+                Pasūtijums #{order.id}
+              </p>
+              <button
+                onClick={() => downloadPdf(order.id)}
+                className="hover:opacity-80"
+              >
+                <i className="fa-solid fa-download text-dark-brown"></i>
+              </button>
+            </div>
             <p className="text-sm text-dark-brown font-poppins">
               Pasūtīts: {order.created_at.slice(0, 10)}
             </p>

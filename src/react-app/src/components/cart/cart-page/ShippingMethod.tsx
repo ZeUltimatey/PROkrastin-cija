@@ -20,13 +20,16 @@ type PaymentMethod = {
 };
 
 export const ShippingMethod = ({
+  shippingMethod,
+  setShippingMethod,
   setPaymentReady,
 }: {
+  shippingMethod: number;
+  setShippingMethod: (shippingMethod: number) => void;
   setPaymentReady: (paymentReady: boolean) => void;
 }) => {
   const [addresses, setAddresses] = useState<SavedAddress[]>(null);
   const [addressOpen, setAddressOpen] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
 
   const showToast = useToast();
@@ -55,17 +58,17 @@ export const ShippingMethod = ({
   }, []);
 
   useEffect(() => {
-    if (selectedAddress) {
+    if (shippingMethod) {
       setPaymentReady(true);
     } else {
       setPaymentReady(false);
     }
-  }, [selectedAddress]);
+  }, [shippingMethod]);
 
   const closeModal = () => {
     setAddressOpen(false);
     setIsEditing(false);
-    setSelectedAddress(null);
+    setShippingMethod(null);
   };
 
   return (
@@ -84,24 +87,24 @@ export const ShippingMethod = ({
           addresses.map((address) => (
             <div
               onClick={() => {
-                setSelectedAddress(address.id);
+                setShippingMethod(address.id);
               }}
               className={`bg-light-gray border-2  rounded-md p-4 flex gap-2 ${
-                selectedAddress == address.id
+                shippingMethod == address.id
                   ? "border-accent-brown "
                   : "border-hover-brown"
               }`}
             >
               <div
                 className={` w-12 h-12  flex place-items-center justify-center rounded-md ${
-                  selectedAddress == address.id
+                  shippingMethod == address.id
                     ? "bg-accent-brown"
                     : "bg-hover-brown"
                 }`}
               >
                 <i
                   className={`fa-solid fa-house text-xl ${
-                    selectedAddress == address.id
+                    shippingMethod == address.id
                       ? "text-hover-brown"
                       : "text-accent-brown"
                   }`}
@@ -110,7 +113,7 @@ export const ShippingMethod = ({
               <div>
                 <p
                   className={`${
-                    selectedAddress == address.id ? "font-semibold" : ""
+                    shippingMethod == address.id ? "font-semibold" : ""
                   }`}
                 >
                   {address.location_name}

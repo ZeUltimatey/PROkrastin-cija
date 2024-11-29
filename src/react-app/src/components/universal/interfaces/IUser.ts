@@ -13,4 +13,7 @@ export interface IUser {
   deactivated?: number;
   image_url?: any;
   email_verified_at: string;
+  display_lowest_price: number;
+  display_only_available: number;
+  recieve_noficiations: number;
 }

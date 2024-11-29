@@ -14,6 +14,7 @@ interface IProps {
   filteredItemAmount?: number;
   filterUpdateTrigger?: number;
   queryConstant: string;
+  placeholder?: string;
 }
 
 export const SearchSort = (props: IProps) => {
@@ -133,7 +134,7 @@ export const SearchSort = (props: IProps) => {
           <form className="flex lg:grow">
             <input
               onSubmit={searchItems}
-              placeholder="Meklēt preces..."
+              placeholder={props.placeholder ?? "Meklēt preces..."}
               type="text"
               value={search}
               onChange={handleSearchInputChange}

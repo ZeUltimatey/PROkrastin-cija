@@ -8,12 +8,12 @@ import { Constants } from "../universal/Constants";
 import { useConfirmation } from "../universal/Confirmation";
 
 export const Cart = () => {
-  const { cartItems, removeFromCart, addToCart, fetchCart, payForBasket } =
-    useCart();
+  const { cartItems, removeFromCart, addToCart, fetchCart } = useCart();
   const [user, setUser] = useState<IUser>(null);
   const [paymentReady, setPaymentReady] = useState(false);
   const navigate = useNavigate();
   const [showMessage, setShowMessage] = useState(false);
+  const [shippingMethod, setShippingMethod] = useState(null);
 
   const getTotalPrice = () => {
     return cartItems.reduce((acc, item) => {
@@ -47,6 +47,21 @@ export const Cart = () => {
   }, []);
 
   const confirm = useConfirmation();
+
+  const payForBasket = async () => {
+    await fetch(`${Constants.API_URL}/checkout?location_id=${shippingMethod}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+    }).then(async (response) => {
+      await response.json().then((data) => {
+        window.location.href = data.url;
+      });
+    });
+  };
 
   return (
     <div className="flex flex-col lg:flex-row lg:min-h-screen  font-poppins">
@@ -119,7 +134,11 @@ export const Cart = () => {
 
       <div className=" bg-content-white p-6 lg:border-l border-medium-brown lg:w-1/4">
         <h3 className="text-xl font-bold text-dark-brown mb-4">Apmaksāt</h3>
-        <ShippingMethod setPaymentReady={setPaymentReady} />
+        <ShippingMethod
+          shippingMethod={shippingMethod}
+          setShippingMethod={setShippingMethod}
+          setPaymentReady={setPaymentReady}
+        />
 
         <button
           disabled={cartItems.length == 0 || !paymentReady}

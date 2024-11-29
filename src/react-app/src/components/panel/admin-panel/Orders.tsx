@@ -1,5 +1,14 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IUser } from "../../universal/interfaces/IUser";
+import { Constants } from "../../universal/Constants";
+import {
+  createColumnHelper,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Pagination } from "../../universal/Pagination";
 
 export interface IOrder {
   id: number;
@@ -18,50 +27,104 @@ export interface IOrder {
 export const Orders = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>(null);
-
-  const handleEditClick = (order: IOrder) => {
-    setSelectedOrder(order);
-    setIsModalOpen(true);
-  };
+  const [orders, setOrders] = useState<IOrder[]>(null);
+  const [pagination, setPagination] = useState(null);
 
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedOrder(null);
   };
 
-  const handleCancelOrder = () => {
-    if (selectedOrder) {
-      console.log(`Cancelling order ${selectedOrder.id}`);
-      setIsModalOpen(false);
-    }
+  const fetchOrders = (url?: string) => {
+    fetch(url ?? `${Constants.API_URL}/all_transactions`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+    }).then(async (response) => {
+      if (response.ok) {
+        const data = await response.json();
+        setPagination(data.meta);
+        setOrders(data.data);
+      }
+    });
   };
 
-  // const orders: IOrder[] = [
-  //   {
-  //     id: "#5001",
-  //     customerName: "Anna Vītola",
-  //     email: "anna@epasts.com",
-  //     date: "2024-01-15",
-  //     status: "Veiksmīgs",
-  //     total: "$120.00",
-  //   },
-  //   {
-  //     id: "#5002",
-  //     customerName: "Jānis Bērziņš",
-  //     email: "janis@epasts.com",
-  //     date: "2024-02-20",
-  //     status: "Sūtīšans procesā",
-  //     total: "$85.00",
-  //   },
-  //   {
-  //     id: "#5003",
-  //     customerName: "Laura Kalniņa",
-  //     email: "laura@epasts.com",
-  //     date: "2024-03-12",
-  //     status: "Atcelts",
-  //     total: "$0.00",
-  //   },
-  // ];
+  const downloadPdf = (transactionId: number) => {
+    fetch(
+      `${Constants.API_URL}/transaction_pdf?transaction_id=${transactionId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            Constants.LOCAL_STORAGE.TOKEN
+          )}`,
+        },
+      }
+    ).then((response) => {
+      response.blob().then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `Pasutijums_${transactionId}.pdf`;
+        a.click();
+      });
+    });
+  };
+
+  const columnHelper = createColumnHelper<IOrder>();
+
+  const columns = useMemo(
+    () => [
+      columnHelper.accessor("id", {
+        header: "ID",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor(
+        (row) => `${row.transactor.name} ${row.transactor.surname}`,
+        {
+          id: "transactorFullName",
+          header: "Vārds, uzvārds",
+          cell: (info) => info.getValue(),
+        }
+      ),
+      columnHelper.accessor("created_at", {
+        header: "Pasūtīts",
+        cell: (info) =>
+          info.getValue().split("T")[0] +
+          " " +
+          info.getValue().split("T")[1].split(".")[0],
+      }),
+      columnHelper.accessor("total_pricing", {
+        header: "Summa",
+        cell: (info) => info.getValue().toFixed(2) + "€",
+      }),
+      columnHelper.display({
+        header: "PDF",
+        cell: (info) => (
+          <button onClick={() => downloadPdf(info.row.original.id)}>
+            <i className="fa-download fa-solid"></i>
+          </button>
+        ),
+      }),
+    ],
+
+    []
+  );
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const table = useReactTable({
+    columns,
+    data: orders,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    enableSortingRemoval: false,
+  });
 
   return (
     <div className="min-h-screen flex bg-content-white w-full">
@@ -74,67 +137,81 @@ export const Orders = () => {
           </div>
         </header>
 
-        <main className="p-8">
-          <div className="bg-light-gray shadow rounded-lg border-2 border-medium-brown">
-            <div className="p-6 border-b border-medium-brown">
-              <h2 className="text-xl font-bold text-dark-brown font-poppins">
-                Visi pasūtījumi
-              </h2>
-            </div>
-
-            <table className="w-full text-left">
+        <div className="flex place-items-center justify-center flex-col gap-4">
+          {orders && (
+            <table className="text-center font-poppins w-full">
               <thead>
-                <tr className="border-b border-medium-brown">
-                  <th className="py-4 px-6 font-poppins text-dark-brown">
-                    Pasūtījuma ID
-                  </th>
-                  <th className="py-4 px-6 font-poppins text-dark-brown">
-                    Klienta vārds
-                  </th>
-                  <th className="py-4 px-6 font-poppins text-dark-brown">
-                    E-pasts
-                  </th>
-                  <th className="py-4 px-6 font-poppins text-dark-brown">
-                    Datums
-                  </th>
-                  <th className="py-4 px-6 font-poppins text-dark-brown">
-                    Statuss
-                  </th>
-                  <th className="py-4 px-6 font-poppins text-dark-brown">
-                    Kopā
-                  </th>
-                  <th className="py-4 px-6 font-poppins text-dark-brown">
-                    Apskatīt
-                  </th>
-                </tr>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th
+                        className="h-12 bg-light-gray border-b border-light-brown text-dark-brown font-semibold"
+                        key={header.id}
+                        colSpan={header.colSpan}
+                      >
+                        {header.isPlaceholder ? null : (
+                          <div
+                            className={
+                              header.column.getCanSort()
+                                ? "cursor-pointer select-none"
+                                : ""
+                            }
+                            onClick={header.column.getToggleSortingHandler()}
+                            title={
+                              header.column.getCanSort()
+                                ? header.column.getNextSortingOrder() === "asc"
+                                  ? "Sort ascending"
+                                  : header.column.getNextSortingOrder() ===
+                                    "desc"
+                                  ? "Sort descending"
+                                  : "Clear sort"
+                                : undefined
+                            }
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              asc: (
+                                <i className="fa-solid fa-chevron-up ml-2"></i>
+                              ),
+                              desc: (
+                                <i className="fa-solid fa-chevron-down ml-2"></i>
+                              ),
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                ))}
               </thead>
               <tbody>
-                {/* {orders.map((order) => (
-                  <tr className="border-b border-medium-brown" key={order.id}>
-                    <td className="py-4 px-6 text-dark-brown">{order.id}</td>
-                    <td className="py-4 px-6 text-dark-brown">
-                      {order.customerName}
-                    </td>
-                    <td className="py-4 px-6 text-dark-brown">{order.email}</td>
-                    <td className="py-4 px-6 text-dark-brown">{order.date}</td>
-                    <td className="py-4 px-6 text-dark-brown">
-                      {order.status}
-                    </td>
-                    <td className="py-4 px-6 text-dark-brown">{order.total}</td>
-                    <td className="py-4 px-6">
-                      <button
-                        onClick={() => handleEditClick(order)}
-                        className="bg-medium-brown text-white px-4 py-2 rounded-lg font-poppins"
-                      >
-                        Apskatīt
-                      </button>
-                    </td>
-                  </tr>
-                ))} */}
+                {table.getRowModel().rows.map((row) => {
+                  return (
+                    <tr key={row.id}>
+                      {row.getVisibleCells().map((cell) => (
+                        <td
+                          className="h-8 border-b border-light-brown bg-light-gray text-dark-brown font-semibold"
+                          key={cell.id}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
-          </div>
-        </main>
+          )}
+          {pagination && (
+            <Pagination pagination={pagination} onNavigate={fetchOrders} />
+          )}
+        </div>
       </div>
 
       {isModalOpen && selectedOrder && (

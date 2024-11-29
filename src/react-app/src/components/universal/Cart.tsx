@@ -13,7 +13,6 @@ interface ICartContextType {
   addToCart: (item: IProduct, amount?: number) => void;
   removeFromCart: (item: ICartItem) => void;
   fetchCart: () => void;
-  payForBasket: () => void;
 }
 
 const CartContext = createContext<ICartContextType | undefined>(undefined);
@@ -139,24 +138,10 @@ const CartProvider = ({ children }: { children: ReactNode }) => {
       JSON.stringify(updatedCart)
     );
   };
-  const payForBasket = async () => {
-    await fetch(`${Constants.API_URL}/checkout`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem(
-          Constants.LOCAL_STORAGE.TOKEN
-        )}`,
-      },
-    }).then(async (response) => {
-      await response.json().then((data) => {
-        window.location.href = data.url;
-      })
-    });
-  };
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, fetchCart, payForBasket }}
+      value={{ cartItems, addToCart, removeFromCart, fetchCart }}
     >
       {children}
     </CartContext.Provider>
@@ -172,5 +157,3 @@ const useCart = () => {
 };
 
 export { CartProvider, useCart };
-
-
