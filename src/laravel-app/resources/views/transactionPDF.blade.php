@@ -109,7 +109,6 @@
     <div class="buyer section">
         <p><strong>Vārds:</strong> {{ $transaction->transactor->name }} {{ $transaction->transactor->surname }}</p>
         <p><strong>E-pasts:</strong> {{ $transaction->transactor->email }}</p>
-        <p><strong>Telefons:</strong> {{ $transaction->transactor->phone_number ?? 'N/A' }}</p>
     </div>
 
     <!-- Products Section -->
