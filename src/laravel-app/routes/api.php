@@ -25,6 +25,7 @@ Route::get('/login', function () {
 })->name('login');
 Route::post('/register', [UserController::class, 'register']);
 
+Route::get('/products', [ProductController::class, 'index']);
 Route::get('/breeds', [CatBreedController::class, 'index']);
 Route::get('/search', [SearchController::class, 'index']);
 
@@ -71,7 +72,7 @@ Route::get('/checkout/cancel', [UserController::class, 'successPaid'])->name('ch
 
 // Users only
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/products', [ProductController::class, 'index']);
+
 
     Route::get('/checkout', [UserController::class, 'basketPayment'])->name('checkout');
     Route::delete('/purchaseSuccesfull', [UserController::class, 'clear_basket_after_payment'])->name('clear-basket-after-payment');

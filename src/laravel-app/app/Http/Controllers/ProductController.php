@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
+use App\Http\Requests\ProductSearchRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
@@ -21,10 +22,10 @@ class ProductController extends Controller
     /**
      * Show all products.
      */
-    public function index(Request $request)
+    public function index(ProductSearchRequest $request)
     {
         // Sense logged user
-        $user = new UserResource(Auth::user());
+        $user = new UserResource(auth('sanctum')->user());
 
         // Initialize a query builder for the Product model
         $query = Product::query()
