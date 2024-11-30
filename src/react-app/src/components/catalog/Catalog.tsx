@@ -17,9 +17,10 @@ export const Catalog = () => {
 
   const fetchItems = async (url?: string) => {
     await fetch(
-      `${Constants.API_URL}/products?price_sort=${sort.price}&${
-        url ? formatQueryParams(url) : ""
-      }`,
+      url ??
+        `${Constants.API_URL}/products?price_sort=${
+          sort.price
+        }&${formatQueryParams(url)}`,
       {
         method: "GET",
         headers: {

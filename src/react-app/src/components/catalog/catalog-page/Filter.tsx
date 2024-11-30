@@ -28,70 +28,103 @@ export const Filter = ({
   filterUpdateTrigger: number;
 }) => {
   const [filter, setFilter] = useState(initialFilterCriteria);
-  const [priceMin, setPriceMin] = useState<number | null>(null);
-  const [priceMax, setPriceMax] = useState<number | null>(null);
+  const [priceMin, setPriceMin] = useState(filter.price.from);
+  const [priceMax, setPriceMax] = useState(filter.price.to);
   const [isLoaded, setIsLoaded] = useState(false);
+
   const debounceMinPrice = useDebounce(priceMin, 800);
   const debounceMaxPrice = useDebounce(priceMax, 800);
 
-  // Load saved filter on component mount or filterUpdateTrigger change
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (isLoaded) {
-        onFilterUpdate(); // Trigger only after debouncing.
-      } else {
-        setIsLoaded(true);
-      }
-    }, 500); // Debounce time
+    const savedFilter: IQuery = JSON.parse(
+      localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_CATALOG)
+    );
 
-    return () => clearTimeout(timer); // Cleanup
-  }, [filter, debounceMinPrice, debounceMaxPrice]);
+    setFilter({
+      category: {
+        [CategoryNames.CATS]: savedFilter?.product_type?.includes(
+          CategoryNames.CATS
+        ),
+        [CategoryNames.CARE]: savedFilter?.product_type?.includes(
+          CategoryNames.CARE
+        ),
+        [CategoryNames.FOOD]: savedFilter?.product_type?.includes(
+          CategoryNames.FOOD
+        ),
+        [CategoryNames.ACCESSORIES]: savedFilter?.product_type?.includes(
+          CategoryNames.ACCESSORIES
+        ),
+        [CategoryNames.TOYS]: savedFilter?.product_type?.includes(
+          CategoryNames.TOYS
+        ),
+        [CategoryNames.FURNITURE]: savedFilter?.product_type?.includes(
+          CategoryNames.FURNITURE
+        ),
+      },
+      price: {
+        from: savedFilter?.min_price || null,
+        to: savedFilter?.max_price || null,
+      },
+    });
+  }, [filterUpdateTrigger]);
 
-  const setupFilter = (updatedFilter: typeof initialFilterCriteria) => {
-    const selectedCategories = Object.entries(updatedFilter.category)
-      .filter(([, isSelected]) => isSelected)
-      .map(([key]) => key)
+  const setupFilter = (newFilter: typeof initialFilterCriteria) => {
+    const selectedCategories = Object.keys(newFilter.category)
+      .filter((key) => newFilter.category[key])
       .join(",");
-
     const keyword = JSON.parse(
-      localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_CATALOG) || "{}"
-    ).keyword;
-
-    const newQuery = {
+      localStorage.getItem(Constants.LOCAL_STORAGE.QUERY_CATALOG)
+    )?.keyword;
+    const updatedFilter = {
       keyword: keyword ?? "",
       product_type: selectedCategories,
-      min_price: updatedFilter.price.from || 0,
-      max_price: updatedFilter.price.to || 0,
+      min_price: newFilter.price.from || 0,
+      max_price: newFilter.price.to || 0,
     };
-
+    setPriceMin(newFilter.price.from);
+    setPriceMax(newFilter.price.to);
     localStorage.setItem(
       Constants.LOCAL_STORAGE.QUERY_CATALOG,
-      JSON.stringify(newQuery)
+      JSON.stringify(updatedFilter)
     );
     onFilterUpdate();
+    setIsLoaded(true);
   };
 
   const handleCategoryChange = (category: string) => {
-    setFilter((prevFilter) => {
-      const updatedFilter = {
-        ...prevFilter,
-        category: {
-          ...prevFilter.category,
-          [category]: !prevFilter.category[category],
-        },
-      };
-      setupFilter(updatedFilter);
-      return updatedFilter;
-    });
+    const updatedFilter = {
+      ...filter,
+      category: {
+        ...filter.category,
+        [category]: !filter.category[category],
+      },
+    };
+    setFilter(updatedFilter);
+    setupFilter(updatedFilter);
   };
 
-  const handlePriceChange = (
-    value: string,
-    setter: React.Dispatch<React.SetStateAction<number | null>>
-  ) => {
-    const numValue = value ? parseInt(value) : null;
-    setter(numValue);
-  };
+  useEffect(() => {
+    if (isLoaded) {
+      setupFilter({
+        ...filter,
+        price: { from: debounceMinPrice, to: debounceMaxPrice },
+      });
+    }
+  }, [debounceMinPrice, debounceMaxPrice]);
+
+  useEffect(() => {
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      price: { ...prevFilter.price, from: debounceMinPrice },
+    }));
+  }, [debounceMinPrice]);
+
+  useEffect(() => {
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      price: { ...prevFilter.price, to: debounceMaxPrice },
+    }));
+  }, [debounceMaxPrice]);
 
   return (
     <div className="flex flex-col gap-2 bg-content-white p-6 rounded-md shadow-md w-full lg:w-64 min-h-80">
@@ -124,7 +157,9 @@ export const Filter = ({
           <input
             type="number"
             value={priceMin || ""}
-            onChange={(e) => handlePriceChange(e.target.value, setPriceMin)}
+            onChange={(e) =>
+              setPriceMin(e.target.value ? parseInt(e.target.value) : null)
+            }
             id="price"
             placeholder="No"
             className="w-12 text-dark-brown font-poppins font-semibold py-1 px-2 text-center shadow-sm focus:accent-accent-brown rounded-md"
@@ -134,9 +169,12 @@ export const Filter = ({
           </span>
           <input
             type="number"
-            value={priceMax || ""}
-            onChange={(e) => handlePriceChange(e.target.value, setPriceMax)}
+            value={priceMax == 9999999 ? "" : priceMax || ""}
+            onChange={(e) =>
+              setPriceMax(e.target.value ? parseInt(e.target.value) : null)
+            }
             id="price"
+            max={9999999}
             placeholder="Līdz"
             className="w-12 text-dark-brown font-poppins font-semibold py-1 px-2 text-center shadow-sm focus:accent-accent-brown rounded-md"
           />
