@@ -21,8 +21,11 @@ class ProductController extends Controller
     /**
      * Show all products.
      */
-    public function index(Request $request)
+    public function index(ProductSearchRequest $request)
     {
+        // Sense logged user
+        $user = new UserResource(auth('sanctum')->user());
+
         // Initialize a query builder for the Product model
         $query = Product::query()
             ->select('products.*')
