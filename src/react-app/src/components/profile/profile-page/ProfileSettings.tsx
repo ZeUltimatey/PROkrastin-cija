@@ -9,7 +9,7 @@ import { FormInput } from "../../universal/FormInput";
 interface IPrefences {
   display_lowest_price: boolean;
   display_only_available: boolean;
-  recieve_noficiations: boolean;
+  recieve_notifications: boolean;
 }
 
 export const ProfileSettings = ({ user }: { user: IUser }) => {
@@ -24,7 +24,7 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
   const [preferences, setPerferences] = useState<IPrefences>({
     display_lowest_price: user.display_lowest_price === 1 ?? false,
     display_only_available: user.display_only_available === 1 ?? false,
-    recieve_noficiations: user.recieve_noficiations === 1 ?? false,
+    recieve_notifications: user.recieve_notifications === 1 ?? false,
   });
 
   const navigate = useNavigate();
@@ -154,7 +154,11 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
           Constants.LOCAL_STORAGE.TOKEN
         )}`,
       },
-      body: JSON.stringify(preferences),
+      body: JSON.stringify({
+        display_lowest_price: preferences.display_lowest_price,
+        display_only_available: preferences.display_only_available,
+        recieve_notifications: preferences.recieve_notifications,
+      }),
     }).then((response) => {
       if (response.ok) {
         showToast(true, "Preferences saglabātas!");
@@ -217,11 +221,11 @@ export const ProfileSettings = ({ user }: { user: IUser }) => {
                   id="email"
                   type="checkbox"
                   className="form-checkbox text-medium-brown mr-2"
-                  checked={preferences?.recieve_noficiations}
+                  checked={preferences?.recieve_notifications}
                   onChange={(e) => {
                     setPerferences({
                       ...preferences,
-                      recieve_noficiations: e.target.checked,
+                      recieve_notifications: e.target.checked,
                     });
                   }}
                 />

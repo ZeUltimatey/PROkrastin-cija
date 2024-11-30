@@ -15,5 +15,5 @@ export interface IUser {
   email_verified_at: string;
   display_lowest_price: number;
   display_only_available: number;
-  recieve_noficiations: number;
+  recieve_notifications: number;
 }

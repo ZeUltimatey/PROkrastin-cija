@@ -33,20 +33,11 @@ export const ForgotPassword = () => {
     })
       .then(async (response) => {
         if (response.ok) {
-          const data = await response.json();
-          localStorage.setItem(Constants.LOCAL_STORAGE.TOKEN, data.token);
-          showToast(true, "Autentifikācija veiksmīga!");
-          setTimeout(() => navigate("/"), 1000);
+          showToast(true, "E-pasts ar paroles maiņas instrukcijām nosūtīts!");
+          setIsEmailSent(true);
         } else {
           const data = await response.json();
-          switch (data.error) {
-            case "Invalid credentials":
-              showToast(false, "Nepareizs e-pasts vai parole.");
-              break;
-            default:
-              showToast(false, "Kļūda autentifikācijā.");
-              break;
-          }
+          showToast(false, data.message);
         }
       })
       .catch((error) => {
@@ -65,29 +56,34 @@ export const ForgotPassword = () => {
           Aizmirsi paroli?
         </span>
       </div>
-      <form onSubmit={onSubmit} className="space-y-4 font-poppins">
+      <form
+        onSubmit={onSubmit}
+        className="font-poppins place-items-center flex flex-col"
+      >
         {!isEmailSent && (
-          <div>
-            <label htmlFor="email" className="text-dark-brown">
-              E-pasts
-            </label>
-            <FormInput
-              id="email"
-              placeholder="Ievadi savu e-pastu!"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-            />
+          <div className="flex flex-col gap-4 w-full">
+            <div>
+              <label htmlFor="email" className="text-dark-brown">
+                E-pasts
+              </label>
+              <FormInput
+                id="email"
+                placeholder="Ievadi savu e-pastu!"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+              />
+            </div>
+            <input
+              disabled={isLoading}
+              type="submit"
+              value="Tālāk"
+              className="w-full bg-light-brown text-white font-semibold py-2 px-4 rounded-md hover:bg-medium-brown transition-all"
+            ></input>
           </div>
         )}
-
-        <input
-          disabled={isLoading}
-          type="submit"
-          value="Tālāk"
-          className="w-full bg-light-brown text-white font-semibold py-2 px-4 rounded-md hover:bg-medium-brown transition-all"
-        ></input>
+        {isEmailSent && <div>Lūdzu, pārbaudiet savu e-pastu!</div>}
         {isLoading && (
           <div className="mx-auto w-full">
             <Spinner />
