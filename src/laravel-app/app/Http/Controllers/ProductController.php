@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
+use App\Http\Requests\ProductSearchRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
