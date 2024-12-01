@@ -31,7 +31,7 @@ export const ProductInfo = ({
             className="hover:cursor-pointer w-52 hover:opacity-70"
             onClick={() => navigate(`/reviews/${product.id}`)}
           >
-            <StarRating stars={reviews.data.length} />
+            <StarRating stars={product.rating} />
             <div className="text-sm ml-1 underline text-dark-brown">
               {reviews.data.length} atsauksmes
             </div>

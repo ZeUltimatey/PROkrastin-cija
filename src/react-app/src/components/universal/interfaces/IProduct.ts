@@ -6,7 +6,8 @@ export interface IProduct {
   description: string;
   pricing: number;
   discount_pricing?: number;
-  images?: any[];
+  images?: { images: any[] };
   stock?: number;
   cat?: any;
+  rating?: number;
 }

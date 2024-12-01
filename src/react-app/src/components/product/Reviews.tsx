@@ -104,7 +104,8 @@ export const Reviews = () => {
       }),
     }).then(async (response) => {
       if (response.ok) {
-        fetchReviews();
+        showToast(true, "Atsauksme veiksmīgi pievienota!");
+        setTimeout(() => window.location.reload(), 1000);
       }
     });
   };
@@ -122,7 +123,8 @@ export const Reviews = () => {
         },
       }).then(async (response) => {
         if (response.ok) {
-          fetchReviews();
+          showToast(true, "Atsauksme veiksmīgi dzēsta!");
+          setTimeout(() => window.location.reload(), 1000);
         }
       });
     }
@@ -151,12 +153,12 @@ export const Reviews = () => {
               Atsauksmes
             </h3>
           </div>
-          {product && (
+          {product && reviews && (
             <div>
               <h2 className="text-2xl font-poppins text-dark-brown">
                 {product.display_name}
               </h2>
-              <StarRating stars={2} />
+              <StarRating stars={product.rating} />
               <p className="text-dark-brown text-xs ml-1">
                 {reviews.length} atsauksmes
               </p>
@@ -165,7 +167,11 @@ export const Reviews = () => {
           )}
         </div>
         <img
-          src={"../images/products/cat_food.png"}
+          src={
+            product?.images?.images[0]?.url
+              ? Constants.BASE_URL + product.images?.images[0]?.url
+              : "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
+          }
           className="rounded-md h-56 w-56 object-cover shadow-md"
         />
       </div>
@@ -238,19 +244,6 @@ export const Reviews = () => {
                 ></i>
               ))}
             </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span>Pievienot atsauksmi anonīmi:</span>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={isAnonymous}
-                onChange={toggleAnonymous}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-dark-gray rounded-full peer dark:bg-dark-brown peer-checked:after:translate-x-full peer-checked:after:border-content-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-content-white after:border-dark-brown after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-light-brown"></div>
-            </label>
           </div>
 
           <input

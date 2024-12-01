@@ -126,7 +126,14 @@ export const Cats = () => {
       }),
       columnHelper.accessor("display_name", {
         header: "Nosaukums",
-        cell: (info) => info.getValue(),
+        cell: (info) => (
+          <a
+            href={`/product/${info.row.original.id}`}
+            className="hover:underline"
+          >
+            {info.getValue()}
+          </a>
+        ),
       }),
       columnHelper.accessor("cat.breed_name", {
         header: "Šķirne",

@@ -110,7 +110,14 @@ export const Breeds = () => {
       }),
       columnHelper.accessor("display_name", {
         header: "Nosaukums",
-        cell: (info) => info.getValue(),
+        cell: (info) => (
+          <a
+            href={`/breed/${info.row.original.id}`}
+            className="hover:underline"
+          >
+            {info.getValue()}
+          </a>
+        ),
       }),
       columnHelper.display({
         header: "Darbības",
