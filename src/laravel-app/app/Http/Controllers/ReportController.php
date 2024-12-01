@@ -30,7 +30,12 @@ class ReportController extends Controller
         return response()->json(['error' => 'No permission to view this transaction.'], 403); // Forbidden
     }
 
-    public function generate_statistics(Request $request) {
-        return ReportsService::download_statistics();
+    public function generate_statistics(Request $request)
+    {
+        // Retrieve the export type from the request (default to 'xlsx' if not provided)
+        $exportType = $request->input('export_type', 'xlsx');
+
+        // Pass the export_type to the download_statistics method in the ReportsService
+        return ReportsService::download_statistics($exportType);
     }
 }

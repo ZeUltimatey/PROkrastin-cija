@@ -6,6 +6,7 @@ use App\Exports\FullExport;
 use App\Exports\TransactionExport;
 use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReportsService
@@ -43,8 +44,14 @@ class ReportsService
         return $pdf->download('transaction_report.pdf');
     }
 
-    static public function download_statistics()
+    public static function download_statistics($exportType)
     {
-        return Excel::download(new FullExport(), 'Murrātava.xlsx');
+        // Check the export type and return the corresponding export
+        if ($exportType == 'csv') {
+            return Excel::download(new TransactionExport(), 'Transakcijas.csv', \Maatwebsite\Excel\Excel::CSV);
+        }
+
+        // Default to exporting as XLSX if 'csv' is not provided
+        return Excel::download(new FullExport, 'Murrātava.xlsx', \Maatwebsite\Excel\Excel::XLSX);
     }
 }
