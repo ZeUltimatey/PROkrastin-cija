@@ -53,7 +53,7 @@ export const CartProduct = (props: ICartProductProps) => {
       <td className="flex items-center lg:py-4 py-2">
         <img
           src={
-            product.images.images[0]?.url
+            product?.images?.images[0]?.url
               ? Constants.BASE_URL + product.images.images[0].url
               : "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
           }

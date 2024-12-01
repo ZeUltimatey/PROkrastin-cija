@@ -46,7 +46,7 @@ export const ItemCard = (props: IProduct) => {
               : props.pricing.toFixed(2)}
             &euro;
           </span>
-          {props.discount_pricing && (
+          {!!props.discount_pricing && (
             <span className="line-through text-lg">
               {props.pricing.toFixed(2)}&euro;
             </span>

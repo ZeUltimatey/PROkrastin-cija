@@ -9,12 +9,14 @@ export const SpecialOffers = () => {
   const [discountItems, setDiscountItems] = useState<IProduct[]>(null);
 
   const getDiscountItems = async () => {
-    await fetch(`${Constants.API_URL}/products`).then(async (response) => {
-      if (response.ok) {
-        const data = await response.json();
-        setDiscountItems(data.data);
+    await fetch(`${Constants.API_URL}/products?per_page=1000`).then(
+      async (response) => {
+        if (response.ok) {
+          const data = await response.json();
+          setDiscountItems(data.data);
+        }
       }
-    });
+    );
   };
 
   const responsive = {
