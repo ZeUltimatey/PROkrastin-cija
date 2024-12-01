@@ -136,6 +136,10 @@ export const Cats = () => {
         header: "Cena",
         cell: (info) => <div>{info.getValue()}&euro;</div>,
       }),
+      columnHelper.accessor("discount_pricing", {
+        header: "Atlaide",
+        cell: (info) => <div>{info.getValue()}&euro;</div>,
+      }),
       columnHelper.accessor("cat.birthdate", {
         header: "Dz. datums",
         cell: (info) => info.getValue(),
@@ -173,7 +177,7 @@ export const Cats = () => {
         )}`,
       },
       body: JSON.stringify({
-        breed_id: formData.breed_id,
+        breed_id: formData.cat.breed_id,
         display_name: formData.display_name,
         pricing: formData.pricing,
         discount_pricing: formData.discount_pricing,
@@ -208,7 +212,7 @@ export const Cats = () => {
         )}`,
       },
       body: JSON.stringify({
-        breed_id: formData.breed_id,
+        breed_id: formData.cat.breed_id,
         display_name: formData.display_name,
         pricing: formData.pricing,
         discount_pricing: formData.discount_pricing,
