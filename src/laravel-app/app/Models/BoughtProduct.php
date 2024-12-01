@@ -13,6 +13,7 @@ class BoughtProduct extends Model
         'transaction_id',
         'display_name',
         'amount',
+        'product_type',
         'price_per_product',
         'total_price',
     ];
