@@ -12,7 +12,6 @@ class Review extends Model
     protected $fillable = [
         'reviewer_id',
         'product_id',
-        'attachment_groups',
         'content',
         'rating',
     ];
@@ -27,10 +26,5 @@ class Review extends Model
     public function product()
     {
         return $this->hasOne(Product::class, 'id', 'product_id');
-    }
-
-    public function attachment(): MorphOne
-    {
-        return $this->morphOne(Attachment::class, 'attachable');
     }
 }
