@@ -124,9 +124,13 @@ Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
 
     Route::post('/products', [ProductController::class, 'store']);
     Route::post('/products/{id}/images/add', [ProductController::class, 'addImages']); // gonna need to explain this
-    Route::post('/products/images/{image}/remove', [ProductController::class, 'removeImage']);  //gonna need to explain this
+    Route::post('/products/{id}/images/remove/{url}', [ProductController::class, 'removeImage']);  //gonna need to explain this
     Route::post('/cats', [CatController::class, 'store']);
+    Route::post('/cats/{id}/images/add', [CatController::class, 'addImages']);
+    Route::post('/cats/{id}/images/remove/{url}', [CatController::class, 'removeImage']);
     Route::post('/breeds', [CatBreedController::class, 'store']);
+    Route::post('/breeds/{id}/images/add', [CatBreedController::class, 'addImages']);
+    Route::post('/breeds/{id}/images/remove/{url}', [CatBreedController::class, 'removeImage']);
 
 //    Route::put('/user/{id}', [UserController::class, 'update']);
     Route::put('/products/{id}', [ProductController::class, 'update']);

@@ -28,7 +28,7 @@ class UserResource extends JsonResource
         // Base parameters
         $user = [
             'id'           => $this->id,
-            'image_url'    => $this->image_url,
+            'attachment'   => new AttachmentResource($this->attachment),
             'email'        => $this->email,
             'display_name' => $this->display_name,
             'user_role'    => $this->user_role,

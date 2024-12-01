@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Model;
 
 class Review extends Model
@@ -11,7 +12,6 @@ class Review extends Model
     protected $fillable = [
         'reviewer_id',
         'product_id',
-        'attachment_groups',
         'content',
         'rating',
     ];

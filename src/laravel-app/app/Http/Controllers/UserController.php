@@ -18,6 +18,8 @@ use App\Models\Product;
 use Laravel\Cashier\Cashier;
 use App\Models\SelectedProducts;
 use App\Models\User;
+use App\Models\Attachment;
+use App\Models\Images;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
@@ -127,6 +129,7 @@ class UserController extends Controller
 
         // Check if the user has verified the email and is not deactivated or deleted
         $user_model = Auth::user();
+        //dd($user_model);
         $user = new UserResource($user_model);
         if ($user['email_verified_at'] === null) {
             dispatch(new SendEmailVerification($user_model));
@@ -347,34 +350,49 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-
+    
         $user = Auth::user();
-        $oldImagePath = str_replace('/storage/', '', $user->image_url);
-        Storage::disk('public')->delete($oldImagePath);
+
+        // if user doesn't have an attachment_id create a new one
+        if (!$user->attachment) {
+            $user->attachment()->create();  
+            $user->load('attachment');
+        } else {
+            $image = $user->attachment->images()->first();
+            if ($image) {
+                $oldImagePath = str_replace('/storage/', '', $image->url);
+                Storage::disk('public')->delete($oldImagePath);
+                $image->delete();
+            }
+        }
+        // Save the image with the attachment ID
         $path = $request->file('image')->store('images/profile', 'public');
-        $user->image_url = Storage::url($path);
-        $user->save();
-
+        $image = new Images();
+        $image->url = Storage::url($path);
+        $image->attachment_id = $user->attachment->id;
+        $image->save();
+       
         return $user;
-
     }
 
+    
     public function removeProfilePicture()
     {
         $user = Auth::user();
-        $user->image_url = null;
-        $user->save();
-        $oldImagePath = str_replace('/storage/', '', $user->image_url);
-        Storage::disk('public')->delete($oldImagePath);
-        $user->image_url = '';
+
+        $image = $user->attachment->images()->first();
+        if ($image) {
+            $oldImagePath = str_replace('/storage/', '', $image->url);
+            Storage::disk('public')->delete($oldImagePath);
+            $image->delete();
+        }
         return response()->json(true, 204);
     }
+
 
     public function basketPayment(Request $request)
     {
         $user = Auth::user();
-        // $stripePriceId = 'price_1QJk5qG6wIBbt2iyeYY9aBEV';
-        // $quantity = 1;
         $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
 
         $order = array();
@@ -391,20 +409,6 @@ class UserController extends Controller
     }
 
 
-    public function tt(Request $request)
-    {
-        $user = Auth::user();
-        $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
-        foreach ($basketProducts as $basketProduct) {
-            $basketProduct->product->stock -= $basketProduct->amount;
-            $basketProduct->product->save();
-
-            $basketProduct->delete();
-            dd($basketProducts);
-        }
-
-    }
-
     public function successPaid(TransactionRequest $request)
     { // TODO: ^ TransactionRequest ^ does not have complete validation for session id and user id
         // Sense
@@ -418,12 +422,12 @@ class UserController extends Controller
         // Check for a valid session
         $sessionId = $request->get('session_id');
         if ($sessionId === null)
-            return redirect()->to(env('FRONTEND_URL'));
+            return redirect()->to(env('FRONTEND_URL_SUCCESS'));
 
         // Check if the payment has been completed
         $session = Cashier::stripe()->checkout->sessions->retrieve($sessionId);
         if ($session->payment_status !== 'paid')
-            return redirect()->to(env('FRONTEND_URL'));
+            return redirect()->to(env('FRONTEND_URL_SUCCESS'));
 
         // Get transaction summary
         $basket_item_models = SelectedProducts::with('product')
@@ -480,7 +484,7 @@ class UserController extends Controller
             $basket_item->delete();
         }
 
-        return redirect()->to(env('FRONTEND_URL'));
+        return redirect()->to(env('FRONTEND_URL_SUCCESS'));
     }
 
     public function failedPaid(Request $request)

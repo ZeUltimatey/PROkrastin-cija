@@ -6,6 +6,8 @@ use App\Http\Requests\CatBreedRequest;
 use App\Http\Resources\CatBreedResource;
 use App\Models\Cat;
 use App\Models\CatBreed;
+use App\Models\Attachment;
+use App\Models\Images;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -101,5 +103,58 @@ class CatBreedController extends Controller
         // Delete the cat breed
         $cat_breed_model->delete();
         return response()->json(true, 204); // No content
+    }
+
+    public function addImages(Request $request, int $id)
+{
+    // Validate the images array and each individual image
+    $validator = Validator::make($request->all(), [
+        'images.*' => 'required|image|mimes:jpeg,png,jpg|max:4096', // Each image must meet these criteria
+        'images' => 'required|array|min:1', // Ensure at least one image is uploaded
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'errors' => $validator->errors(),
+        ], 422); // Unprocessable Entity
+    }
+
+    $uploadedImages = []; // To store details of uploaded images
+    $catBreed = CatBreed::where('id', $id)->first();
+    // if user doesn't have an attachment_id create a new one
+    if (!$catBreed->attachment) {
+        $catBreed->attachment()->create();  
+        $catBreed->load('attachment');
+    } 
+
+    foreach ($request->file('images') as $image) {
+        // Save the image with the attachment ID
+        $path = $image->store('images/breeds', 'public');
+        $image = new Images();
+        $image->url = Storage::url($path);
+        $image->attachment_id = $catBreed->attachment->id;
+        $image->save();
+
+        $uploadedImages[] = $image; // Add to the result list
+    }
+
+    return response()->json([
+        'message' => 'Images uploaded successfully.',
+        'images' => $uploadedImages,
+    ]);
+    }
+
+    public function removeImage(int $id, string $url){
+
+        $catBreed = CatBreed::where('id', $id)->first();
+
+        $image = $catBreed->attachment->images()->where('url', $url)->first();
+        if ($image) {
+            $oldImagePath = str_replace('/storage/', '', $image->url);
+            Storage::disk('public')->delete($oldImagePath);
+            $image->delete();
+        }
+        
+        return response()->json(true, 204);; // No content
     }
 }

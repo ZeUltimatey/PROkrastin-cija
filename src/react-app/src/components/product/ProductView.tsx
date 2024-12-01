@@ -77,7 +77,7 @@ export const ProductView = () => {
       <div className="bg-[#eaded2] mt-4 py-12 rounded-md">
         {product && reviews && (
           <div className="flex flex-col lg:flex-row gap-12 px-12">
-            {product.images.length > 0 ? (
+            {product.images?.length > 0 ? (
               <div className="">
                 {product.images.length > 1 && (
                   <div>

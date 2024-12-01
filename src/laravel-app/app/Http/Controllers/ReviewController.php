@@ -6,6 +6,8 @@ use App\Http\Requests\ReviewRequest;
 use App\Http\Resources\ReviewResource;
 use App\Models\Product;
 use App\Models\Review;
+use App\Models\Attachment;
+use App\Models\Images;
 use App\Services\PaginateService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
