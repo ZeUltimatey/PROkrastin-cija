@@ -10,6 +10,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Psy\Util\Json;
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
 
 class CatController extends Controller
 {
@@ -31,6 +33,24 @@ class CatController extends Controller
             'stock'            => $cat_data['stock'],
         ]);
 
+        $stripe = new \Stripe\StripeClient('sk_test_51QJH6GG6wIBbt2iyQVg6IQJayaNghHn2TdAkBwM6IIH7oUsVwzxUJLXAZmzhce8frnKbvXY2Dp7HsLCqVIqGA5AE00PBU1G7Jp');
+        // Add product to Stripe
+        $timeStampedID = $product_model->id . "_" . $product_model->created_at->timestamp;
+            $stripe->products->create([
+                'id' => $timeStampedID,
+                'name' => $product_model->display_name,
+                'description' => $product_model->description,
+            ]);
+            $prices = $stripe->prices->create([
+                'currency' => 'eur',
+                'unit_amount' => ($product_model->discount_pricing ?? $product_model->pricing) * 100,
+                'product' => $timeStampedID,
+            ]);
+            $product_model->update([
+               'price_id' => $prices->id,
+               'stripe_product_id' => $timeStampedID
+            ]);
+
         // Create the Cat model
         Cat::create([
             'id'        => $product_model->id,
@@ -39,7 +59,7 @@ class CatController extends Controller
             'color'     => $cat_data['color'],
         ]);
 
-        return response()->json(null, 201); // Content created
+        return $product_model->id; // Content created
     }
 
     /**
