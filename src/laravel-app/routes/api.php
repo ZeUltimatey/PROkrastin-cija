@@ -109,6 +109,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 // Admins only - some routes are for testing purposes
 Route::middleware(['auth:sanctum', AdminMiddleware::class])->group(function () {
+    Route::get('/statistics_sheet', [ReportController::class, 'generate_statistics']);
+
     Route::get('/all_users', [UserController::class, 'index']);
     Route::get('/all_bought_products', [BoughtProductController::class, 'index_all']);
     Route::get('/all_locations', [LocationController::class, 'index_all']);

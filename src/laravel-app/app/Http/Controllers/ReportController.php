@@ -7,6 +7,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Transaction;
 use App\Services\ReportsService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
@@ -27,5 +28,9 @@ class ReportController extends Controller
         // Download transaction if it was allowed to do so
         if ($allowed) { return ReportsService::download_check($transaction_id); }
         return response()->json(['error' => 'No permission to view this transaction.'], 403); // Forbidden
+    }
+
+    public function generate_statistics(Request $request) {
+        return ReportsService::download_statistics();
     }
 }

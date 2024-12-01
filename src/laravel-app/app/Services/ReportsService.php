@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use App\Exports\FullExport;
+use App\Exports\TransactionExport;
 use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportsService
 {
@@ -38,5 +41,10 @@ class ReportsService
 
         // Return the PDF as a downloadable file
         return $pdf->download('transaction_report.pdf');
+    }
+
+    static public function download_statistics()
+    {
+        return Excel::download(new FullExport(), 'Murrātava.xlsx');
     }
 }

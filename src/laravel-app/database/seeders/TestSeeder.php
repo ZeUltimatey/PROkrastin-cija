@@ -286,7 +286,7 @@ class TestSeeder extends Seeder
         ]);
         Transaction::create([
             "transactor_id" => 2,
-            "location_id" => 1,
+            "location_id" => null,
             "total_pricing" => 45.00,
             "check_content" => "no content",
         ]);
