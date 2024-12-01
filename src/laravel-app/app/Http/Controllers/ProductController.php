@@ -233,12 +233,18 @@ class ProductController extends Controller
 }
 
 
+    public function removeImage(int $id, string $url){
 
-    public function removeImage(Request $request, ProductImage $image){
-        $oldImagePath = str_replace('/storage/', '', $image->url);
-        Storage::disk('public')->delete($oldImagePath);
-        $image->delete();
-        return response()->json(true, 204); // No content
+        $product = Product::where('id', $id)->first();
+
+        $image = $product->attachment->images()->where('url', $url)->first();
+        if ($image) {
+            $oldImagePath = str_replace('/storage/', '', $image->url);
+            Storage::disk('public')->delete($oldImagePath);
+            $image->delete();
+        }
+        
+        return response()->json(true, 204);; // No content
     }
 
     // Import products to Stripe system

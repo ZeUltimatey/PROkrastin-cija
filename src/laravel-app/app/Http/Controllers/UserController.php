@@ -373,37 +373,26 @@ class UserController extends Controller
         $image->save();
        
         return $user;
-        //
-        $validator = Validator::make($request->all(), [
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-        ]);
-
-        $user = Auth::user();
-        $oldImagePath = str_replace('/storage/', '', $user->image_url);
-        Storage::disk('public')->delete($oldImagePath);
-        $path = $request->file('image')->store('images/profile', 'public');
-        $user->image_url = Storage::url($path);
-        $user->save();
-
-        return $user;        
     }
 
+    
     public function removeProfilePicture()
     {
         $user = Auth::user();
-        $user->image_url = null;
-        $user->save();
-        $oldImagePath = str_replace('/storage/', '', $user->image_url);
-        Storage::disk('public')->delete($oldImagePath);
-        $user->image_url = '';
+
+        $image = $user->attachment->images()->first();
+        if ($image) {
+            $oldImagePath = str_replace('/storage/', '', $image->url);
+            Storage::disk('public')->delete($oldImagePath);
+            $image->delete();
+        }
         return response()->json(true, 204);
     }
+
 
     public function basketPayment(Request $request)
     {
         $user = Auth::user();
-        // $stripePriceId = 'price_1QJk5qG6wIBbt2iyeYY9aBEV';
-        // $quantity = 1;
         $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
 
         $order = array();
@@ -419,20 +408,6 @@ class UserController extends Controller
         return response()->json(['url' => $session->url], 200);
     }
 
-
-    public function tt(Request $request)
-    {
-        $user = Auth::user();
-        $basketProducts = SelectedProducts::where('user_id', $user->id)->get();
-        foreach ($basketProducts as $basketProduct) {
-            $basketProduct->product->stock -= $basketProduct->amount;
-            $basketProduct->product->save();
-
-            $basketProduct->delete();
-            dd($basketProducts);
-        }
-
-    }
 
     public function successPaid(TransactionRequest $request)
     { // TODO: ^ TransactionRequest ^ does not have complete validation for session id and user id

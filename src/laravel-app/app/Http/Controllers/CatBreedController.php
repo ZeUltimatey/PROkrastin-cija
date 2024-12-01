@@ -143,4 +143,18 @@ class CatBreedController extends Controller
         'images' => $uploadedImages,
     ]);
     }
+
+    public function removeImage(int $id, string $url){
+
+        $catBreed = CatBreed::where('id', $id)->first();
+
+        $image = $catBreed->attachment->images()->where('url', $url)->first();
+        if ($image) {
+            $oldImagePath = str_replace('/storage/', '', $image->url);
+            Storage::disk('public')->delete($oldImagePath);
+            $image->delete();
+        }
+        
+        return response()->json(true, 204);; // No content
+    }
 }

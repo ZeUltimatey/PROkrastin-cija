@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Images extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'attachment_id',
+        'url',
+    ];
+
 
     public function attachment(): hasOne
     {
