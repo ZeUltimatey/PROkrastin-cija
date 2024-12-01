@@ -508,7 +508,7 @@ export const Products = () => {
                       <div className="flex flex-col gap-1">
                         <button
                           onClick={(e) => {
-                            deleteImage(e, image.url);
+                            deleteImage(e, image.id);
                           }}
                           className="hover:opacity-80"
                         >

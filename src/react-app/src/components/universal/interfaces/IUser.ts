@@ -16,4 +16,5 @@ export interface IUser {
   display_lowest_price: number;
   display_only_available: number;
   recieve_notifications: number;
+  attachment: any;
 }

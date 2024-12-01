@@ -134,8 +134,8 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
             <img
               className="lg:w-24 lg:h-24 h-12 w-12 rounded-full object-cover border-4 border-medium-brown"
               src={
-                user.image_url
-                  ? Constants.BASE_URL + user.image_url
+                user.attachment.images[0]
+                  ? Constants.BASE_URL + user.attachment.images[0].url
                   : "https://t3.ftcdn.net/jpg/01/79/88/20/360_F_179882080_Zga46fOuCNnZlF9o2IC6gYgHVQFDVKMv.jpg"
               }
               alt="Lietotāja attēls"
@@ -282,7 +282,7 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
                 <p className="text-sm opacity-40">
                   Bildes izmērs nedrīkst pārsniegt 4MB.
                 </p>
-                {user.image_url && (
+                {user?.attachment?.images[0] && (
                   <div
                     onClick={handleProfilePictureRemove}
                     className="flex gap-2 place-items-center hover:opacity-70 hover:cursor-pointer"

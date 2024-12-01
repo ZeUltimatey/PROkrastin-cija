@@ -18,7 +18,7 @@ const Cat = {
   breed_name: "",
   birthdate: "",
   color: "",
-  breed_id: 0,
+  breed_id: 1,
 };
 
 export const Product = {
@@ -28,10 +28,11 @@ export const Product = {
   pricing: 0,
   discount_pricing: null as number,
   breed_id: 0,
-  image_url: "",
+  image_url: null as any,
   stock: 1,
   product_type: CategoryNames.CATS,
   cat: Cat,
+  images: { images: [] as { id: number; url: string }[] },
 };
 
 export const Cats = () => {
@@ -61,14 +62,30 @@ export const Cats = () => {
     });
   };
 
+  const handlePictureAdd = async (id: number) => {
+    const imageData = new FormData();
+    Array.from(formData.image_url).forEach((image: any, index: number) => {
+      imageData.append(`images[${index}]`, image);
+    });
+    console.log(formData.image_url);
+    await fetch(`${Constants.API_URL}/products/${id}/images/add`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+      body: imageData,
+    });
+  };
+
   const fetchBreeds = async () => {
     await fetch(`${Constants.API_URL}/breeds`, {
       method: "GET",
     }).then(async (response) => {
       if (response.ok) {
         const data = await response.json();
-        if (data.data.length > 0)
-          setFormData({ ...formData, breed_id: data.data[0].id });
+
         setBreeds(data.data);
       } else {
         showToast(false, "Kļūda iegūstot šķirnes.");
@@ -89,7 +106,6 @@ export const Cats = () => {
       if (response.ok) {
         const data = await response.json();
         setFormData(data.data);
-        console.log(data.data.data);
         setIsModalOpen(true);
       }
     });
@@ -194,8 +210,12 @@ export const Cats = () => {
         color: formData.cat.color,
         stock: 1,
       }),
-    }).then((response) => {
+    }).then(async (response) => {
       if (response.ok) {
+        const data = await response.json();
+        if (formData.image_url) {
+          await handlePictureAdd(data);
+        }
         showToast(true, "Kaķis veiksmīgi pievienots!");
         setIsModalOpen(false);
         setTimeout(() => window.location.reload(), 1000);
@@ -229,8 +249,11 @@ export const Cats = () => {
         color: formData.cat.color,
         stock: 1,
       }),
-    }).then((response) => {
+    }).then(async (response) => {
       if (response.ok) {
+        if (formData.image_url) {
+          await handlePictureAdd(formData.id);
+        }
         showToast(true, "Produkts veiksmīgi atjaunināts!");
         setIsModalOpen(false);
         setTimeout(() => window.location.reload(), 1000);
@@ -239,6 +262,31 @@ export const Cats = () => {
       }
     });
     setIsLoading(false);
+  };
+
+  const deleteImage = async (
+    e: { preventDefault: () => void },
+    url: string
+  ) => {
+    e.preventDefault();
+    if (await confirm("Dzēst bildi?")) {
+      fetch(
+        `${Constants.API_URL}/products/${formData.id}/images/remove/${url}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(
+              Constants.LOCAL_STORAGE.TOKEN
+            )}`,
+          },
+        }
+      ).then((response) => {
+        if (response.ok) {
+          showToast(true, "Bilde veiksmīgi dzēsta!");
+          setTimeout(() => window.location.reload(), 1000);
+        }
+      });
+    }
   };
 
   const closeModal = () => {
@@ -452,12 +500,15 @@ export const Cats = () => {
                       Šķirne
                     </label>
                     <select
-                      onChange={(e) =>
+                      onChange={(e) => {
                         setFormData({
                           ...formData,
-                          breed_id: parseInt(e.target.value),
-                        })
-                      }
+                          cat: {
+                            ...formData.cat,
+                            breed_id: parseInt(e.target.value),
+                          },
+                        });
+                      }}
                       className="mt-1 w-full px-4 py-2 border bg-transparent font-poppins border-gray-300 rounded-md shadow-sm"
                     >
                       {Object.keys(breeds).map((breed, key) => {
@@ -510,10 +561,38 @@ export const Cats = () => {
                     Augšupielādēt attēlu
                   </label>
                   <input
+                    onChange={(e) =>
+                      setFormData({ ...formData, image_url: e.target.files })
+                    }
                     type="file"
                     accept="image/*"
+                    multiple
                     className="mt-1 w-full px-4 py-2 border accent-accent-brown font-poppins border-gray-300 rounded-md shadow-sm "
                   />
+                </div>
+                <p className="text-sm opacity-40">
+                  Esošās bildes ({formData?.images?.images?.length ?? 0})
+                </p>
+                <div className="grid grid-cols-4 place-items-center">
+                  {formData?.images?.images &&
+                    formData.images.images.map((image: any) => (
+                      <div className="flex flex-col gap-1">
+                        <button
+                          onClick={(e) => {
+                            deleteImage(e, image.id);
+                          }}
+                          className="hover:opacity-80"
+                        >
+                          <i className="fa-solid fa-trash text-red-500"></i>
+                        </button>
+                        <img
+                          key={image.id}
+                          src={Constants.BASE_URL + image.url}
+                          alt={formData.display_name}
+                          className="w-24 h-auto rounded-md shadow-md"
+                        />
+                      </div>
+                    ))}
                 </div>
                 <div className="flex justify-end space-x-4 mt-6">
                   <button

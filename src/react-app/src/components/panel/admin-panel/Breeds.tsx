@@ -20,7 +20,8 @@ export const Breed = {
   personality_info: "",
   environment_info: "",
   tips_info: "",
-  attachment_id: "",
+  image_url: null as any,
+  images: { images: [] as { id: number; url: string }[] },
 };
 
 export const Breeds = () => {
@@ -151,8 +152,12 @@ export const Breeds = () => {
         )}`,
       },
       body: JSON.stringify(formData),
-    }).then((response) => {
+    }).then(async (response) => {
       if (response.ok) {
+        const data = await response.json();
+        if (formData.image_url) {
+          await handlePictureAdd(data);
+        }
         showToast(true, "Šķirne veiksmīgi pievienota!");
         setIsModalOpen(false);
         setTimeout(() => window.location.reload(), 1000);
@@ -196,6 +201,7 @@ export const Breeds = () => {
     e.preventDefault();
     setIsEditing(false);
     setIsLoading(true);
+
     await fetch(`${Constants.API_URL}/breeds/${formData.id}`, {
       method: "PUT",
       headers: {
@@ -205,7 +211,10 @@ export const Breeds = () => {
         )}`,
       },
       body: JSON.stringify(formData),
-    }).then((response) => {
+    }).then(async (response) => {
+      if (formData.image_url) {
+        await handlePictureAdd(formData.id);
+      }
       if (response.ok) {
         showToast(true, "Šķirne veiksmīgi atjaunināta!");
         setIsModalOpen(false);
@@ -231,6 +240,45 @@ export const Breeds = () => {
     getSortedRowModel: getSortedRowModel(),
     enableSortingRemoval: false,
   });
+
+  const deleteImage = async (
+    e: { preventDefault: () => void },
+    url: string
+  ) => {
+    e.preventDefault();
+    if (await confirm("Dzēst bildi?")) {
+      fetch(`${Constants.API_URL}/breeds/${formData.id}/images/remove/${url}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(
+            Constants.LOCAL_STORAGE.TOKEN
+          )}`,
+        },
+      }).then((response) => {
+        if (response.ok) {
+          showToast(true, "Bilde veiksmīgi dzēsta!");
+          setTimeout(() => window.location.reload(), 1000);
+        }
+      });
+    }
+  };
+
+  const handlePictureAdd = async (id: number) => {
+    const imageData = new FormData();
+    Array.from(formData.image_url).forEach((image: any, index: number) => {
+      imageData.append(`images[${index}]`, image);
+    });
+    console.log(formData.image_url);
+    await fetch(`${Constants.API_URL}/breeds/${id}/images/add`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+      body: imageData,
+    });
+  };
 
   return (
     <div className="flex min-h-screen w-full">
@@ -426,10 +474,38 @@ export const Breeds = () => {
                     Augšupielādēt attēlus
                   </label>
                   <input
+                    onChange={(e) =>
+                      setFormData({ ...formData, image_url: e.target.files })
+                    }
                     type="file"
                     accept="image/*"
+                    multiple
                     className="mt-1 w-full px-4 py-2 border accent-accent-brown font-poppins border-gray-300 rounded-md shadow-sm "
                   />
+                </div>
+                <p className="text-sm opacity-40">
+                  Esošās bildes ({formData?.images?.images?.length ?? 0})
+                </p>
+                <div className="grid grid-cols-4 place-items-center">
+                  {formData?.images?.images &&
+                    formData.images.images.map((image: any) => (
+                      <div className="flex flex-col gap-1">
+                        <button
+                          onClick={(e) => {
+                            deleteImage(e, image.id);
+                          }}
+                          className="hover:opacity-80"
+                        >
+                          <i className="fa-solid fa-trash text-red-500"></i>
+                        </button>
+                        <img
+                          key={image.id}
+                          src={Constants.BASE_URL + image.url}
+                          alt={formData.display_name}
+                          className="w-24 h-auto rounded-md shadow-md"
+                        />
+                      </div>
+                    ))}
                 </div>
                 <div className="flex justify-end space-x-4 mt-6">
                   <button
