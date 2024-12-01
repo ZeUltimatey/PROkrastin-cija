@@ -144,11 +144,11 @@ class CatBreedController extends Controller
     ]);
     }
 
-    public function removeImage(int $id, string $url){
+    public function removeImage(int $id, int $image_id){
 
         $catBreed = CatBreed::where('id', $id)->first();
 
-        $image = $catBreed->attachment->images()->where('url', $url)->first();
+        $image = $catBreed->attachment->images()->where('id', $image_id)->first();
         if ($image) {
             $oldImagePath = str_replace('/storage/', '', $image->url);
             Storage::disk('public')->delete($oldImagePath);
