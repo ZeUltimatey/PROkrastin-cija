@@ -6,6 +6,8 @@ use App\Http\Requests\ProductRequest;
 use App\Http\Requests\ProductSearchRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Product;
+use App\Models\Attachment;
+use App\Models\Images;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -206,18 +208,22 @@ class ProductController extends Controller
     }
 
     $uploadedImages = []; // To store details of uploaded images
+    $product = Product::where('id', $id)->first();
+    // if user doesn't have an attachment_id create a new one
+    if (!$product->attachment) {
+        $product->attachment()->create();  
+        $product->load('attachment');
+    } 
 
     foreach ($request->file('images') as $image) {
+        // Save the image with the attachment ID
         $path = $image->store('images/products', 'public');
-        $imageUrl = Storage::url($path);
+        $image = new Images();
+        $image->url = Storage::url($path);
+        $image->attachment_id = $product->attachment->id;
+        $image->save();
 
-        // Save the image to the database
-        $uploadedImage = ProductImage::create([
-            'product_id' => $id,
-            'url' => $imageUrl,
-        ]);
-
-        $uploadedImages[] = $uploadedImage; // Add to the result list
+        $uploadedImages[] = $image; // Add to the result list
     }
 
     return response()->json([

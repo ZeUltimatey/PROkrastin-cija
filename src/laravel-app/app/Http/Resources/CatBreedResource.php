@@ -26,7 +26,8 @@ class CatBreedResource extends JsonResource
             'feeding_info' => $this->feeding_info,
             'personality_info' => $this->personality_info,
             'environment_info' => $this->environment_info,
-            'tips_info' => $this->tips_info
+            'tips_info' => $this->tips_info,
+            'images'           => new AttachmentResource($this->attachment),
         ];
     }
 }

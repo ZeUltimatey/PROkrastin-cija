@@ -28,8 +28,8 @@ class ProductResource extends JsonResource
             'discount_pricing' => $this->discount_pricing,
             'product_type'     => $this->product_type,
             'stock'            => $this->stock,
-            'rating'           => 5,
-            'images'           => ProductImageResource::collection($this->images),
+            'rating'           => round($this->review()->avg('rating'), 2),
+            'images'           => new AttachmentResource($this->attachment),
         ];
 
         if ($this->product_type === 'CATS' && $this->cat) {

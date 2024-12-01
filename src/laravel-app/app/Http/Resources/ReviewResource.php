@@ -21,6 +21,7 @@ class ReviewResource extends JsonResource
             "rating"     => $this->rating,
             "is_anonymous" => $this->is_anonymous,
             "created_at" => Carbon::parse($this->created_at)->format('d/m/Y H:i'),
+            'images'           => new AttachmentResource($this->attachment),
         ];
 
         if (isset($this->show_product)) {
