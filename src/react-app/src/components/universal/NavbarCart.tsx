@@ -28,8 +28,9 @@ export const NavbarCart = () => {
                   <div className="flex w-full gap-2">
                     <img
                       src={
-                        item.product.images[0]
-                          ? Constants.BASE_URL + item.product.images[0].url
+                        item.product.images.images[0]
+                          ? Constants.BASE_URL +
+                            item.product.images.images[0].url
                           : "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
                       }
                       className="w-12 h-12 shadow-sm rounded-md"

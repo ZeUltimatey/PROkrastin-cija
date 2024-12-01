@@ -54,7 +54,7 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
     }).then(async (response) => {
       if (response.ok) {
         showToast(true, "Lietotāja informācija saglabāta.");
-        window.location.reload();
+        setTimeout(() => window.location.reload(), 1000);
         setIsModalOpen(false);
       } else {
         const data = await response.json();

@@ -3,7 +3,6 @@ import { ProductInfo } from "./product-details/ProductInfo";
 import { useParams } from "react-router-dom";
 import { Constants } from "../universal/Constants";
 import { IProduct } from "../universal/interfaces/IProduct";
-import Carousel from "react-multi-carousel";
 import { SimilarProducts } from "./SimilarProducts";
 
 export const ProductView = () => {
@@ -57,7 +56,7 @@ export const ProductView = () => {
   };
 
   const goToNextImage = () => {
-    if (currentImage === product.images.length - 1) {
+    if (currentImage === product.images.images.length - 1) {
       setCurrentImage(0);
       return;
     }
@@ -66,7 +65,7 @@ export const ProductView = () => {
 
   const goToPreviousImage = () => {
     if (currentImage === 0) {
-      setCurrentImage(product.images.length - 1);
+      setCurrentImage(product.images.images.length - 1);
       return;
     }
     setCurrentImage(currentImage - 1);
@@ -77,9 +76,9 @@ export const ProductView = () => {
       <div className="bg-[#eaded2] mt-4 py-12 rounded-md">
         {product && reviews && (
           <div className="flex flex-col lg:flex-row gap-12 px-12">
-            {product.images?.length > 0 ? (
+            {product.images?.images.length > 0 ? (
               <div className="">
-                {product.images.length > 1 && (
+                {product.images.images.length > 1 && (
                   <div>
                     <button
                       onClick={goToPreviousImage}
@@ -97,7 +96,9 @@ export const ProductView = () => {
                 )}
                 <img
                   key={product.id}
-                  src={Constants.BASE_URL + product.images[currentImage].url}
+                  src={
+                    Constants.BASE_URL + product.images.images[currentImage].url
+                  }
                   alt="product"
                   className="rounded-md h-[400px] w-[700px] object-cover shadow-md"
                 />

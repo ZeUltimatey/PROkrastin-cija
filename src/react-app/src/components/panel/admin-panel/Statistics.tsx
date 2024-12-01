@@ -93,6 +93,48 @@ export const Statistics = () => {
     []
   );
 
+  const downloadExcel = () => {
+    fetch(`${Constants.API_URL}/statistics_sheet`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+    }).then(async (response) => {
+      if (response.ok) {
+        const data = await response.blob();
+        const url = window.URL.createObjectURL(new Blob([data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "statistika.xlsx");
+        document.body.appendChild(link);
+        link.click();
+      }
+    });
+  };
+
+  const downloadCsv = () => {
+    fetch(`${Constants.API_URL}/statistics_sheet?export_type=csv`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem(
+          Constants.LOCAL_STORAGE.TOKEN
+        )}`,
+      },
+    }).then(async (response) => {
+      if (response.ok) {
+        const data = await response.blob();
+        const url = window.URL.createObjectURL(new Blob([data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "statistika.csv");
+        document.body.appendChild(link);
+        link.click();
+      }
+    });
+  };
+
   const table = useReactTable({
     columns,
     data: transactions,
@@ -108,9 +150,20 @@ export const Statistics = () => {
           <h1 className="text-2xl font-bold text-dark-brown font-poppins">
             Statistika
           </h1>
-          <button className="bg-medium-brown text-white px-4 min-w-48 hover:bg-opacity-85 transition-all py-2 rounded-lg font-poppins">
-            <i className="fa-solid fa-download" /> Lejupielādēt excel
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={downloadExcel}
+              className="bg-medium-brown text-white px-4 min-w-48 hover:bg-opacity-85 transition-all py-2 rounded-lg font-poppins"
+            >
+              <i className="fa-solid fa-download" /> Lejupielādēt excel
+            </button>
+            <button
+              onClick={downloadCsv}
+              className="bg-medium-brown text-white px-4 min-w-48 hover:bg-opacity-85 transition-all py-2 rounded-lg font-poppins"
+            >
+              <i className="fa-solid fa-download" /> Lejupielādēt CSV
+            </button>
+          </div>
         </div>
       </header>
       <main className="p-8">

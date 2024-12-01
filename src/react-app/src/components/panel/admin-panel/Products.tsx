@@ -12,6 +12,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Pagination } from "../../universal/Pagination";
+import { IProduct } from "../../universal/interfaces/IProduct";
 
 export const Product = {
   id: 0,
@@ -22,12 +23,13 @@ export const Product = {
   product_type: "FOOD",
   stock: 0,
   image_url: null as any,
+  images: { images: [] as { id: number; url: string }[] },
 };
 
 export const Products = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState(Product);
-  const [products, setProducts] = useState<(typeof Product)[]>(null);
+  const [products, setProducts] = useState<IProduct[]>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [pagination, setPagination] = useState(null);
@@ -88,7 +90,7 @@ export const Products = () => {
     return;
   };
 
-  const columnHelper = createColumnHelper<typeof Product>();
+  const columnHelper = createColumnHelper<IProduct>();
 
   const columns = useMemo(
     () => [
@@ -212,6 +214,31 @@ export const Products = () => {
       }
     });
     setIsLoading(false);
+  };
+
+  const deleteImage = async (
+    e: { preventDefault: () => void },
+    url: string
+  ) => {
+    e.preventDefault();
+    if (await confirm("Dzēst bildi?")) {
+      fetch(
+        `${Constants.API_URL}/products/${formData.id}/images/remove/${url}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(
+              Constants.LOCAL_STORAGE.TOKEN
+            )}`,
+          },
+        }
+      ).then((response) => {
+        if (response.ok) {
+          showToast(true, "Bilde veiksmīgi dzēsta!");
+          setTimeout(() => window.location.reload(), 1000);
+        }
+      });
+    }
   };
 
   const closeModal = () => {
@@ -471,6 +498,30 @@ export const Products = () => {
                   <p className="text-sm opacity-40">
                     Bildes izmērs nedrīkst pārsniegt 4MB.
                   </p>
+                </div>
+                <p className="text-sm opacity-40">
+                  Esošās bildes ({formData?.images?.images?.length ?? 0})
+                </p>
+                <div className="grid grid-cols-4 place-items-center">
+                  {formData?.images?.images &&
+                    formData.images.images.map((image: any) => (
+                      <div className="flex flex-col gap-1">
+                        <button
+                          onClick={(e) => {
+                            deleteImage(e, image.url);
+                          }}
+                          className="hover:opacity-80"
+                        >
+                          <i className="fa-solid fa-trash text-red-500"></i>
+                        </button>
+                        <img
+                          key={image.id}
+                          src={Constants.BASE_URL + image.url}
+                          alt={formData.display_name}
+                          className="w-24 h-auto rounded-md shadow-md"
+                        />
+                      </div>
+                    ))}
                 </div>
                 <div className="flex justify-end space-x-4 mt-6">
                   <button

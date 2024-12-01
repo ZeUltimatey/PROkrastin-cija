@@ -29,8 +29,8 @@ export const ItemCard = (props: IProduct) => {
         <img
           className="rounded-t-md"
           src={
-            props.images && props.images[0]
-              ? Constants.BASE_URL + props.images[0].url
+            props.images && props.images.images[0]
+              ? Constants.BASE_URL + props.images.images[0].url
               : "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
           }
           alt={props.description}
