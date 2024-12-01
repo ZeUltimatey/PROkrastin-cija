@@ -66,8 +66,8 @@ class CatBreedController extends Controller
     public function store(CatBreedRequest $request)
     {
         // Create the cat breed
-        CatBreed::create($request->all());
-        return response()->json(null, 201); // Content created
+        $catBreed = CatBreed::create($request->all());
+        return $catBreed->id; // Content created
     }
 
     /**

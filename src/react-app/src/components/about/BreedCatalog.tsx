@@ -16,6 +16,7 @@ export interface IBreed {
   environment_info: string;
   personality_info: string;
   tips_info: string;
+  images: any;
 }
 
 export const BreedCatalog = () => {
@@ -147,9 +148,15 @@ export const BreedCatalog = () => {
                   <button
                     onClick={() => navigate(`/breed/${breed.id}`)}
                     key={breed.id}
-                    className="rounded-md hover:shadow-md transition-all flex border h-24 border-slate-300 w-full"
+                    className="rounded-md hover:shadow-md transition-all flex border h-32 border-slate-300 w-full"
                   >
-                    <div className="bg-gradient-to-r from-purple-400 to-pink-400 rounded-s-md w-48 lg:block hidden"></div>
+                    <img
+                      src={
+                        Constants.BASE_URL + breed?.images?.images[0]?.url ??
+                        "https://www.svgrepo.com/show/508699/landscape-placeholder.svg"
+                      }
+                      className=" rounded-s-md w-32 bg-cover h-32 lg:block hidden"
+                    ></img>
                     <div className="px-4 grow flex text-left justify-center flex-col">
                       <h3 className="lg:text-xl font-semibold text-dark-brown">
                         {breed.display_name}

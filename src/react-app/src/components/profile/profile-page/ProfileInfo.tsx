@@ -134,7 +134,7 @@ export const ProfileInfo = ({ user }: { user: IUser }) => {
             <img
               className="lg:w-24 lg:h-24 h-12 w-12 rounded-full object-cover border-4 border-medium-brown"
               src={
-                user.attachment.images[0]
+                user?.attachment?.images[0]
                   ? Constants.BASE_URL + user.attachment.images[0].url
                   : "https://t3.ftcdn.net/jpg/01/79/88/20/360_F_179882080_Zga46fOuCNnZlF9o2IC6gYgHVQFDVKMv.jpg"
               }

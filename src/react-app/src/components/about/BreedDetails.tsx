@@ -50,32 +50,21 @@ export const BreedDetails = () => {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-12 p-12">
-        <div className="lg:w-1/3 flex flex-col gap-6">
-          <div
-            className="grow h-80 cursor-pointer"
-            onClick={() => setIsModalOpen(true)}
-          >
-            <div className="w-full h-full bg-gray-300 rounded-md shadow-lg flex items-center justify-center"></div>
-          </div>
-
-          <div
-            className="grow h-80 cursor-pointer"
-            onClick={() => setIsModalOpen(true)}
-          >
-            <div className="w-full h-full bg-gray-300 rounded-md shadow-lg flex items-center justify-center"></div>
-          </div>
-
-          <div
-            className="grow h-80 cursor-pointer"
-            onClick={() => setIsModalOpen(true)}
-          >
-            <div className="w-full h-full bg-gray-300 rounded-md shadow-lg flex items-center justify-center"></div>
-          </div>
+      <div className="flex">
+        <div className="flex flex-col gap-12 p-12">
+          {breed?.images?.images &&
+            breed.images.images.map((image: any) => (
+              <img
+                key={image.id}
+                src={Constants.BASE_URL + image.url}
+                alt={breed.display_name}
+                className="w-48 h-auto rounded-md shadow-md"
+              />
+            ))}
         </div>
 
         {breed && (
-          <div className="flex flex-col grow gap-8 font-poppins">
+          <div className="flex flex-col grow mt-12 gap-8 font-poppins">
             <div className="bg-light-gray p-6 rounded-md shadow-lg">
               <h3 className="lg:text-2xl text-lg font-semibold text-accent-brown mb-4">
                 Barošana
@@ -110,22 +99,6 @@ export const BreedDetails = () => {
           </div>
         )}
       </div>
-
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-30">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-3/4 lg:w-2/4">
-            <div className="flex justify-between items-center mb-4">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-dark-brown rounded-full w-7 h-7 flex items-center justify-center"
-              >
-                <i className="fa-solid fa-x"></i>
-              </button>
-            </div>
-            <div className="flex items-center justify-center h-96 bg-gray-300 rounded-md"></div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

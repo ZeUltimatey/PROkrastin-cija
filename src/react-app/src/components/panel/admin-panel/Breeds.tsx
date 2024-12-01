@@ -543,8 +543,18 @@ export const Breeds = () => {
                   <i className="fa-solid fa-x"></i>
                 </button>
               </div>
-              <div className="flex gap-8">
-                <div>{}</div>
+              <div className="flex gap-6">
+                <div className="flex flex-col gap-4">
+                  {formData?.images?.images &&
+                    formData.images.images.map((image: any) => (
+                      <img
+                        key={image.id}
+                        src={Constants.BASE_URL + image.url}
+                        alt={formData.display_name}
+                        className="w-48 h-auto rounded-md shadow-md"
+                      />
+                    ))}
+                </div>
                 <div className="flex flex-col grow gap-8 font-poppins">
                   <div className="bg-light-gray p-6 rounded-md shadow-lg">
                     <h3 className="lg:text-2xl text-lg font-semibold text-accent-brown mb-4">
